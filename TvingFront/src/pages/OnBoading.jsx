@@ -7,7 +7,7 @@ function OnBoading() {
       <Helmet>
         <title>TvingFront - OnBoading</title>
       </Helmet>
-      <div>
+      <div className="text-xl">
         <h1>안녕</h1>
       </div>
     </>
