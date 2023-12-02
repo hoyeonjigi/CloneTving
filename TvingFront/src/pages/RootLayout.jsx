@@ -1,12 +1,9 @@
 import { Outlet } from "react-router-dom";
 
-
-
-
 function RootLayout() {
-  return (  
-    <div className="max-w-[430px] mx-auto">
-      <Outlet/>
+  return (
+    <div className="font-noto max-w-[1920px]">
+      <Outlet />
     </div>
   );
 }
