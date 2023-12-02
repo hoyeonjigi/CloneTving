@@ -14,6 +14,9 @@ export default {
       },
 
       brightness: ["hover", "focus"], // 이 부분을 추가합니다.
+			colors: {
+        brand: '#FF153C',
+      },
     },
   },
   plugins: [],
