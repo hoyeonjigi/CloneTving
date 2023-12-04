@@ -1,0 +1,8 @@
+<svg className="hover:filter hover:brightness-150" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" class="css-o3xn5l esx4t663">
+	<g transform="translate(1.245 .684)">
+		<rect width="36" height="36" rx="18" transform="translate(-1.245 -.684)" fill="rgba(255,255,255,.13)">
+		</rect>
+		<path data-name="패\uC2A4 4579" d="M27.379 11.832a2.8 2.8 0 00-1.978-1.978c-1.745-.468-8.743-.468-8.743-.468s-7 0-8.743.468a2.8 2.8 0 00-1.978 1.978 31.26 31.26 0 000 10.772 2.8 2.8 0 001.982 1.978c1.745.468 8.743.468 8.743.468s7 0 8.743-.468a2.8 2.8 0 001.978-1.978 31.263 31.263 0 000-10.772zm-12.96 8.743v-6.714l5.813 3.357z" fill="rgba(255,255,255,.31)">
+		</path>
+	</g>
+</svg>
