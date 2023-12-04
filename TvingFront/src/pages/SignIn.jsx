@@ -8,11 +8,11 @@ function SignIn() {
       <Helmet>
         <title>TvingFront - SingIn</title>
       </Helmet>
-      <div>
-        <h1>안녕</h1>
+      {/* main */}
+      <div className='bg-black'>
+        <h3 className="text-white">안녕</h3>
       </div>
     </>
   )
 }
-
 export default SignIn

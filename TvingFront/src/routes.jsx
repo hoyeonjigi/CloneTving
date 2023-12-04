@@ -3,7 +3,7 @@ import RootLayout from "./pages/RootLayout.jsx";
 import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Main from "./pages/Main.jsx";
-import OnBoading from "./pages/OnBoading.jsx";
+import OnBoarding from "./pages/OnBoarding.jsx";
 
 const router = createBrowserRouter([
   {
@@ -12,7 +12,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <OnBoading />,
+        element: <OnBoarding />,
       },
       {
         path: "/signin",
