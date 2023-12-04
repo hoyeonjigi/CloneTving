@@ -84,7 +84,7 @@ function Footer() {
             href="https://www.youtube.com/c/TVING_official"
             className="hover:brightness-200"
           >
-            <img src={youtube}></img>
+            <img src={youtube} className="hover:brightness-200"></img>
           </a>
         </li>
         <li>
