@@ -5,6 +5,7 @@ import logo_white from "@/assets/logo-white.svg";
 import onboard from "@/assets/onBoarding/onboard.webp";
 import LoginButtonRed from "@/components/LoginButtonRed";
 import SlideTop from "@/components/SlideTop";
+import SlideBottom from "@/components/SlideBottom";
 
 function OnBoading() {
   return (
@@ -16,7 +17,6 @@ function OnBoading() {
         <Header />
 
         <div>
-          
           <section className="mb-80 relative" style={{ height: "80vh" }}>
             <div
               className="absolute inset-0"
@@ -51,7 +51,7 @@ function OnBoading() {
           </section>
 
           <section>
-            <div className="flex flex-col items-center text-center">
+            <div className="flex flex-col items-center text-center mb-12">
               <p className="text-white text-5xl font-bold mb-6">
                 요즘 뜨는 모든 콘텐츠
               </p>
@@ -62,8 +62,8 @@ function OnBoading() {
                 파라마운트+ 오리지널 및 독점 시리즈
               </p>
             </div>
-            {/* <SlideTop/> */}
-            <div></div>
+            <SlideTop />
+            <SlideBottom />
           </section>
           <section
             id="scroll-section-1"

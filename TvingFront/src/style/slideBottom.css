@@ -1,0 +1,26 @@
+.sliderBottom {
+  display: flex;
+  animation: slide 25s linear infinite;
+}
+
+.slide {
+  flex: 0 0 auto;
+  width: 19%;
+  height: 25%;
+  margin-right: 0.75rem;
+  overflow: hidden;
+}
+
+.slide:not(:last-child) {
+  margin-right: 0.75rem;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* 슬라이드 하나의 너비로 이동 거리를 설정하세요. */
+    transform: translateX(-100%);
+  }
+}

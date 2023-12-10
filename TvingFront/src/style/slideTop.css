@@ -1,0 +1,26 @@
+.mySwiper {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  49.999% {
+    transform: translateX(-50%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.mySwiper .swiper-wrapper {
+  display: flex;
+  width: 200%;
+  animation: scroll 30s linear infinite;
+}
