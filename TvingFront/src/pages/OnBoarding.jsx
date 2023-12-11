@@ -50,7 +50,7 @@ function OnBoading() {
             </div>
           </section>
 
-          <section>
+          <section className="mb-40">
             <div className="flex flex-col items-center text-center mb-12">
               <p className="text-white text-5xl font-bold mb-6">
                 요즘 뜨는 모든 콘텐츠

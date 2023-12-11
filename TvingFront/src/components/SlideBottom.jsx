@@ -46,8 +46,8 @@ function SlideBottom() {
   return (
     <>
       <Swiper
-        className="mb-3"
-        slidesPerView={5}
+        className="mb-3 smooth-swiper"
+        slidesPerView={4.5}
         spaceBetween={"1%"}
         autoplay={{
           delay: 0,
@@ -55,7 +55,7 @@ function SlideBottom() {
         }}
         loop={true}
         modules={[Autoplay]}
-        speed={9000}
+        speed={5000}
         freeMode={true}
         preventInteractionOnTransition={true}
       >
