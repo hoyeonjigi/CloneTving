@@ -1,0 +1,20 @@
+<included>
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./clone-tving/src/main/resources/log-storage/error/error-${BY_DATE}.log</file>
+        
+        <filter class = "ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern> ./clone-tving/src/main/resources/log-storage-backup/error/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>300MB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+</included>
