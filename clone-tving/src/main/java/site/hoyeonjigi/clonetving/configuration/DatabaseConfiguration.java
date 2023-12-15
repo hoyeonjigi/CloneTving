@@ -1,5 +1,7 @@
 package site.hoyeonjigi.clonetving.configuration;
 
+import java.util.Properties;
+
 import javax.sql.DataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -23,5 +25,11 @@ public class DatabaseConfiguration {
     public DataSource dataSource() throws Exception{
         DataSource dataSource = new HikariDataSource(hikariConfig());
         return dataSource;
+    }
+    
+    @Bean
+    @ConfigurationProperties(prefix="spring.jpa")
+    public Properties hibernateConfig(){
+        return new Properties();
     }
 }
