@@ -4,8 +4,9 @@ import { Helmet } from "react-helmet-async";
 import logo_white from "@/assets/logo-white.svg";
 import onboard from "@/assets/onBoarding/onboard.webp";
 import LoginButtonRed from "@/components/LoginButtonRed";
-import SlideTop from "@/components/SlideTop";
-import SlideBottom from "@/components/SlideBottom";
+import SlideTop from "@/components/onboarding/SlideTop";
+import SlideBottom from "@/components/onboarding/SlideBottom";
+import TvingOriginal from "@/components/onboarding/TvingOriginal";
 
 function OnBoading() {
   return (
@@ -37,7 +38,7 @@ function OnBoading() {
           </section>
 
           <section>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center mb-12">
               <p className="text-white text-5xl font-bold mb-6">
                 티빙 오리지널 시리즈
               </p>
@@ -48,6 +49,7 @@ function OnBoading() {
                 오리지널 콘텐츠를 감상해 보세요.
               </p>
             </div>
+            <TvingOriginal/>
           </section>
 
           <section className="mb-40">

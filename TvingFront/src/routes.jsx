@@ -7,6 +7,7 @@ import OnBoarding from "./pages/OnBoarding.jsx";
 import Profile from "./pages/Profile.jsx";
 import ProfilesForEdit from "./pages/ProfilesForEdit.jsx";
 import UserTving from "./pages/UserTving.jsx";
+import ProfileForCreate from "./pages/profileForCreate.jsx";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "/userTving",
         element: <UserTving />,
+      },
+      {
+        path: "/user/profile",
+        element: <ProfileForCreate />,
       },
     ],
   },
