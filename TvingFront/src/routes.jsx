@@ -8,6 +8,7 @@ import Profile from "./pages/Profile.jsx";
 import ProfilesForEdit from "./pages/ProfilesForEdit.jsx";
 import UserTving from "./pages/UserTving.jsx";
 import ProfileForCreate from "./pages/profileForCreate.jsx";
+import ProfileForEditDetail from "./pages/ProfileForEditDetail.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
         element: <Main />,
       },
       {
-        path: "/profiles",
+        path: "/user/profiles",
         element: <Profile />,
       },
       {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "/user/profile",
         element: <ProfileForCreate />,
+      },
+      {
+        path: "/user/profileForEdit",
+        element: <ProfileForEditDetail />,
       },
     ],
   },
