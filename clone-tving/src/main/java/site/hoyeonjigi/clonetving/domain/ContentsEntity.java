@@ -43,9 +43,9 @@ public class ContentsEntity {
     @Column(nullable=false)
     private boolean contentRating;
 
-    @OneToMany(mappedBy = "contentsentity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ContentsJenreEntity> jenres = new ArrayList<ContentsJenreEntity>();
 
-    @OneToMany(mappedBy = "contentsentity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<EvaluationEntity> evaluations = new ArrayList<EvaluationEntity>();
 }
