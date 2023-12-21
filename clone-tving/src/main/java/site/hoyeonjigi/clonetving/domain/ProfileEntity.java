@@ -36,7 +36,7 @@ public class ProfileEntity {
     @Column(nullable=false)
     private boolean child;
 
-    @OneToMany(mappedBy = "profileentity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private ArrayList<RecentViewEntity> recentviews = new ArrayList<>();
 
 }
