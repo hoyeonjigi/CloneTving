@@ -1,9 +1,12 @@
-import React from 'react'
+import HeaderMain from "@/components/HeaderMain";
+import React from "react";
 
 function Main() {
   return (
-    <div>Main</div>
-  )
+    <>
+      <HeaderMain />
+    </>
+  );
 }
 
 export default Main;
