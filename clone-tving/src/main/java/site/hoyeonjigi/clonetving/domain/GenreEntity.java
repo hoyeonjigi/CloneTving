@@ -4,18 +4,23 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "jenre")
+@Table(name = "genre")
 @Data
 @AllArgsConstructor
-public class JenreEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+public class GenreEntity {
     @Id
-    private String jenreId;
+    private String genreId;
 
     @Column(length=20, nullable=false)
-    private String jenreName;
+    private String genreName;
 
 }
