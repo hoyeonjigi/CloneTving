@@ -2,7 +2,6 @@ package site.hoyeonjigi.clonetving.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,8 +19,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "user")
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class UserEntity {
     

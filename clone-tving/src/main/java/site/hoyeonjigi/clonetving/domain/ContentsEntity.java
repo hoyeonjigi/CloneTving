@@ -2,7 +2,6 @@ package site.hoyeonjigi.clonetving.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,13 +9,19 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import java.sql.Date;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "contents")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class ContentsEntity {
     
     @Id
@@ -29,7 +34,7 @@ public class ContentsEntity {
     private String contentTitle;
 
     @Column(nullable=false)
-    private String contentReleaseDate;
+    private Date contentReleaseDate;
 
     @Column(nullable=false)
     private int contentView;
@@ -38,13 +43,13 @@ public class ContentsEntity {
     private String contentOverview;
 
     @Column(nullable=false)
-    private byte[] contentImg;
+    private String contentImage;
 
     @Column(nullable=false)
     private boolean contentRating;
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<ContentsJenreEntity> jenres = new ArrayList<ContentsJenreEntity>();
+    private List<ContentsGenreEntity> genres = new ArrayList<ContentsGenreEntity>();
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<EvaluationEntity> evaluations = new ArrayList<EvaluationEntity>();
