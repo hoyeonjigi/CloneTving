@@ -6,15 +6,20 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "content_jenre")
+@Table(name = "content_genre")
 @Data
 @AllArgsConstructor
-@IdClass(ContentJenreEntityPK.class)
-public class ContentsJenreEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@IdClass(ContentGenreEntityPK.class)
+public class ContentsGenreEntity {
 
     @Id
     @ManyToOne
@@ -23,7 +28,7 @@ public class ContentsJenreEntity {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "jenre_id")
-    private JenreEntity jenre;
+    @JoinColumn(name = "genre_id")
+    private GenreEntity genre;
 
 }
