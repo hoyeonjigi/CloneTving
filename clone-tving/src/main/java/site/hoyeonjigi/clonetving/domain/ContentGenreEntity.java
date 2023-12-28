@@ -19,16 +19,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @IdClass(ContentGenreEntityPK.class)
-public class ContentsGenreEntity {
+public class ContentGenreEntity {
 
     @Id
     @ManyToOne
     @JoinColumn(name = "content_id")
-    private ContentsEntity content;
+    private ContentEntity content;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "genre_id")
     private GenreEntity genre;
+
+    public Object get() {
+        return null;
+    }
 
 }

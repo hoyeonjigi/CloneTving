@@ -17,8 +17,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import site.hoyeonjigi.clonetving.domain.ContentsEntity;
-import site.hoyeonjigi.clonetving.domain.ContentsGenreEntity;
+import site.hoyeonjigi.clonetving.domain.ContentEntity;
+import site.hoyeonjigi.clonetving.domain.ContentGenreEntity;
 import site.hoyeonjigi.clonetving.domain.GenreEntity;
 
 @SpringBootTest
@@ -26,7 +26,7 @@ import site.hoyeonjigi.clonetving.domain.GenreEntity;
 public class ContentsRepositoryTest {
 
     @Autowired
-    ContentsRepository contentsRepository;
+    ContentRepository contentsRepository;
 
     @Autowired 
     ContentGenreRepository contentGenreRepository;
@@ -40,7 +40,7 @@ public class ContentsRepositoryTest {
     void save(String contentconf, String id, String title, String date , int view, String overview, String img, Boolean rating , String[] genreId){
         //given
         Date insertdate = Date.valueOf(date);
-        ContentsEntity contentsEntity = ContentsEntity.builder()
+        ContentEntity contentsEntity = ContentEntity.builder()
                                             .contentClassification(contentconf)
                                             .contentId(id)
                                             .contentTitle(title)
@@ -51,11 +51,11 @@ public class ContentsRepositoryTest {
                                             .contentRating(rating).build();
 
         //when
-        ContentsEntity saveContentsEntity = contentsRepository.save(contentsEntity);
+        ContentEntity saveContentsEntity = contentsRepository.save(contentsEntity);
 
         for(int i=0; i<genreId.length; i++){
             Optional<GenreEntity> genreEntity = genreRepository.findById(genreId[i]);
-            ContentsGenreEntity contentsGenreEntity = ContentsGenreEntity.builder()
+            ContentGenreEntity contentsGenreEntity = ContentGenreEntity.builder()
                                                             .content(contentsEntity)
                                                             .genre(genreEntity.orElse(null)).build();
 

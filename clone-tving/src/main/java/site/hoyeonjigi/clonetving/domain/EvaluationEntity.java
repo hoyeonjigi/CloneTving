@@ -38,7 +38,7 @@ public class EvaluationEntity {
     @Id
     @ManyToOne
     @JoinColumn(name = "content_id")
-    private ContentsEntity content;
+    private ContentEntity content;
 
     @Column(nullable=false)
     private float starRating;
