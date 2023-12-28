@@ -17,12 +17,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "contents")
+@Table(name = "content")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class ContentsEntity {
+public class ContentEntity {
     
     @Id
     private String contentId;
@@ -49,8 +49,12 @@ public class ContentsEntity {
     private boolean contentRating;
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<ContentsGenreEntity> genres = new ArrayList<ContentsGenreEntity>();
+    private List<ContentGenreEntity> genres = new ArrayList<ContentGenreEntity>();
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<EvaluationEntity> evaluations = new ArrayList<EvaluationEntity>();
+
+    public Object stream() {
+        return null;
+    }
 }
