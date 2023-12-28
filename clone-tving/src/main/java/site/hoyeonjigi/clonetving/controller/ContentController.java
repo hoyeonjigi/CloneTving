@@ -11,7 +11,7 @@ import site.hoyeonjigi.clonetving.dto.ContentDto;
 import site.hoyeonjigi.clonetving.service.ContentService;
 
 @RestController
-public class UserController {
+public class ContentController {
     
 	@Autowired
     private ContentService contentService;
