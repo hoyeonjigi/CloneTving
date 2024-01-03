@@ -1,6 +1,7 @@
 package site.hoyeonjigi.clonetving.service;
 
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -49,6 +50,19 @@ public class ContentServiceImpl implements ContentService{
         contentEntities = contentRepository.findContentByGenre(decodeClassification, decodeGenreName, pageable);
         contentDtos = contentEntities.stream().map(o->new ContentDto(o)).collect(Collectors.toList());
         
+        return contentDtos;
+    }
+
+    @Override
+    public List<ContentDto> selectPopularContent(String classification, int pageNumber) throws UnsupportedEncodingException {
+        String decodeClassification = URLDecoder.decode(classification, "UTF-8");
+        List<ContentEntity> contentEntities = null;
+        List<ContentDto> contentDtos = null;
+        int pageSize = 20;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        contentEntities = contentRepository.findPopularContent(decodeClassification, pageable);
+        contentDtos = contentEntities.stream().map(o->new ContentDto(o)).collect(Collectors.toList());
         return contentDtos;
     }
     

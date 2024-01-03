@@ -148,4 +148,12 @@ public class ContentsRepositoryTest {
         assertEquals("807172", findContent.get(0).getContentId());
     }
 
+    @Test
+    void findPopularContent(){
+        int pageNumber = 0;
+        int pageSize = 20;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<ContentEntity> findContent = contentsRepository.findPopularContent("영화",pageable);
+        assertEquals("test", findContent.get(0).getContentId());
+    }
 }

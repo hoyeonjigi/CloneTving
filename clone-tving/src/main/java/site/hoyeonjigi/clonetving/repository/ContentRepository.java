@@ -13,16 +13,10 @@ import site.hoyeonjigi.clonetving.domain.ContentEntity;
 
 @Repository
 public interface ContentRepository extends JpaRepository<ContentEntity, String>{
+    //최신 콘텐츠 20개 검색
     List<ContentEntity> findFirst20ByContentClassificationOrderByContentReleaseDateDesc(String classification);
 
-
-
-    // @Query(value="select c from ContentEntity c " +
-    //             "where c.contentId IN " +
-    //             "(select distinct cg.content.contentId from ContentGenreEntity cg "+
-    //             "where cg.genre.genreId IN "+
-    //             "(select g.genreId from GenreEntity g where g.genreName = :genreName))")
-
+    //장르별 콘텐츠 
     @Query(value="select c " +
                 "from ContentEntity c " +
                 "where c.contentClassification = :ContentClassification AND c.contentId IN "+
@@ -31,4 +25,15 @@ public interface ContentRepository extends JpaRepository<ContentEntity, String>{
                     "where cg.genre.genreName = :genreName)")
     List<ContentEntity> findContentByGenre(@Param("ContentClassification")String classification,
                 @Param("genreName")String genreName,Pageable pageable);
+    
+    //인기있는 콘텐츠
+    @Query(value="select c "+
+                "from ContentEntity c " +
+                "join c.evaluations e " +
+                "where c.contentClassification = :ContentClassification AND c.contentView > 1000 " +
+                "group by c.contentId " +
+                "having count(e) > 0 " +
+                "order by avg(e.starRating) desc")
+    List<ContentEntity> findPopularContent(@Param("ContentClassification")String classification,Pageable pageable);
+
 }
