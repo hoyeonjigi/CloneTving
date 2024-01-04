@@ -1,14 +1,14 @@
 package site.hoyeonjigi.clonetving.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,7 +36,6 @@ public class ContentsRepositoryTest {
 
     //콘텐츠 데이터 삽입 메소드
     @Test
-    @Rollback(false)
     void save(String contentconf, String id, String title, String date , int view, String overview, String img, Boolean rating , String[] genreId){
         //given
         Date insertdate = Date.valueOf(date);
@@ -67,7 +66,6 @@ public class ContentsRepositoryTest {
 
     //TMDB의 영화 데이터 파싱후 저장
     @Test
-    @Rollback(false)
     void contentMoviesave() throws IOException, InterruptedException{
         for(int j=2;j<16; j++){
             HttpRequest request = HttpRequest.newBuilder()
@@ -99,7 +97,6 @@ public class ContentsRepositoryTest {
 
     //TMDB의 TV콘텐츠 파싱후 저장
     @Test
-    @Rollback(false)
     public void contentTvSave() throws IOException, InterruptedException {
         for(int j=11; j<12; j++){
             HttpRequest request = HttpRequest.newBuilder()
@@ -139,5 +136,24 @@ public class ContentsRepositoryTest {
             }
         }
         return stringArray;
+    }
+
+    @Test
+    void findContentByGenre(){
+        int pageNumber = 1; // 페이지 번호 (0부터 시작)
+        int pageSize = 20; // 페이지 크기 (결과 수)
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        List<ContentEntity> findContent = contentsRepository.findContentByGenre("영화","공포",pageable);
+        assertEquals("807172", findContent.get(0).getContentId());
+    }
+
+    @Test
+    void findPopularContent(){
+        int pageNumber = 0;
+        int pageSize = 20;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<ContentEntity> findContent = contentsRepository.findPopularContent("영화",pageable);
+        assertEquals("test", findContent.get(0).getContentId());
     }
 }
