@@ -35,8 +35,9 @@ public class ProfileEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @Column(nullable=false)
-    private byte[] profileImage;
+    @ManyToOne
+    @JoinColumn(name="image_id")
+    private ProfileImageEntity profileImage;
 
     @Column(nullable=false)
     private boolean child;
