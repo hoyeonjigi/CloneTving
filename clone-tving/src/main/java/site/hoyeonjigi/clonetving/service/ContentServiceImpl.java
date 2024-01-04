@@ -27,13 +27,9 @@ public class ContentServiceImpl implements ContentService{
     public List<ContentDto> selectReleasedContent(String classification) throws Exception {
         List<ContentEntity> contentEntities = null; 
         List<ContentDto> contentDtos = null; 
-        if(classification.equals("movie")){
-            contentEntities = contentRepository.findFirst20ByContentClassificationOrderByContentReleaseDateDesc("영화");
-            contentDtos = contentEntities.stream().map(o -> new ContentDto(o)).collect(Collectors.toList());
-        } else if(classification.equals("drama")) {
-            contentEntities = contentRepository.findFirst20ByContentClassificationOrderByContentReleaseDateDesc("드라마");
-            contentDtos = contentEntities.stream().map(o -> new ContentDto(o)).collect(Collectors.toList());
-        }
+        String decodeClassification = URLDecoder.decode(classification, "UTF-8");
+        contentEntities = contentRepository.findFirst20ByContentClassificationOrderByContentReleaseDateDesc(decodeClassification);
+        contentDtos = contentEntities.stream().map(o -> new ContentDto(o)).collect(Collectors.toList());
         
         return contentDtos;
     }

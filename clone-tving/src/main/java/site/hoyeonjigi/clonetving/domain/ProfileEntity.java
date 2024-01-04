@@ -43,5 +43,4 @@ public class ProfileEntity {
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private ArrayList<RecentViewEntity> recentviews = new ArrayList<>();
-
 }
