@@ -18,7 +18,7 @@ public class ContentController {
 	@Autowired
     private ContentService contentService;
 
-    @RequestMapping(value="/api/classification={classification}/release-date", method=RequestMethod.GET)
+    @RequestMapping(value="/api/release-date/classification={classification}", method=RequestMethod.GET)
 	public List<ContentDto> openReleasedContentList(@PathVariable("classification") String classification) throws Exception{
 		return contentService.selectReleasedContent(classification);
 	}
