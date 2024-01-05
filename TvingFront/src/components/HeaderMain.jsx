@@ -5,11 +5,20 @@ import { useState } from "react";
 
 import search from "@/assets/search/icon_search.svg";
 import searchHover from "@/assets/search/icon_search_white.svg";
+
 import close from "@/assets/search/x.svg";
+import closeHover from "@/assets/search/x_white.svg";
 import myProfile from "@/assets/profiles/profile_s1.webp";
+import SearchModal from "./SearchModal";
 
 function HeaderMain() {
   const [isHovered, setIsHovered] = useState(false);
+  const [isSearchClicked, setIsSearchClicked] = useState(false); // 추가된 코드
+
+  const handleSearchClick = () => {
+    // 추가된 코드
+    setIsSearchClicked((prev) => !prev);
+  };
 
   return (
     <>
@@ -41,21 +50,24 @@ function HeaderMain() {
         </div>
         <div className="flex flex-row">
           <button
-            className="mr-9"
+            className="mr-9 w-8"
             onMouseOver={() => setIsHovered(true)}
             onMouseOut={() => setIsHovered(false)}
+            onClick={handleSearchClick}
           >
-            <img
-              src={isHovered ? searchHover : search}
-              alt=""
-              className="w-8"
-            />
+            {isSearchClicked ? (
+              <img src={isHovered ? closeHover : close} alt="닫기 버튼" />
+            ) : (
+              <img src={isHovered ? searchHover : search} alt="검색 버튼" />
+            )}
           </button>
           <button>
             <img src={myProfile} alt="" className="w-8" />
           </button>
         </div>
+        
       </div>
+      <SearchModal visible={isSearchClicked} onClose={handleSearchClick}/>
     </>
   );
 }

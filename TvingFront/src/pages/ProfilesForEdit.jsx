@@ -5,6 +5,7 @@ import profile2 from "@/assets/profiles/profile2.png";
 import profilePlus from "@/assets/profiles/icon-plus.png";
 import profileEdit from "@/assets/profiles/icon-edit.svg";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function ProfilesForEdit() {
   return (
@@ -22,7 +23,11 @@ function ProfilesForEdit() {
         <div className="mt-12 flex items-center justify-center">
           <ul className="flex flex-row justify-center items-center gap-10 w-[70%]">
             <li className="flex flex-col text-center gap-6 flex-grow relative">
-              <button className="w-full overflow-hidden relative">
+              <motion.button
+                className="w-full overflow-hidden relative"
+                whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
+                transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
+              >
                 <img
                   src={profile1}
                   alt="첫번째 프로필"
@@ -34,11 +39,15 @@ function ProfilesForEdit() {
                   alt="프로필 편집 아이콘"
                   className="absolute w-[25%] h-auto top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 />
-              </button>
+              </motion.button>
               <p className="text-[#888888] text-xl font-medium">이재호</p>
             </li>
             <li className="flex flex-col text-center gap-6 flex-grow relative">
-              <button className="w-full overflow-hidden relative">
+              <motion.button
+                className="w-full overflow-hidden relative"
+                whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
+                transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
+              >
                 <img
                   src={profile2}
                   alt="두번째 프로필"
@@ -50,11 +59,11 @@ function ProfilesForEdit() {
                   alt="프로필 편집 아이콘"
                   className="absolute w-[25%] h-auto top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 />
-              </button>
+              </motion.button>
               <p className="text-[#888888] text-xl font-medium">박세웅</p>
             </li>
 
-            <li className="flex flex-col text-center gap-6 flex-grow relative">
+            {/* <li className="flex flex-col text-center gap-6 flex-grow relative">
               <button className="bg-[#4e4e4e] w-full h-full p-[6.6rem]">
                 <img
                   src={profilePlus}
@@ -63,11 +72,25 @@ function ProfilesForEdit() {
                 />
               </button>
               <p className="text-[#888888] text-xl font-medium">프로필 추가</p>
+            </li> */}
+            <li className="flex flex-col text-center gap-6 flex-grow relative">
+              <motion.button
+                className="bg-[#4e4e4e] w-full h-full p-[6.6rem] relative" // 버튼에 relative를 추가
+                whileHover={{ y: -15 }}
+                transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
+              >
+                <img
+                  src={profilePlus}
+                  alt="프로필 추가 아이콘"
+                  className="absolute w-[35%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" // 이미지의 위치를 버튼 중앙으로 설정
+                />
+              </motion.button>
+              <p className="text-[#888888] text-xl font-medium">프로필 추가</p>
             </li>
           </ul>
         </div>
         <div className="mt-16 mb-24">
-          <Link to="/profiles">
+          <Link to="/user/profiles">
             <button
               type="button"
               className="px-[6.2rem] py-6 font-bold text-1.5xl bg-[#dedede] text-black  rounded hover:bg-white"

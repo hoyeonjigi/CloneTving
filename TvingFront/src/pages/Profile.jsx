@@ -4,6 +4,7 @@ import profile1 from "@/assets/profiles/profile1.png";
 import profile2 from "@/assets/profiles/profile2.png";
 import profilePlus from "@/assets/profiles/icon-plus.png";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function Profile() {
   return (
@@ -21,34 +22,62 @@ function Profile() {
         <div className="mt-12 flex items-center justify-center">
           <ul className="flex flex-row justify-center items-center gap-10 w-[70%]">
             <li className="flex flex-col text-center gap-6 flex-grow">
-              <button className="w-full">
+              <motion.button
+                className="w-full"
+                whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
+                transition={{ type: "tween", stiffness: 300, duration: 0.2 }} // transition 설정
+              >
                 <img
                   src={profile1}
                   alt="첫번째 프로필"
                   className="w-full h-auto"
                 />
-              </button>
+              </motion.button>
               <p className="text-[#888888] text-xl font-medium">이재호</p>
             </li>
             <li className="flex flex-col text-center gap-6 flex-grow">
-              <button className="w-full">
+              <motion.button
+                className="w-full"
+                whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
+                transition={{ type: "tween", stiffness: 300, duration: 0.2 }} // transition 설정
+              >
                 <img
                   src={profile2}
                   alt="두번째 프로필"
                   className="w-full h-auto"
                 />
-              </button>
+              </motion.button>
+
               <p className="text-[#888888] text-xl font-medium">박세웅</p>
             </li>
 
-            <li className="flex flex-col text-center gap-6 flex-grow relative">
-              <button className="bg-[#4e4e4e] w-full h-full p-[6.6rem]">
+            {/* <li className="flex flex-col text-center gap-6 flex-grow relative">
+              <motion.button
+                className="bg-[#4e4e4e] w-full h-full p-[6.6rem]"
+                whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
+                transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
+              >
                 <img
                   src={profilePlus}
                   alt="프로필 추가 아이콘"
-                  className="absolute w-[35%] h-auto top-[40%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  className="absolute w-[35%] top-[40%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 />
-              </button>
+              </motion.button>
+
+              <p className="text-[#888888] text-xl font-medium">프로필 추가</p>
+            </li> */}
+            <li className="flex flex-col text-center gap-6 flex-grow relative">
+              <motion.button
+                className="bg-[#4e4e4e] w-full h-full p-[6.6rem] relative" // 버튼에 relative를 추가
+                whileHover={{ y: -15 }}
+                transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
+              >
+                <img
+                  src={profilePlus}
+                  alt="프로필 추가 아이콘"
+                  className="absolute w-[35%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" // 이미지의 위치를 버튼 중앙으로 설정
+                />
+              </motion.button>
               <p className="text-[#888888] text-xl font-medium">프로필 추가</p>
             </li>
           </ul>

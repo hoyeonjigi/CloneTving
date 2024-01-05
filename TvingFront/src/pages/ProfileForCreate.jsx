@@ -15,6 +15,8 @@ import profile9 from "@/assets/profiles/profile9.png";
 import profile10 from "@/assets/profiles/profile10.png";
 import profileEdit from "@/assets/profiles/icon-edit.svg";
 
+import { motion } from "framer-motion";
+
 function ProfileForCreate() {
   const profiles = [
     { src: profile1, alt: "기본 프로필 1" },
@@ -57,10 +59,16 @@ function ProfileForCreate() {
       <Header />
 
       <div className="flex flex-col items-center justify-center">
-        <h3 className="text-white text-4xl font-bold mt-24 mb-12">프로필 만들기</h3>
+        <h3 className="text-white text-4xl font-bold mt-24 mb-12">
+          프로필 만들기
+        </h3>
 
         <form className="flex flex-col items-center">
-          <button className="w-[40%] overflow-hidden relative flex items-center justify-center">
+          <motion.button
+            className="w-[40%] overflow-hidden relative flex items-center justify-center"
+            whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
+            transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
+          >
             <img
               src={currentProfile.src}
               alt={currentProfile.alt}
@@ -72,7 +80,7 @@ function ProfileForCreate() {
               alt="프로필 편집 아이콘"
               className="absolute w-[25%] h-auto top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             />
-          </button>
+          </motion.button>
 
           <div className="w-full mt-12">
             <label htmlFor="name" className="sr-only">
