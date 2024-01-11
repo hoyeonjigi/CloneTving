@@ -19,7 +19,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import site.hoyeonjigi.clonetving.domain.ContentEntity;
 import site.hoyeonjigi.clonetving.domain.ContentGenreEntity;
 import site.hoyeonjigi.clonetving.domain.GenreEntity;

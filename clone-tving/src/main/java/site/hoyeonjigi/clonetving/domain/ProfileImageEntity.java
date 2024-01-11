@@ -31,7 +31,7 @@ public class ProfileImageEntity {
     private String imageName;
 
     @Column(nullable=false)
-    private byte[] imageBlob;
+    private String imageUrl;
 
     @OneToMany(mappedBy = "profileImage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProfileEntity> profiles = new ArrayList<>();

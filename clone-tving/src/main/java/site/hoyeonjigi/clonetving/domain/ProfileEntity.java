@@ -1,6 +1,7 @@
 package site.hoyeonjigi.clonetving.domain;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -43,5 +44,5 @@ public class ProfileEntity {
     private boolean child;
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private ArrayList<RecentViewEntity> recentviews = new ArrayList<>();
+    private List<RecentViewEntity> recentviews = new ArrayList<>();
 }

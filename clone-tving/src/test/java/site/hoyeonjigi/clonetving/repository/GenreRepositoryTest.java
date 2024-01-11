@@ -28,6 +28,10 @@ public class GenreRepositoryTest {
                                     .genreName(genreName).build();
         GenreEntity saveGenreEntity = genreRepository.save(genreEntity);
         assertEquals(genreEntity, saveGenreEntity);
+
+
+
+        
     }
 
     // @Test
