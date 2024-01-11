@@ -15,7 +15,7 @@ public class ProfileDto {
 
     private String profileName;
     private UserDto user;
-    private byte[] profileImage;
+    private String profileImage;
     private boolean child;
     private ArrayList<RecentViewDto> recentviews = new ArrayList<>();
 }
