@@ -1,11 +1,10 @@
 package site.hoyeonjigi.clonetving.dto;
 
-import java.util.ArrayList;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.hoyeonjigi.clonetving.domain.ProfileEntity;
 
 @Getter
 @NoArgsConstructor
@@ -14,8 +13,14 @@ import lombok.NoArgsConstructor;
 public class ProfileDto {
 
     private String profileName;
-    private UserDto user;
-    private String profileImage;
+    private String userId;
+    private String profileImageUrl;
     private boolean child;
-    private ArrayList<RecentViewDto> recentviews = new ArrayList<>();
+
+    public ProfileDto(ProfileEntity profileEntity){
+        this.profileName = profileEntity.getProfileName();
+        this.userId = profileEntity.getUser().getUserId();
+        this.profileImageUrl = profileEntity.getProfileImage().getImageUrl();
+        this.child = profileEntity.isChild();
+    }
 }

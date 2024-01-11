@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ProfileService {
     String registProfile(RegistProfileDto profile);
+    List<ProfileDto> selectProfileByUserId(String userId);
 }
