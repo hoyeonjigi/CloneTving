@@ -11,15 +11,15 @@ import searchHover from "@/assets/search/icon_search_white.svg";
 import close from "@/assets/search/x.svg";
 import closeHover from "@/assets/search/x_white.svg";
 import myProfile from "@/assets/profiles/profile_s1.webp";
-import SearchModal from "./SearchModal";
-import ProfileModal from "./ProfileModal";
+import SearchModal from "./modal/SearchModal";
+import MainProfileModal from "./modal/MainProfileModal";
 
 function HeaderMain() {
   const [isHovered, setIsHovered] = useState(false);
   const [isSearchClicked, setIsSearchClicked] = useState(false); // 추가된 코드
 
   // 프로필 이미지
-  const [isProfileHovered, setIsProfileHovered] = useState(false);
+
   const [isVisible, setIsVisible] = useState(false);
 
   const handleSearchClick = () => {
@@ -88,17 +88,13 @@ function HeaderMain() {
               <img src={myProfile} alt="" className="w-8" />
             </button>
             {isVisible && (
-              // <div className="absolute top-10 right-0 w-48 h-24 bg-white border border-gray-200 rounded-md p-4 shadow-lg">
-              //   <p className="text-lg font-bold">프로필 정보</p>
-              //   {/* 여기에 필요한 정보를 추가하세요 */}
-              // </div>
-              <ProfileModal />
+             
+              <MainProfileModal />
             )}
           </div>
         </div>
       </div>
-      {/* {isVisible && <ProfileModal />} */}
-      {/* ProfileModal은 아래로 보여질 작은 모달창 컴포넌트입니다. */}
+      
       <SearchModal visible={isSearchClicked} onClose={handleSearchClick} />
     </>
   );

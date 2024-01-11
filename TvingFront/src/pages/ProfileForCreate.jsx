@@ -16,6 +16,7 @@ import profile10 from "@/assets/profiles/profile10.png";
 import profileEdit from "@/assets/profiles/icon-edit.svg";
 
 import { motion } from "framer-motion";
+import UserProfileModal from "@/components/modal/UserProfileModal";
 
 function ProfileForCreate() {
   const profiles = [
@@ -34,6 +35,21 @@ function ProfileForCreate() {
   const [name, setName] = useState("");
   const [currentProfile, setCurrentProfile] = useState(profiles[0]);
 
+  //프로필 모달
+  // 모달 창 상태를 관리하는 state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 모달 창을 여는 함수
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // 모달 창을 닫는 함수
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // 사용자 이름 정규식
   const handleNameChange = (e) => {
     const inputName = e.target.value;
     setName(inputName);
@@ -68,6 +84,8 @@ function ProfileForCreate() {
             className="w-[40%] overflow-hidden relative flex items-center justify-center"
             whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
             transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
+            onClick={openModal}
+            type="button"
           >
             <img
               src={currentProfile.src}
@@ -81,6 +99,10 @@ function ProfileForCreate() {
               className="absolute w-[25%] h-auto top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             />
           </motion.button>
+
+          <UserProfileModal isOpen={isModalOpen} closeModal={closeModal}>
+            
+          </UserProfileModal>
 
           <div className="w-full mt-12">
             <label htmlFor="name" className="sr-only">

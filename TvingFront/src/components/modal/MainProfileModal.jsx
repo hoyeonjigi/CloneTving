@@ -2,7 +2,7 @@ import profile from "@/assets/profiles/profile_s1.webp";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-function ProfileModal() {
+function MainProfileModal() {
   return (
     <motion.div
       className="absolute w-72 bg-[#212121] border border-[#4d4d4d] rounded-sm right-0 top-10"
@@ -54,4 +54,4 @@ function ProfileModal() {
   );
 }
 
-export default ProfileModal;
+export default MainProfileModal;
