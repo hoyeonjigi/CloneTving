@@ -14,12 +14,24 @@ export default {
       },
 
       brightness: ["hover", "focus"],
-      
+
       colors: {
         brand: "#FF153C",
         onboard: "#DEDEDE",
+        btnText: "#A3A3A3",
+        btnBorder: "#4e4e4e",
+
+        gray_01: "#191919",
+        gray_02: "#212121",
+        gray_03: "#2e2e2e",
+        gray_04: "#4e4e4e",
+        gray_05: "#6e6e6e",
+        gray_06: "#888888",
+        gray_07: "#a3a3a3",
+        gray_08: "#dedede",
       },
       fontSize: {
+        "1.5xl": ["1.3rem", "1.75rem"],
         "2.5xl": ["1.75rem", "2.25rem"], // 원하는 크기로 조정 가능
         "4.5xl": ["2.85rem", "3rem"],
       },

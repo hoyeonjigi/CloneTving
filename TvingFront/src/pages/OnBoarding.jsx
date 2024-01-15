@@ -4,7 +4,9 @@ import { Helmet } from "react-helmet-async";
 import logo_white from "@/assets/logo-white.svg";
 import onboard from "@/assets/onBoarding/onboard.webp";
 import LoginButtonRed from "@/components/LoginButtonRed";
-import SlideTop from "@/components/SlideTop";
+import SlideTop from "@/components/onboarding/SlideTop";
+import SlideBottom from "@/components/onboarding/SlideBottom";
+import TvingOriginal from "@/components/onboarding/TvingOriginal";
 
 function OnBoading() {
   return (
@@ -16,7 +18,6 @@ function OnBoading() {
         <Header />
 
         <div>
-          
           <section className="mb-80 relative" style={{ height: "80vh" }}>
             <div
               className="absolute inset-0"
@@ -37,7 +38,7 @@ function OnBoading() {
           </section>
 
           <section>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center mb-12">
               <p className="text-white text-5xl font-bold mb-6">
                 티빙 오리지널 시리즈
               </p>
@@ -48,10 +49,11 @@ function OnBoading() {
                 오리지널 콘텐츠를 감상해 보세요.
               </p>
             </div>
+            <TvingOriginal/>
           </section>
 
-          <section>
-            <div className="flex flex-col items-center text-center">
+          <section className="mb-40">
+            <div className="flex flex-col items-center text-center mb-12">
               <p className="text-white text-5xl font-bold mb-6">
                 요즘 뜨는 모든 콘텐츠
               </p>
@@ -62,8 +64,8 @@ function OnBoading() {
                 파라마운트+ 오리지널 및 독점 시리즈
               </p>
             </div>
-            {/* <SlideTop/> */}
-            <div></div>
+            <SlideTop />
+            <SlideBottom />
           </section>
           <section
             id="scroll-section-1"
