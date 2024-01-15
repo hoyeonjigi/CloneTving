@@ -5,6 +5,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import HeaderMain from "@/components/HeaderMain";
 
 function Main() {
 	return (
@@ -13,6 +14,7 @@ function Main() {
 				<title>TvingFront - Main</title>
 			</Helmet>
 			<div className="bg-black font-noto">
+				<HeaderMain />
 				<section>
 					<div>
 						<Swiper

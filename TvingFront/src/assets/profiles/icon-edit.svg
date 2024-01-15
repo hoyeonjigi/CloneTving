@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+    <path fill="rgba(255,255,255,0)" d="M0 0H50V50H0z"/>
+    <path fill="#fff" d="M3.863 31.1L3 38.709h7.585l22.37-22.37-7.585-7.585zm32.591-18.261a5.362 5.362 0 0 0 0-7.585 5.362 5.362 0 0 0-7.585 0l-1.335 1.335 7.585 7.585z" transform="translate(4.695 3.805)"/>
+</svg>

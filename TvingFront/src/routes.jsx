@@ -5,7 +5,11 @@ import SignUp from "./pages/SignUp.jsx";
 import Main from "./pages/Main.jsx";
 import FindID from "./pages/FindID.jsx";
 import OnBoarding from "./pages/OnBoarding.jsx";
-import FindPassword from "./pages/FindPassword.jsx";
+import Profile from "./pages/Profile.jsx";
+import ProfilesForEdit from "./pages/ProfilesForEdit.jsx";
+import UserTving from "./pages/UserTving.jsx";
+import ProfileForCreate from "./pages/profileForCreate.jsx";
+import ProfileForEditDetail from "./pages/ProfileForEditDetail.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -29,12 +33,24 @@ const router = createBrowserRouter([
 				element: <Main />,
 			},
 			{
-				path: "/findid",
-				element: <FindID />,
+				path: "/user/profiles",
+				element: <Profile />,
 			},
 			{
-				path: "/findpassword",
-				element: <FindPassword />,
+				path: "/profilesForEdit",
+				element: <ProfilesForEdit />,
+			},
+			{
+				path: "/userTving",
+				element: <UserTving />,
+			},
+			{
+				path: "/user/profile",
+				element: <ProfileForCreate />,
+			},
+			{
+				path: "/user/profileForEdit",
+				element: <ProfileForEditDetail />,
 			},
 		],
 	},
