@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import site.hoyeonjigi.clonetving.domain.ContentEntity;
 import site.hoyeonjigi.clonetving.domain.ContentGenreEntity;
 import site.hoyeonjigi.clonetving.domain.ContentGenreEntityPK;
 
