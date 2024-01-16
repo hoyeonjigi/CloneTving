@@ -51,8 +51,8 @@ public class ProfileServiceImpl implements ProfileService{
     }
     
     boolean isDuplicateProfileName(String userId, String profileName){
-        UserEntity userEntity = userRepository.findByUserId(userId);
-        Optional<ProfileEntity> profileEntity = profileRepository.findByUserAndProfileName(userEntity, profileName);
+        Optional<UserEntity> user = userRepository.findByUserId(userId);
+        Optional<ProfileEntity> profileEntity = profileRepository.findByUserAndProfileName(user.get(), profileName);
         if(profileEntity.isPresent()){
             return true;
         }

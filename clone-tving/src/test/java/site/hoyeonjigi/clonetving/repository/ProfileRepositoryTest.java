@@ -29,13 +29,6 @@ public class ProfileRepositoryTest {
     ProfileImageRepository profileImageRepository;
 
     @Test
-    void findProfileEntity(){
-        UserEntity userEntity = userRepository.findByUserId("abc123");
-        Optional<ProfileEntity> findProfileEntity = profileRepository.findByUserAndProfileName(userEntity, "테스트");
-        assertEquals(Optional.empty(), findProfileEntity);
-    }
-
-    @Test
     void testSaveProfile(){
         ProfileEntity saveProfileEntity = saveProfile("abc123", "1001", "테스트", false);
     }

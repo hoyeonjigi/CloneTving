@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.hoyeonjigi.clonetving.domain.ContentGenreEntity;
 import site.hoyeonjigi.clonetving.domain.EvaluationEntity;
 
 @Getter
