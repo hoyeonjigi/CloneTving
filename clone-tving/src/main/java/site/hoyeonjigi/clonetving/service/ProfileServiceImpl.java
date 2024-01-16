@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.json.JSONObject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import site.hoyeonjigi.clonetving.domain.RecentViewEntity;
 import site.hoyeonjigi.clonetving.domain.UserEntity;
 import site.hoyeonjigi.clonetving.dto.ProfileDto;
 import site.hoyeonjigi.clonetving.dto.RegistProfileDto;
+import site.hoyeonjigi.clonetving.dto.UpdateProfileDto;
 import site.hoyeonjigi.clonetving.repository.ProfileImageRepository;
 import site.hoyeonjigi.clonetving.repository.ProfileRepository;
 import site.hoyeonjigi.clonetving.repository.UserRepository;
@@ -103,10 +105,75 @@ public class ProfileServiceImpl implements ProfileService{
         List<ProfileEntity> profileEntities = null;
         List<ProfileDto> profileDtos = null;
         if(userEntity == null){
-            return profileDtos;
+            return null;
         }
         profileEntities = profileRepository.findByUser(userEntity);
         profileDtos = profileEntities.stream().map(o->new ProfileDto(o)).collect(Collectors.toList());
         return profileDtos;
     }
+
+    @Override
+    @Transactional
+    public String updateProfile(UpdateProfileDto profile) {
+
+        UserEntity userEntity = userRepository.findById(profile.getUserId()).orElse(null);
+        //유저를 찾을 수 없을때
+        if(userEntity == null){
+            return createErrorMessage("not found user");
+        }
+        Optional<ProfileEntity> profileEntity = profileRepository.findByUserAndProfileName(userEntity, profile.getProfileName());
+        ProfileEntity updateProfileEntity = profileEntity.orElse(null);
+        
+        //프로필을 찾을 수 없을때
+        if(updateProfileEntity == null){
+            return createErrorMessage("not found profile");
+        }
+
+        //프로필 이름을 변경할때 
+        if(profile.getUpdateProfileName() != null){
+            if(isDuplicateProfileName(profile.getUserId(), profile.getUpdateProfileName())){
+                return createErrorMessage("duplicate profile");
+            }
+            else{
+                updateProfileEntity.setProfileName(profile.getUpdateProfileName());
+                if(profile.getChild()!=null){
+                    updateProfileEntity.setChild(profile.getChild());
+                }
+                if(profile.getImageName()!=null){
+                    ProfileImageEntity profileImageEntity = profileImageRepository.findByImageName(profile.getImageName());
+                    updateProfileEntity.setProfileImage(profileImageEntity);
+                }
+            }
+        }
+        else{
+            if(profile.getChild() != null){
+                updateProfileEntity.setChild(profile.getChild());
+            }
+            if(profile.getImageName() != null){
+                ProfileImageEntity profileImageEntity = profileImageRepository.findByImageName(profile.getImageName());
+                updateProfileEntity.setProfileImage(profileImageEntity);
+            }
+        }
+        profileRepository.save(updateProfileEntity);
+        return createSuccessMessage(updateProfileEntity.getUser().getUserId(), updateProfileEntity.getProfileName(),
+            updateProfileEntity.getProfileImage().getImageName(), updateProfileEntity.isChild(), "success");
+    }
+
+    @Override
+    @Transactional
+    public String deleteProfile(String userId, String profileName) {
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
+        Optional<ProfileEntity> profile = profileRepository.findByUserAndProfileName(userEntity, profileName);
+        if(userEntity == null){
+            return createErrorMessage("not found user");
+        }
+        if(profile.isEmpty()){
+            return createErrorMessage("not found profile");
+        }
+        ProfileEntity profileEntity = profile.orElse(null);
+        profileRepository.deleteByUserAndProfileName(userEntity, profileName);
+        return createSuccessMessage(profileEntity.getUser().getUserId(), profileEntity.getProfileName(),
+            profileEntity.getProfileImage().getImageName(), profileEntity.isChild(), "delete success");
+    }
+
 }

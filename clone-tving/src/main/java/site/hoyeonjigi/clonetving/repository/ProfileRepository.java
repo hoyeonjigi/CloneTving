@@ -12,4 +12,7 @@ import site.hoyeonjigi.clonetving.domain.UserEntity;
 public interface ProfileRepository extends JpaRepository<ProfileEntity, ProfileEntityPK>{
     Optional<ProfileEntity> findByUserAndProfileName(UserEntity user, String ProfileName);
     List<ProfileEntity> findByUser(UserEntity user);
+    void deleteByUserAndProfileName(UserEntity user , String profileName);
+    void delete(ProfileEntity profileEntity);
+    void deleteById(ProfileEntityPK prifilEntityPK);
 }
