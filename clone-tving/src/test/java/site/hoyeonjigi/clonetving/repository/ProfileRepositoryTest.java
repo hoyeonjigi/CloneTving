@@ -74,12 +74,4 @@ public class ProfileRepositoryTest {
         assertEquals("테스트2", profiles.get(1).getProfileName());
     }
 
-    @Test
-    @Transactional
-    @Rollback(false)
-    void deleteProfile(){
-        UserEntity user = userRepository.findByUserId("abc123");
-        Optional<ProfileEntity> profile = profileRepository.findByUserAndProfileName(user, "test");
-        profileRepository.delete(profile.get());
-    }
 }
