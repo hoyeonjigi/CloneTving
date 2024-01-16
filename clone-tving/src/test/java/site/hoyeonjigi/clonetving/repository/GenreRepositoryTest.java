@@ -28,29 +28,33 @@ public class GenreRepositoryTest {
                                     .genreName(genreName).build();
         GenreEntity saveGenreEntity = genreRepository.save(genreEntity);
         assertEquals(genreEntity, saveGenreEntity);
+
+
+
+        
     }
 
-    @Test
-    void insertJenre() throws IOException, InterruptedException{
-    HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create("https://api.themoviedb.org/3/genre/tv/list?language=ko"))
-        .header("accept", "application/json")
-        .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNWQxMDM3Y2MwYzZiZTk4ODVhZTRiMTQxMTVjN2U0MCIsInN1YiI6IjY1NWIxOTdhZjY3ODdhMDEwMDhiZGMxNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.dmjFpapNQf7gjcTImbzG1GwaF3lvgJtKENrzuddC1as")
-        .method("GET", HttpRequest.BodyPublishers.noBody())
-        .build();
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        String jsonString = response.body();
-        JSONObject jsonObject = new JSONObject(jsonString);
-        JSONArray genreArray = jsonObject.getJSONArray("genres");
-        for(int i=0; i<genreArray.length(); i++){
-            JSONObject job = genreArray.getJSONObject(i);
-            String genreName = job.getString("name");
-            String genreId = Integer.toString(job.getInt("id"));
-            System.out.println("name = " + genreName);
-            System.out.println("id = "+ genreId);
-            save(genreId, genreName);
-        }   
-    }
+    // @Test
+    // void insertJenre() throws IOException, InterruptedException{
+    // HttpRequest request = HttpRequest.newBuilder()
+    //     .uri(URI.create("https://api.themoviedb.org/3/genre/tv/list?language=ko"))
+    //     .header("accept", "application/json")
+    //     .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNWQxMDM3Y2MwYzZiZTk4ODVhZTRiMTQxMTVjN2U0MCIsInN1YiI6IjY1NWIxOTdhZjY3ODdhMDEwMDhiZGMxNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.dmjFpapNQf7gjcTImbzG1GwaF3lvgJtKENrzuddC1as")
+    //     .method("GET", HttpRequest.BodyPublishers.noBody())
+    //     .build();
+    //     HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+    //     String jsonString = response.body();
+    //     JSONObject jsonObject = new JSONObject(jsonString);
+    //     JSONArray genreArray = jsonObject.getJSONArray("genres");
+    //     for(int i=0; i<genreArray.length(); i++){
+    //         JSONObject job = genreArray.getJSONObject(i);
+    //         String genreName = job.getString("name");
+    //         String genreId = Integer.toString(job.getInt("id"));
+    //         System.out.println("name = " + genreName);
+    //         System.out.println("id = "+ genreId);
+    //         save(genreId, genreName);
+    //     }   
+    // }
 
 
     @Test
