@@ -15,7 +15,7 @@ function Main() {
 			</Helmet>
 			<div className="bg-black font-noto">
 				<HeaderMain />
-				<section>
+				{/* <section>
 					<div>
 						<Swiper
 							modules={[Navigation, Pagination, Autoplay]}
@@ -322,7 +322,7 @@ function Main() {
 							</div>
 						</SwiperSlide>
 					</Swiper>
-				</section>
+				</section> */}
 			</div>
 		</>
 	);

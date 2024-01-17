@@ -9,7 +9,6 @@ import "swiper/css/navigation";
 // import required modules
 import { Navigation } from "swiper/modules";
 
-
 import profile1 from "@/assets/profiles/profile1.png";
 import profile2 from "@/assets/profiles/profile2.png";
 import profile3 from "@/assets/profiles/profile3.png";
@@ -69,79 +68,50 @@ function UserProfileModal({ isOpen, closeModal }) {
           &times;
         </span>
 
-
-        <SwiperEX/>
+        {/* <SwiperEX /> */}
         <h3 className="text-white text-3xl">이미지 선택</h3>
         <div>
-          <div>
-            <h4 className="text-white">기본 이미지</h4>
-            <ul className="flex flex-row">
-              <li>
-                <img src={baseProfiles[0].src} alt={baseProfiles[0].alt} />
-              </li>
-              <li>
-                <img src={baseProfiles[1].src} alt={baseProfiles[1].alt} />
-              </li>
-              <li>
-                <img src={baseProfiles[2].src} alt={baseProfiles[2].alt} />
-              </li>
-              <li>
-                <img src={baseProfiles[3].src} alt={baseProfiles[3].alt} />
-              </li>
-              <li>
-                <img src={baseProfiles[4].src} alt={baseProfiles[4].alt} />
-              </li>
-              <li>
-                <img src={baseProfiles[5].src} alt={baseProfiles[5].alt} />
-              </li>
-              <li>
-                <img src={baseProfiles[6].src} alt={baseProfiles[6].alt} />
-              </li>
-              <li>
-                <img src={baseProfiles[7].src} alt={baseProfiles[7].alt} />
-              </li>
-              <li>
-                <img src={baseProfiles[8].src} alt={baseProfiles[8].alt} />
-              </li>
-              <li>
-                <img src={baseProfiles[9].src} alt={baseProfiles[9].alt} />
-              </li>
-            </ul>
-          </div>
-          <div>
-            <ul className="flex flex-row">
-              <li>
-                <img src={yumiProfiles[0].src} alt={yumiProfiles[0].alt} />
-              </li>
-              <li>
-                <img src={yumiProfiles[1].src} alt={yumiProfiles[1].alt} />
-              </li>
-              <li>
-                <img src={yumiProfiles[2].src} alt={yumiProfiles[2].alt} />
-              </li>
-              <li>
-                <img src={yumiProfiles[3].src} alt={yumiProfiles[3].alt} />
-              </li>
-              <li>
-                <img src={yumiProfiles[4].src} alt={yumiProfiles[4].alt} />
-              </li>
-              <li>
-                <img src={yumiProfiles[5].src} alt={yumiProfiles[5].alt} />
-              </li>
-              <li>
-                <img src={yumiProfiles[6].src} alt={yumiProfiles[6].alt} />
-              </li>
-              <li>
-                <img src={yumiProfiles[7].src} alt={yumiProfiles[7].alt} />
-              </li>
-              <li>
-                <img src={yumiProfiles[8].src} alt={yumiProfiles[8].alt} />
-              </li>
-            </ul>
+          <h4 className="text-white">기본 이미지</h4>
+          <Swiper
+            spaceBetween={10}
+            slidesPerView={5}
+            // navigation
+            navigation={{
+              nextEl: ".swiper-button-next-base",
+              prevEl: ".swiper-button-prev-base",
+            }}
+            modules={[Navigation]}
+            className="w-[800px]"
+          >
+            {baseProfiles.map((profile, index) => (
+              <SwiperSlide key={index}>
+                <img src={profile.src} alt={profile.alt} />
+              </SwiperSlide>
+            ))}
+            <div className="swiper-button-next-base"></div>
+            <div className="swiper-button-prev-base"></div>
+          </Swiper>
 
-
-            
-          </div>
+          <h4 className="text-white">유미의 세포들 이미지</h4>
+          <Swiper
+            spaceBetween={10}
+            slidesPerView={5}
+            // navigation
+            navigation={{
+              nextEl: ".swiper-button-next-yumi",
+              prevEl: ".swiper-button-prev-yumi",
+            }}
+            modules={[Navigation]}
+            className="w-[800px]"
+          >
+            {yumiProfiles.map((profile, index) => (
+              <SwiperSlide key={index}>
+                <img src={profile.src} alt={profile.alt} />
+              </SwiperSlide>
+            ))}
+            <div className="swiper-button-next-yumi"></div>
+            <div className="swiper-button-prev-yumi"></div>
+          </Swiper>
         </div>
       </div>
     </div>
