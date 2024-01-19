@@ -12,6 +12,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import site.hoyeonjigi.clonetving.domain.ProfileEntity;
+import site.hoyeonjigi.clonetving.domain.ProfileEntityPK;
 import site.hoyeonjigi.clonetving.domain.ProfileImageEntity;
 import site.hoyeonjigi.clonetving.domain.RecentViewEntity;
 import site.hoyeonjigi.clonetving.domain.UserEntity;
@@ -67,9 +68,10 @@ public class ProfileRepositoryTest {
     }
 
     @Test
-    void findUser2(){
+    void findProfileByUser(){
         UserEntity userEntity = userRepository.findById("abc123").orElse(null);
-        assertEquals("abc123", userEntity.getUserId());
+        List<ProfileEntity> profiles = profileRepository.findByUser(userEntity);
+        assertEquals("테스트2", profiles.get(1).getProfileName());
     }
 
 }
