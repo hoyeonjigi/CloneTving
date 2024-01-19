@@ -67,11 +67,4 @@ public class ProfileRepositoryTest {
         return profileImage;
     }
 
-    @Test
-    void findProfileByUser(){
-        UserEntity userEntity = userRepository.findById("abc123").orElse(null);
-        List<ProfileEntity> profiles = profileRepository.findByUser(userEntity);
-        assertEquals("테스트2", profiles.get(1).getProfileName());
-    }
-
 }

@@ -35,9 +35,13 @@ public class WebSecurityConfig{
             .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .formLogin((formLogin) -> formLogin.disable())
             .httpBasic((httpBasic) -> httpBasic.disable())
-            .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests.requestMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll().anyRequest().authenticated())
+            .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+                                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
+                                        .anyRequest().authenticated())
             .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);
             return http.build();    
+            
     }
 }
