@@ -35,8 +35,9 @@ public class WebSecurityConfig{
             .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .formLogin((formLogin) -> formLogin.disable())
             .httpBasic((httpBasic) -> httpBasic.disable())
-            .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+            .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests 
                                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/health-check").permitAll()
                                         .requestMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
                                         .anyRequest().authenticated())
             .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
