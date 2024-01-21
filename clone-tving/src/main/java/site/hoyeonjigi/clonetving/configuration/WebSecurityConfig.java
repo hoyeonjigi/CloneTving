@@ -36,9 +36,8 @@ public class WebSecurityConfig{
             .formLogin((formLogin) -> formLogin.disable())
             .httpBasic((httpBasic) -> httpBasic.disable())
             .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests 
-                                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/user/login", "/user/register").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/health-check").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
                                         .anyRequest().authenticated())
             .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);
