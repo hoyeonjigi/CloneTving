@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,13 +32,14 @@ public class WebSecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http.csrf(AbstractHttpConfigurer::disable)
             .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .formLogin((formLogin) -> formLogin.disable())
             .httpBasic((httpBasic) -> httpBasic.disable())
             .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests 
-                                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/user/login", "/user/register").permitAll()
+                                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/health-check").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/user/login", "/user/register").permitAll()
                                         .anyRequest().authenticated())
             .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);
