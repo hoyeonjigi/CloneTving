@@ -12,7 +12,7 @@ import site.hoyeonjigi.clonetving.dto.JsonWebTokenDto;
 import site.hoyeonjigi.clonetving.dto.UserLoginRequsetDto;
 import site.hoyeonjigi.clonetving.dto.UserRegisterRequestDto;
 import site.hoyeonjigi.clonetving.service.UserService;
-
+ 
 @RestController
 @RequestMapping(value="/user")
 public class UserController {

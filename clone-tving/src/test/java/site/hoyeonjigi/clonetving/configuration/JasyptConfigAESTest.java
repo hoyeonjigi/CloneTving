@@ -13,12 +13,15 @@ public class JasyptConfigAESTest {
 		String username = "";
         //db_password
 		String password = "";
+		//token secret key
+		String token_key = "VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa";
 
-        String key = "";
+        String key = "encryptKey_hoyeonjigi";
 
-		System.out.println(jasyptEncoding(url, key));
-		System.out.println(jasyptEncoding(username, key));
-		System.out.println(jasyptEncoding(password, key));
+		// System.out.println(jasyptEncoding(url, key));
+		// System.out.println(jasyptEncoding(username, key));
+		// System.out.println(jasyptEncoding(password, key));
+		System.out.println(jasyptEncoding(token_key, key));
 	}
 
 	public String jasyptEncoding(String value, String key) {

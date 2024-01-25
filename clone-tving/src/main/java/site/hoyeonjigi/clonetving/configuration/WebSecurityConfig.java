@@ -10,6 +10,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import site.hoyeonjigi.clonetving.common.ExceptionHandlerFilter;
 import site.hoyeonjigi.clonetving.common.JwtAuthenticationFilter;
@@ -17,7 +19,7 @@ import site.hoyeonjigi.clonetving.common.JwtProvider;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig{
+public class WebSecurityConfig implements WebMvcConfigurer{
 
     private final JwtProvider jwtProvider;
 
@@ -46,4 +48,17 @@ public class WebSecurityConfig{
             return http.build();    
             
     }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("*")                
+                .allowedHeaders("*")
+                .maxAge(3600);
+        
+    }
+
+    
+    
 }
