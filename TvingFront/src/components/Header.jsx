@@ -10,7 +10,7 @@ function Header() {
       </Helmet>
 
       {/* onboarding과 main의 header를 구별해줘야함 */}
-      <div className="py-6 px-16">
+      <div className="py-6 px-16 bg-black">
         <Link to="/" className="inline-block w-[120px]">
           <h1 className="sr-only">티빙</h1>
           <img src={Logo} alt="tving 메인으로 바로가기"  className="top-1"/>
