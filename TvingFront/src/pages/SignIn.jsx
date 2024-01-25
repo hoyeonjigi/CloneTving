@@ -7,12 +7,39 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+import { postData } from "@/utils/crud";
+
 function SignIn() {
   const [isChecked, setIsChecked] = useState(false);
+
+  const [userId, setUserId] = useState(""); // username 상태 변수 추가
+  const [userPassword, setuserPassword] = useState(""); // password 상태 변수 추가
 
   // 체크박스 클릭 이벤트 핸들러
   const handleCheckboxClick = () => {
     setIsChecked(!isChecked);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // 폼 제출 시 페이지 리로딩 방지
+
+    const url = "https://hoyeonjigi.site/user/login"; // 변경해야 함
+    const data = { userId, userPassword };
+    const headers = {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      // 필요한 경우 다른 헤더를 추가
+    };
+
+    console.log(data);
+
+    try {
+      const response = await postData(url, data, headers);
+      console.log(response);
+      // 여기서 응답 데이터를 처리
+    } catch (error) {
+      console.error(`Error in sending POST request: ${error}`);
+    }
   };
 
   return (
@@ -27,7 +54,7 @@ function SignIn() {
           <h3 className="text-white text-center font-extrabold text-3.5xl mb-12">
             TVING ID 로그인
           </h3>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-3 items-center">
               <label htmlFor="loginId" className="sr-only">
                 아이디
@@ -37,7 +64,9 @@ function SignIn() {
                 id="loginId"
                 placeholder="아이디"
                 required
-                className="bg-[#212121] px-5 py-5 text-2xl  rounded text-white  placeholder:text-xl placeholder:text-gray_05 w-[580px] border-none focus:ring-yellow-700"
+                className="bg-[#212121] px-5 py-5 text-2xl  rounded text-white  placeholder:text-xl placeholder:text-gray_05 w-[580px]"
+                value={userId} // 상태 변수를 value 속성에 연결
+                onChange={(e) => setUserId(e.target.value)} // 사용자 입력을 상태 변수에 저장
               />
               <label htmlFor="loginPwd" className="sr-only">
                 비밀번호
@@ -48,6 +77,8 @@ function SignIn() {
                 placeholder="비밀번호"
                 required
                 className="bg-[#212121] px-5 py-5 text-2xl  rounded text-white  placeholder:text-xl placeholder:text-gray_05 w-[580px]"
+                value={userPassword} // 상태 변수를 value 속성에 연결
+                onChange={(e) => setuserPassword(e.target.value)} // 사용자 입력을 상태 변수에 저장
               />
             </div>
             <div className="flex flex-row items-center pt-3 pb-7">
