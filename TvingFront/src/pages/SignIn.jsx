@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate} from "react-router-dom";
+
 import { Helmet } from "react-helmet-async";
 import unCheck from "@/assets/signIn/check-icon.svg";
 import check from "@/assets/signIn/check_white.svg";
@@ -10,6 +12,8 @@ import Footer from "@/components/Footer";
 import { postData } from "@/utils/crud";
 
 function SignIn() {
+
+  const navigate = useNavigate(); // useNavigate 훅 사용
   const [isChecked, setIsChecked] = useState(false);
 
   const [userId, setUserId] = useState(""); // username 상태 변수 추가
@@ -31,16 +35,64 @@ function SignIn() {
       // 필요한 경우 다른 헤더를 추가
     };
 
-    console.log(data);
+
 
     try {
       const response = await postData(url, data, headers);
       console.log(response);
+      console.log(response.grantType);
+      console.log(response.accessToken);
+      localStorage.setItem("grantType", response.grantType);
+      localStorage.setItem("accessToken", response.accessToken);
+      navigate('/user/profiles');
+
       // 여기서 응답 데이터를 처리
     } catch (error) {
       console.error(`Error in sending POST request: ${error}`);
+
+      alert(
+        `일치하는 회원정보가 없습니다.\n아이디, 비밀번호를 다시 확인해주세요`
+      );
+      setUserId(""); // 아이디 상태 초기화
+      setuserPassword(""); // 비밀번호 상태 초기화
     }
   };
+
+  useEffect(() => {
+    const url = "https://hoyeonjigi.site/user/login"; // 변경해야 함
+    const data = { userId, userPassword };
+    const headers = {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      // 필요한 경우 다른 헤더를 추가
+    };
+    // 25분마다 로그인 요청을 실행하는 함수
+    const refreshLogin = async () => {
+      // 로그인 요청 코드
+      try {
+        const response = await postData(url, data, headers);
+        console.log(response);
+        console.log(response.grantType);
+        console.log(response.accessToken);
+
+        // 로컬 스토리지에 grantType과 accessToken 저장
+        localStorage.setItem("grantType", response.grantType);
+        localStorage.setItem("accessToken", response.accessToken);
+
+        // 여기서 응답 데이터를 처리
+      } catch (error) {
+        console.error(`Error in sending POST request: ${error}`);
+      }
+    };
+
+    // 25분마다 refreshLogin 함수 실행
+    const intervalId = setInterval(refreshLogin, 29 * 60 * 1000); // 25분을 밀리초로 변환
+
+    // 컴포넌트가 언마운트될 때 setInterval 정리
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   return (
     <>
