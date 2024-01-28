@@ -1,6 +1,7 @@
 import profile from "@/assets/profiles/profile_s1.webp";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import LogoutButton from "./LogoutModal";
 
 function MainProfileModal() {
   return (
@@ -46,7 +47,8 @@ function MainProfileModal() {
         </Link>
         <Link to="/main">
           <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
-            <a href="/main">로그아웃</a>
+            {/* <a href="/main">로그아웃</a> */}
+            <LogoutButton/>
           </li>
         </Link>
       </ul>

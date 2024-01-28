@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  animate.css:
+    specifier: ^4.1.1
+    version: 4.1.1
   axios:
     specifier: ^1.6.6
     version: 1.6.6
@@ -41,6 +44,12 @@ dependencies:
   slick-carousel:
     specifier: ^1.8.1
     version: 1.8.1(jquery@3.7.1)
+  sweetalert2:
+    specifier: ^11.10.4
+    version: 11.10.4
+  sweetalert2-react-content:
+    specifier: ^5.0.7
+    version: 5.0.7(react-dom@18.2.0)(react@18.2.0)(sweetalert2@11.10.4)
   swiper:
     specifier: ^11.0.5
     version: 11.0.5
@@ -1012,6 +1021,10 @@ packages:
       buffer-more-ints: 0.0.2
       readable-stream: 1.1.14
       safe-buffer: 5.2.1
+    dev: false
+
+  /animate.css@4.1.1:
+    resolution: {integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==}
     dev: false
 
   /ansi-regex@5.0.1:
@@ -3681,6 +3694,22 @@ packages:
 
   /svg-parser@2.0.4:
     resolution: {integrity: sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==}
+    dev: false
+
+  /sweetalert2-react-content@5.0.7(react-dom@18.2.0)(react@18.2.0)(sweetalert2@11.10.4):
+    resolution: {integrity: sha512-8Fk82Mpk45lFXpJWKIFF/lq8k/dJKDDQGFcuqVosaL/qRdViyAs5+u37LoTGfnOIvf+rfQB3PAXcp1XLLn+0ew==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+      sweetalert2: ^11.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      sweetalert2: 11.10.4
+    dev: false
+
+  /sweetalert2@11.10.4:
+    resolution: {integrity: sha512-MOVRuEW/yQsyzgkaiHqAJcYKxW3vhtE5o3Skp6vZdyJejCOWo4FOicbjRfvqHAXTyTMuwDHA+0lYbO6BiHl1Gw==}
     dev: false
 
   /swiper@11.0.5:

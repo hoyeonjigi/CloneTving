@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Helmet } from "react-helmet-async";
 import unCheck from "@/assets/signIn/check-icon.svg";
 import check from "@/assets/signIn/check_white.svg";
-
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
 import { postData } from "@/utils/crud";
 
 function SignIn() {
-
   const navigate = useNavigate(); // useNavigate 훅 사용
   const [isChecked, setIsChecked] = useState(false);
 
   const [userId, setUserId] = useState(""); // username 상태 변수 추가
   const [userPassword, setuserPassword] = useState(""); // password 상태 변수 추가
+  const [isLoginSuccess, setIsLoginSuccess] = useState(false); // 로그인 성공 여부를 추적하는 상태 변수 추가
 
   // 체크박스 클릭 이벤트 핸들러
   const handleCheckboxClick = () => {
@@ -32,21 +30,14 @@ function SignIn() {
     const headers = {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      // 필요한 경우 다른 헤더를 추가
     };
-
-
 
     try {
       const response = await postData(url, data, headers);
-      console.log(response);
-      console.log(response.grantType);
-      console.log(response.accessToken);
       localStorage.setItem("grantType", response.grantType);
       localStorage.setItem("accessToken", response.accessToken);
-      navigate('/user/profiles');
-
-      // 여기서 응답 데이터를 처리
+      setIsLoginSuccess(true); // 로그인 성공 상태를 true로 변경
+      navigate("/user/profiles");
     } catch (error) {
       console.error(`Error in sending POST request: ${error}`);
 
@@ -59,23 +50,11 @@ function SignIn() {
   };
 
   useEffect(() => {
-    const url = "https://hoyeonjigi.site/user/login"; // 변경해야 함
-    const data = { userId, userPassword };
-    const headers = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      // 필요한 경우 다른 헤더를 추가
-    };
-    // 25분마다 로그인 요청을 실행하는 함수
+    if (!isLoginSuccess) return; // 로그인이 성공하지 않았다면 아무 것도 하지 않음
+
     const refreshLogin = async () => {
-      // 로그인 요청 코드
       try {
         const response = await postData(url, data, headers);
-        console.log(response);
-        console.log(response.grantType);
-        console.log(response.accessToken);
-
-        // 로컬 스토리지에 grantType과 accessToken 저장
         localStorage.setItem("grantType", response.grantType);
         localStorage.setItem("accessToken", response.accessToken);
 
@@ -85,14 +64,12 @@ function SignIn() {
       }
     };
 
-    // 25분마다 refreshLogin 함수 실행
-    const intervalId = setInterval(refreshLogin, 29 * 60 * 1000); // 25분을 밀리초로 변환
+    const intervalId = setInterval(refreshLogin, 29 * 60 * 1000); // 29분을 밀리초로 변환
 
-    // 컴포넌트가 언마운트될 때 setInterval 정리
     return () => {
       clearInterval(intervalId);
     };
-  }, []);
+  }, [isLoginSuccess]); // 의존성 배열에 isLoginSuccess 추가
 
   return (
     <>

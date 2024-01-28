@@ -15,6 +15,8 @@ import profile9 from "@/assets/profiles/profile9.png";
 import profile10 from "@/assets/profiles/profile10.png";
 import profileEdit from "@/assets/profiles/icon-edit.svg";
 
+import { useNavigate } from "react-router-dom";
+
 import { motion } from "framer-motion";
 import UserProfileModal from "@/components/modal/UserProfileModal";
 
@@ -61,6 +63,12 @@ function ProfileForCreate() {
     }
   };
 
+  const navigate = useNavigate();
+
+  const handleCancel = () => {
+    navigate("/user/profiles");
+  };
+
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * profiles.length);
     setCurrentProfile(profiles[randomIndex]);
@@ -100,9 +108,10 @@ function ProfileForCreate() {
             />
           </motion.button>
 
-          <UserProfileModal isOpen={isModalOpen} closeModal={closeModal}>
-            
-          </UserProfileModal>
+          <UserProfileModal
+            isOpen={isModalOpen}
+            closeModal={closeModal}
+          ></UserProfileModal>
 
           <div className="w-full mt-12">
             <label htmlFor="name" className="sr-only">
@@ -129,7 +138,10 @@ function ProfileForCreate() {
             <button className="px-[5.5rem] py-5 font-bold text-1.5xl bg-[#dedede] text-black  rounded hover:bg-white">
               확인
             </button>
-            <button className="px-[5.5rem] py-5 font-normal text-1.5xl  text-btnText border border-btnBorder rounded hover:text-[#dedede] hover:border-[#888888]">
+            <button
+              className="px-[5.5rem] py-5 font-normal text-1.5xl  text-btnText border border-btnBorder rounded hover:text-[#dedede] hover:border-[#888888]"
+              onClick={handleCancel}
+            >
               취소
             </button>
           </div>
