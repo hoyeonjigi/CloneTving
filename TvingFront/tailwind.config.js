@@ -33,6 +33,7 @@ export default {
       fontSize: {
         "1.5xl": ["1.3rem", "1.75rem"],
         "2.5xl": ["1.75rem", "2.25rem"], // 원하는 크기로 조정 가능
+        "3.5xl": ["2rem", "2.25rem"],
         "4.5xl": ["2.85rem", "3rem"],
       },
     },

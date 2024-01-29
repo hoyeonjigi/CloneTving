@@ -6,7 +6,14 @@ import profilePlus from "@/assets/profiles/icon-plus.png";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+import { useNavigate } from "react-router-dom";
+
 function Profile() {
+  const navigate = useNavigate(); // useNavigate hook을 통해 navigate 함수를 가져옴
+
+  const handleProfileAdd = () => {
+    navigate("/user/profile"); // 프로필 추가 버튼을 눌렀을 때 '/profilesForEdit'로 이동
+  };
   return (
     <div className="bg-black">
       <Header />
@@ -51,26 +58,12 @@ function Profile() {
               <p className="text-[#888888] text-xl font-medium">박세웅</p>
             </li>
 
-            {/* <li className="flex flex-col text-center gap-6 flex-grow relative">
-              <motion.button
-                className="bg-[#4e4e4e] w-full h-full p-[6.6rem]"
-                whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
-                transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
-              >
-                <img
-                  src={profilePlus}
-                  alt="프로필 추가 아이콘"
-                  className="absolute w-[35%] top-[40%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                />
-              </motion.button>
-
-              <p className="text-[#888888] text-xl font-medium">프로필 추가</p>
-            </li> */}
             <li className="flex flex-col text-center gap-6 flex-grow relative">
               <motion.button
                 className="bg-[#4e4e4e] w-full h-full p-[6.6rem] relative" // 버튼에 relative를 추가
                 whileHover={{ y: -15 }}
                 transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
+                onClick={handleProfileAdd}
               >
                 <img
                   src={profilePlus}
