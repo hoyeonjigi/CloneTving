@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const getData = async (url) => {
+const getData = async (url, headers) => {
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(url, { headers });
     return response.data;
   } catch (error) {
     console.error(`Error in getData: ${error}`);

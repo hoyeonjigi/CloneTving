@@ -17,6 +17,12 @@ function SignIn() {
   const [userPassword, setuserPassword] = useState(""); // password 상태 변수 추가
   const [isLoginSuccess, setIsLoginSuccess] = useState(false); // 로그인 성공 여부를 추적하는 상태 변수 추가
 
+  const url = "https://hoyeonjigi.site/user/login"; // 변경해야 함
+  const data = { userId, userPassword };
+  const headers = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  };
   // 체크박스 클릭 이벤트 핸들러
   const handleCheckboxClick = () => {
     setIsChecked(!isChecked);
@@ -24,13 +30,6 @@ function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // 폼 제출 시 페이지 리로딩 방지
-
-    const url = "https://hoyeonjigi.site/user/login"; // 변경해야 함
-    const data = { userId, userPassword };
-    const headers = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    };
 
     try {
       const response = await postData(url, data, headers);
@@ -64,7 +63,7 @@ function SignIn() {
       }
     };
 
-    const intervalId = setInterval(refreshLogin, 29 * 60 * 1000); // 29분을 밀리초로 변환
+    const intervalId = setInterval(refreshLogin, 30 * 60 * 1000); // 29분을 밀리초로 변환
 
     return () => {
       clearInterval(intervalId);
