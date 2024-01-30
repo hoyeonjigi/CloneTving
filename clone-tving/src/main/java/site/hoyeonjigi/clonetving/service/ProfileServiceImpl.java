@@ -11,10 +11,16 @@ import site.hoyeonjigi.clonetving.domain.ProfileEntity;
 import site.hoyeonjigi.clonetving.domain.ProfileImageEntity;
 import site.hoyeonjigi.clonetving.domain.RecentViewEntity;
 import site.hoyeonjigi.clonetving.domain.UserEntity;
+import site.hoyeonjigi.clonetving.dto.ContentDto;
+import site.hoyeonjigi.clonetving.dto.ProfileDto;
 import site.hoyeonjigi.clonetving.dto.RegistProfileDto;
+import site.hoyeonjigi.clonetving.dto.UpdateProfileDto;
+import site.hoyeonjigi.clonetving.mapper.ProfileMapper;
 import site.hoyeonjigi.clonetving.repository.ProfileImageRepository;
 import site.hoyeonjigi.clonetving.repository.ProfileRepository;
 import site.hoyeonjigi.clonetving.repository.UserRepository;
+import java.util.stream.Collectors;
+
 
 @Service
 public class ProfileServiceImpl implements ProfileService{
@@ -28,6 +34,11 @@ public class ProfileServiceImpl implements ProfileService{
     @Autowired
     ProfileImageRepository profileImageRepository;
 
+    private final ProfileMapper profileMapper;
+
+    public ProfileServiceImpl(ProfileMapper profileMapper) {
+        this.profileMapper = profileMapper;
+    }
 
     @Override
     @Transactional
@@ -93,5 +104,30 @@ public class ProfileServiceImpl implements ProfileService{
         jsonObject.put("message",message);
         String jsonString = jsonObject.toString();
         return jsonString;
+    }
+
+
+    @Override
+    @Transactional
+    public String updateProfile(UpdateProfileDto updateProfile) {
+        int rowAffected = profileMapper.updateProfile(updateProfile);
+        if(rowAffected > 0){
+            return createSuccessMessage(updateProfile.getUserId(),updateProfile.getProfileName(),
+                            updateProfile.getImageName(),updateProfile.getChild(),"success");
+        }
+        return createErrorMessage("update fail");
+    }
+
+    @Override
+    public List<ProfileDto> selectProfile(String userId) {
+        List<ProfileEntity> profileEntities = null;
+        List<ProfileDto> profileDtos = null;
+        UserEntity user = userRepository.findByUserId(userId).orElse(null);
+        if(user == null){
+            return null;
+        }
+        profileEntities = profileRepository.findByUser(user);
+        profileDtos = profileEntities.stream().map(o->new ProfileDto(o)).collect(Collectors.toList());
+        return profileDtos;
     }
 }

@@ -1,0 +1,15 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.hoyeonjigi.clonetving.mapper.ProfileMapper">
+    <update id="updateProfile" parameterType="site.hoyeonjigi.clonetving.dto.UpdateProfileDto">
+        UPDATE profile
+        <set>
+            <if test="updateProfileName != null">profile_name = #{updateProfileName},</if>
+            <if test="imageName != null">image_id = (SELECT image_id FROM profile_image WHERE image_name = #{imageName}),</if>
+            <if test="child != null">child = #{child},</if>
+        </set>
+        WHERE profile_name = #{profileName} AND user_id = #{userId}
+    </update>
+
+</mapper>
