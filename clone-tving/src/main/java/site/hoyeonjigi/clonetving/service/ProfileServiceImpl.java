@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.domain.ProfileEntity;
 import site.hoyeonjigi.clonetving.domain.ProfileImageEntity;
 import site.hoyeonjigi.clonetving.domain.RecentViewEntity;
@@ -23,22 +24,13 @@ import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService{
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired 
-    ProfileRepository profileRepository;
-
-    @Autowired
-    ProfileImageRepository profileImageRepository;
-
+    private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
+    private final ProfileImageRepository profileImageRepository;
     private final ProfileMapper profileMapper;
-
-    public ProfileServiceImpl(ProfileMapper profileMapper) {
-        this.profileMapper = profileMapper;
-    }
 
     @Override
     @Transactional
