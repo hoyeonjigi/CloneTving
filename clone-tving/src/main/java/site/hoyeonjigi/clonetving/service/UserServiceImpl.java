@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService{
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         JsonWebTokenDto jsonWebTokenDto = jwtProvider.generateToken(authentication);
+        userRepository.updateRefreshToken(jsonWebTokenDto.getRefreshToken(), userId);
 
         return jsonWebTokenDto;
     }

@@ -13,19 +13,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.common.ExceptionHandlerFilter;
 import site.hoyeonjigi.clonetving.common.JwtAuthenticationFilter;
 import site.hoyeonjigi.clonetving.common.JwtProvider;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig implements WebMvcConfigurer{
 
     private final JwtProvider jwtProvider;
-
-    public WebSecurityConfig(JwtProvider jwtProvider){
-        this.jwtProvider = jwtProvider;
-    }
 
     @Bean
     public BCryptPasswordEncoder encoder() {

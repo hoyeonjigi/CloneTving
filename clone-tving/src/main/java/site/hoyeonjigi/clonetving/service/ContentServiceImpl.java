@@ -4,23 +4,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.domain.ContentEntity;
 import site.hoyeonjigi.clonetving.dto.ContentDto;
 import site.hoyeonjigi.clonetving.repository.ContentRepository;
 import site.hoyeonjigi.clonetving.repository.GenreRepository;
 
 @Service
+@RequiredArgsConstructor
 public class ContentServiceImpl implements ContentService{
 
-    @Autowired
-    ContentRepository contentRepository;
-
-    @Autowired
-    GenreRepository genreRepository;
+    private final ContentRepository contentRepository;
+    private final GenreRepository genreRepository;
 
     @Override
     public List<ContentDto> selectReleasedContent(String classification) throws Exception {

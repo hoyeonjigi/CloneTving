@@ -45,6 +45,9 @@ public class UserEntity {
     @Column(nullable=false)
     private boolean emailAgreement;
 
+    @Column(nullable=true)
+    private String refreshToken;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProfileEntity> profiles = new ArrayList<ProfileEntity>();
 
