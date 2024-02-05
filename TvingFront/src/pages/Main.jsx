@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import HeaderMain from "@/components/HeaderMain";
+import number_1 from "@/assets/main/test.svg";
 
 function Main() {
 	return (
@@ -99,8 +100,8 @@ function Main() {
 				</section>
 
 				<section className="pt-5 relative">
-					<div>
-						<h3 className="text-white text-2xl font-bold ml-20 mb-2 lg:text-2xl leading-normal h-10 z-0">
+					<div className="content-custom-swiper">
+						<h3 className="text-white text-2xl font-bold ml-16 mb-2 lg:text-2xl leading-normal h-10 z-0">
 							최신 영화
 						</h3>
 
@@ -113,7 +114,7 @@ function Main() {
 							pagination={{
 								clickable: true,
 							}}
-							className="px-16 content-custom-swiper z-10"
+							className="px-16 z-10"
 						>
 							<SwiperSlide className="inline-flex z-50 flex-col items-start cursor-pointer">
 								<img
@@ -297,7 +298,7 @@ function Main() {
 					</div>
 				</section>
 				<section className=" pb-5 relative">
-					<h3 className="text-white text-2xl font-bold ml-20 mb-2 lg:text-2xl leading-normal h-10">
+					<h3 className="text-white text-2xl font-bold ml-16 mb-2 lg:text-2xl leading-normal h-10">
 						인기 컨텐츠
 					</h3>
 					<Swiper
@@ -306,13 +307,12 @@ function Main() {
 						slidesPerView={8.3}
 						navigation
 						pagination={{ clickable: true }}
+						className="px-16"
 					>
-						<SwiperSlide className="ml-20">
+						<SwiperSlide className="">
 							<div className="flex">
 								<div className="items-end self-end z-[3]">
-									<h3 className="mr-[0.3rem] text-white text-8xl font-bold rotate-[6.3deg]">
-										1
-									</h3>
+									<img src={number_1} />
 								</div>
 								<img
 									src="https://image.tving.com/ntgs/contents/CTC/caim/CAIM2100/ko/20230131/M000371639.jpg/dims/resize/F_webp,400"

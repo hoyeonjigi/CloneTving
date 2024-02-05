@@ -153,7 +153,7 @@ function SignUp() {
 							</div>
 						</div>
 						<button
-							onClick=""
+							type="submit"
 							className="bg-[#404040] rounded text-[#898989] p-7 w-[732px] text-2xl font-extrabold text-center"
 						>
 							가입하기
