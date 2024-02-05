@@ -47,7 +47,7 @@ public class ProfileController {
     }
     
 
-    @RequestMapping(value = "/api/updateprofile", method=RequestMethod.PUT)
+    @RequestMapping(value = "/api/updateprofile", method=RequestMethod.PATCH)
     public ResponseEntity<String> updateProfile(@RequestBody @Valid UpdateProfileDto updateprofile){
 
         String response = profileService.updateProfile(updateprofile);
@@ -58,4 +58,11 @@ public class ProfileController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
     }   
+
+    @RequestMapping(value ="api/deleteprofile/profilename={profilename}/userid={userid}", method=RequestMethod.DELETE)
+    public ResponseEntity<String> deleteProfile(@PathVariable("profilename")String ProfileName,
+                                                            @PathVariable("userid")String userid){
+        return null;
+    }
+    
 }

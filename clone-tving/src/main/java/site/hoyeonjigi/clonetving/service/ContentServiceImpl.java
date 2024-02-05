@@ -59,6 +59,11 @@ public class ContentServiceImpl implements ContentService{
         contentDtos = contentEntities.stream().map(o->new ContentDto(o)).collect(Collectors.toList());
         return contentDtos;
     }
+
+    @Override
+    public List<ContentDto> selectContentByTitle(String contentTitle) {
+        return null;
+    }
     
 }
 

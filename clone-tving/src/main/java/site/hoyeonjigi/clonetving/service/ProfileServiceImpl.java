@@ -2,7 +2,8 @@ package site.hoyeonjigi.clonetving.service;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,6 +103,13 @@ public class ProfileServiceImpl implements ProfileService{
     @Override
     @Transactional
     public String updateProfile(UpdateProfileDto updateProfile) {
+        UserEntity userEntity = userRepository.findById(updateProfile.getUserId()).orElse(null);
+        if(userEntity == null){
+            return createErrorMessage("Not Found User");
+        }
+        if(isDuplicateProfileName(updateProfile.getUserId(), updateProfile.getUpdateProfileName())){
+            return createErrorMessage("Duplicate Profile");
+        }
         int rowAffected = profileMapper.updateProfile(updateProfile);
         if(rowAffected > 0){
             return createSuccessMessage(updateProfile.getUserId(),updateProfile.getProfileName(),
@@ -111,6 +119,7 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     @Override
+    @Transactional
     public List<ProfileDto> selectProfile(String userId) {
         List<ProfileEntity> profileEntities = null;
         List<ProfileDto> profileDtos = null;
@@ -121,5 +130,26 @@ public class ProfileServiceImpl implements ProfileService{
         profileEntities = profileRepository.findByUser(user);
         profileDtos = profileEntities.stream().map(o->new ProfileDto(o)).collect(Collectors.toList());
         return profileDtos;
+    }
+
+    @Override
+    @Transactional
+    public String deleteProfile(String userId, String profileName) throws UnsupportedEncodingException {
+        String decodeUserId = URLDecoder.decode(userId, "UTF-8");
+        String decodeProfileName = URLDecoder.decode(profileName, "UTF-8");
+        UserEntity user = userRepository.findById(decodeUserId).orElse(null);
+        if(user == null){
+            return createErrorMessage("Not Found User");
+        }
+        ProfileEntity profile = profileRepository.findByUserAndProfileName(user, decodeProfileName).orElse(null);
+        if(profile == null){
+            return createErrorMessage("Not Found Profile");
+        }
+        int rowAffected = profileMapper.deleteProfile(decodeUserId, decodeProfileName);
+        if(rowAffected > 0){
+            return createSuccessMessage(profile.getUser().getUserId(), profile.getProfileName(),
+                profile.getProfileImage().getImageName(), profile.isChild(), "success");
+        }
+        return createErrorMessage("delete fail");
     }
 }

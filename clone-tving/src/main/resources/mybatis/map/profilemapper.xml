@@ -12,4 +12,9 @@
         WHERE profile_name = #{profileName} AND user_id = #{userId}
     </update>
 
+    <delete id="deleteProfile">
+	    DELETE FROM profile
+	    WHERE profile_name = #{profileName} AND user_id = #{userId}
+    </delete>
+
 </mapper>
