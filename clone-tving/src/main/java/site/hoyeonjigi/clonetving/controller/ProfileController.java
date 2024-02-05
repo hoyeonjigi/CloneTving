@@ -1,6 +1,7 @@
 package site.hoyeonjigi.clonetving.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 
@@ -61,8 +63,14 @@ public class ProfileController {
 
     @RequestMapping(value ="api/deleteprofile/profilename={profilename}/userid={userid}", method=RequestMethod.DELETE)
     public ResponseEntity<String> deleteProfile(@PathVariable("profilename")String ProfileName,
-                                                            @PathVariable("userid")String userid){
-        return null;
+                                                            @PathVariable("userid")String userId) throws UnsupportedEncodingException{
+        String response = profileService.deleteProfile(userId, ProfileName);
+        if(response.contains("Not Found")){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        else{
+            return ResponseEntity.ok().body(response);
+        }
     }
     
 }
