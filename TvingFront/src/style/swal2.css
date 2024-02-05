@@ -1,0 +1,121 @@
+.swal2-container {
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.95
+  ) !important; /* 모달창 바깥 부분의 색상 변경 */
+}
+
+.swal2-popup {
+  font-size: 0.7rem;
+  width: 27%;
+  /* color: #888888; 텍스트 색상 변경 */
+  background-color: #212121;
+}
+
+.swal2-header {
+  /* background-color: #2e2e2e; */
+}
+
+.swal2-title {
+  color: #ffffff; /* 제목 색상 변경 */
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 450;
+}
+
+.swal2-content {
+  font-size: 2rem;
+}
+
+.swal2-confirm {
+  font-size: 1.1rem !important;
+  margin-right: 30px;
+  position: relative; /* 수직선을 추가하기 위해 position을 설정합니다. */
+}
+
+.swal2-cancel {
+  margin-left: 30px;
+  font-size: 1.1rem !important;
+}
+
+.swal2-confirm::after {
+  content: "|"; /* 수직선을 추가합니다. */
+  position: absolute; /* 수직선의 위치를 절대 위치로 설정합니다. */
+  font-weight: 50;
+
+  right: -50%;
+  top: 50%; /* 수직선이 버튼의 수직 중앙에 위치하도록 합니다. */
+  transform: translateY(-50%); /* 수직선의 위치를 조정합니다. */
+  color: #a3a3a3; /* 수직선의 색상을 설정합니다. */
+}
+
+.swal2-confirm,
+.swal2-cancel {
+  box-shadow: none !important;
+  font-weight: 600;
+  color: #a3a3a3 !important;
+  background-color: #212121 !important;
+}
+
+.swal2-confirm:focus,
+.swal2-cancel:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  /* color: #ffffff !important; 취소 버튼의 글자 색상을 변경합니다. */
+  background-color: #212121 !important; /* 취소 버튼의 배경색을 유지합니다. */
+}
+
+.swal2-confirm:hover,
+.swal2-cancel:hover {
+  color: #ffffff !important; /* 취소 버튼의 글자 색상을 변경합니다. */
+}
+
+.swal2-confirm::after,
+.swal2-cancel::after {
+  display: none;
+}
+
+.swal2-confirm,
+.swal2-cancel {
+  transition: none !important;
+}
+
+.swal2-confirm:hover,
+.swal2-confirm:active,
+.swal2-cancel:hover,
+.swal2-cancel:active {
+  filter: none !important;
+}
+
+.animate__animated.animate__fadeIn {
+  animation-duration: 0.3s;
+}
+
+.animate__animated.animate__fadeOut {
+  animation-duration: 0.1s;
+}
+
+@keyframes zoomInBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  /* 80% {
+    transform: scale(0.98);
+  } */
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate__animated.animate__zoomInBounce {
+  animation-name: zoomInBounce;
+  animation-duration: 0.5s;
+}
