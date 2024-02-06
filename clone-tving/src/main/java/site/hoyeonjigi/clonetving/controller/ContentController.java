@@ -1,5 +1,6 @@
 package site.hoyeonjigi.clonetving.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -38,8 +39,9 @@ public class ContentController {
 	}	
 
 	@RequestMapping(value="/api/content/title={contenttitle}", method=RequestMethod.GET)
-	public ResponseEntity<?> openContentByTitle(@PathVariable("contenttitle")String contentTitle){
-		return null;
+	public List<ContentDto> openContentByTitle(@PathVariable("contenttitle")String contentTitle,
+												@RequestParam(value="page",defaultValue = "0")int pageNumber) throws UnsupportedEncodingException{
+		return contentService.selectContentByTitle(contentTitle,pageNumber);
 	}
 	
 }

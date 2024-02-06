@@ -88,11 +88,15 @@ public class ContentServiceImpl implements ContentService{
     }
 
     @Override
-    public List<ContentDto> selectContentByTitle(String contentTitle) throws UnsupportedEncodingException{
+    public List<ContentDto> selectContentByTitle(String contentTitle, int pageNumber) throws UnsupportedEncodingException{
         String decodeContentTitle = URLDecoder.decode(contentTitle, "UTF-8");
         List<ContentEntity> contentEntities = null;
         List<ContentDto> contentDtos = null;
-        return null;
+        int pageSize = 20;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        contentEntities = contentRepository.findByContentTitleContaining(decodeContentTitle , pageable);
+        contentDtos = contentEntities.stream().map(o->new ContentDto(o)).collect(Collectors.toList());
+        return contentDtos;
     }
 
     public boolean isConsonants(String query) {

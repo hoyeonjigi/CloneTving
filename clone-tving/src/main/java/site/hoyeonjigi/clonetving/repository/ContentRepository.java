@@ -34,5 +34,5 @@ public interface ContentRepository extends JpaRepository<ContentEntity, String>{
                 "having count(e) > 0 " +
                 "order by avg(e.starRating) desc")
     List<ContentEntity> findPopularContent(@Param("ContentClassification")String classification,Pageable pageable);
-
+    List<ContentEntity> findByContentTitleContaining(String contentTitle,Pageable pageable);
 }
