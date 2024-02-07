@@ -120,8 +120,8 @@ public class ContentServiceTest {
         map.put('ㅎ', new String[]{"하", "힣"});
     }
         
-        String query = getWhereClauseConsonantsLast("아이ㅇ", "yourColumnName", map);
-        assertEquals(query, "SUBSTR(yourColumnName, 1, 3)= '아이언' AND SUBSTR(yourColumnName, 4, 1) >= '마' AND SUBSTR(yourColumnName, 4, 1) < '바' ");
+        String query = getWhereClauseConsonantsLast("아이언ㅁ", "yourColumnName", map);
+        assertEquals(query, "SUBSTR(yourColumnName, 1, 3) = '아이언' AND SUBSTR(yourColumnName, 4, 1) >= '마' AND SUBSTR(yourColumnName, 4, 1) < '바' ");
     }
 
 

@@ -8,5 +8,6 @@ import site.hoyeonjigi.clonetving.dto.MyBatisContentDto;
 
 @Mapper
 public interface ContentMapper {
-    List<MyBatisContentDto> getContentByTitle(@Param("InitialConsonantQuery")String InitialConsonantQuery);
+    List<MyBatisContentDto> getContentByTitle(@Param("InitialConsonantQuery")String InitialConsonantQuery,
+                                                        @Param("offset") int offset);
 }

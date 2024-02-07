@@ -26,7 +26,7 @@ public class ContentDto {
     private String contentOverview;
     private String contentImage;
     private boolean contentRating;
-    private List<String> genres = new ArrayList<String>();
+    private String genreIds;
 
     public ContentDto (ContentEntity contentEntity){
         this.contentId = contentEntity.getContentId();
@@ -37,7 +37,8 @@ public class ContentDto {
         this.contentOverview = contentEntity.getContentOverview();
         this.contentImage = contentEntity.getContentImage();
         this.contentRating = contentEntity.isContentRating();
-        this.genres = contentEntity.getGenres().stream().map(o -> o.getGenre().getGenreId())
-                                                    .collect(Collectors.toList());                                                               
+        this.genreIds = String.join(",", contentEntity.getGenres().stream()
+                .map(o -> o.getGenre().getGenreId())
+                .collect(Collectors.toList()));                                                         
     }
 }
