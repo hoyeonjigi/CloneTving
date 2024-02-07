@@ -9,4 +9,5 @@ public interface ContentService {
     List<ContentDto> selectReleasedContent(String classification) throws Exception;
     List<ContentDto> selectContentByGenre(String classification, String genre, int pageNumber) throws UnsupportedEncodingException;
     List<ContentDto> selectPopularContent(String classification, int pageNumber) throws UnsupportedEncodingException;
+    List<?> selectContentByTitle(String contentTitle, int pageNumber) throws UnsupportedEncodingException;
 }
