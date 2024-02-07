@@ -9,11 +9,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import site.hoyeonjigi.clonetving.dto.MyBatisContentDto;
+import site.hoyeonjigi.clonetving.dto.ContentDto;
 
 @SpringBootTest
 public class ContentServiceTest {
@@ -24,7 +22,7 @@ public class ContentServiceTest {
     @Test
     @DisplayName("검색 Service 테스트")
     void selectContentByTitle() throws UnsupportedEncodingException{
-        List<MyBatisContentDto> testDto = (List<MyBatisContentDto>) contentServiceImpl.selectContentByTitle("%ec%95%84%ec%9d%b4%e3%85%87",
+        List<ContentDto> testDto = contentServiceImpl.selectContentByTitle("%ec%95%84%ec%9d%b4%e3%85%87",
                                                                                      0);
         assertEquals(testDto.get(0).getContentTitle(), "아이언맨 2");
     }

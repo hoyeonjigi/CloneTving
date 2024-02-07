@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import site.hoyeonjigi.clonetving.dto.ContentDto;
-import site.hoyeonjigi.clonetving.dto.MyBatisContentDto;
-import site.hoyeonjigi.clonetving.mapper.ContentMapper;
-import site.hoyeonjigi.clonetving.service.ContentServiceImpl;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -47,7 +44,7 @@ public class ContentMapperTest {
             map.put('ㅎ', new String[]{"하", "힣"});
         }
         String query = getWhereClauseConsonantsLast("아이ㅇ", "c.content_title", map);
-        List<MyBatisContentDto> contentList = contentMapper.getContentByTitle("SUBSTR(c.content_title, 1, 2) = '아이' AND SUBSTR(c.content_title, 3, 1) >= '아' AND SUBSTR(c.content_title, 3, 1) < '자'",0);
+        List<ContentDto> contentList = contentMapper.getContentByTitle("SUBSTR(c.content_title, 1, 2) = '아이' AND SUBSTR(c.content_title, 3, 1) >= '아' AND SUBSTR(c.content_title, 3, 1) < '자'",0);
         assertEquals("아이언맨 2", contentList.get(0).getContentTitle());
     }
 

@@ -13,7 +13,6 @@ import site.hoyeonjigi.clonetving.domain.ProfileEntity;
 import site.hoyeonjigi.clonetving.domain.ProfileImageEntity;
 import site.hoyeonjigi.clonetving.domain.RecentViewEntity;
 import site.hoyeonjigi.clonetving.domain.UserEntity;
-import site.hoyeonjigi.clonetving.dto.ContentDto;
 import site.hoyeonjigi.clonetving.dto.ProfileDto;
 import site.hoyeonjigi.clonetving.dto.RegistProfileDto;
 import site.hoyeonjigi.clonetving.dto.UpdateProfileDto;

@@ -14,17 +14,14 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.domain.ContentEntity;
 import site.hoyeonjigi.clonetving.dto.ContentDto;
-import site.hoyeonjigi.clonetving.dto.MyBatisContentDto;
 import site.hoyeonjigi.clonetving.mapper.ContentMapper;
 import site.hoyeonjigi.clonetving.repository.ContentRepository;
-import site.hoyeonjigi.clonetving.repository.GenreRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ContentServiceImpl implements ContentService{
 
     private final ContentRepository contentRepository;
-    private final GenreRepository genreRepository;
     private final ContentMapper contentMapper;
     private static final Map<Character, String[]> map = new HashMap<>();
     static {
@@ -136,7 +133,7 @@ public class ContentServiceImpl implements ContentService{
     }
 
     @Override
-    public List<?> selectContentByTitle(String contentTitle, int pageNumber) throws UnsupportedEncodingException{
+    public List<ContentDto> selectContentByTitle(String contentTitle, int pageNumber) throws UnsupportedEncodingException{
         String decodeContentTitle = URLDecoder.decode(contentTitle, "UTF-8");
         List<ContentEntity> contentEntities = null;
         List<ContentDto> contentDtos = null;
@@ -145,12 +142,12 @@ public class ContentServiceImpl implements ContentService{
         int offset = (pageNumber) * pageSize;
         if(isConsonants(decodeContentTitle)){
             String whereQuery = getWhereClause(decodeContentTitle, "c.content_title");
-            List<MyBatisContentDto> myBatisContentDtos = contentMapper.getContentByTitle(whereQuery,offset);
+            List<ContentDto> myBatisContentDtos = contentMapper.getContentByTitle(whereQuery,offset);
             return myBatisContentDtos;
         }
         if(isLastConsonants(decodeContentTitle)){
             String whereQuery = getWhereClauseConsonantsLast(decodeContentTitle, "c.content_title");
-            List<MyBatisContentDto> myBatisContentDtos = contentMapper.getContentByTitle(whereQuery,offset);
+            List<ContentDto> myBatisContentDtos = contentMapper.getContentByTitle(whereQuery,offset);
             return myBatisContentDtos;
         }
         contentEntities = contentRepository.findByContentTitleContaining(decodeContentTitle , pageable);
