@@ -34,5 +34,6 @@
         </where>
         GROUP BY
             c.content_id
+        LIMIT #{offset}, 20
     </select>
 </mapper>

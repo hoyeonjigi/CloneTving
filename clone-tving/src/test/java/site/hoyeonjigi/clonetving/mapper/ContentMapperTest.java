@@ -47,7 +47,7 @@ public class ContentMapperTest {
             map.put('ㅎ', new String[]{"하", "힣"});
         }
         String query = getWhereClauseConsonantsLast("아이ㅇ", "c.content_title", map);
-        List<MyBatisContentDto> contentList = contentMapper.getContentByTitle("SUBSTR(c.content_title, 1, 2) = '아이' AND SUBSTR(c.content_title, 3, 1) >= '아' AND SUBSTR(c.content_title, 3, 1) < '자'");
+        List<MyBatisContentDto> contentList = contentMapper.getContentByTitle("SUBSTR(c.content_title, 1, 2) = '아이' AND SUBSTR(c.content_title, 3, 1) >= '아' AND SUBSTR(c.content_title, 3, 1) < '자'",0);
         assertEquals("아이언맨 2", contentList.get(0).getContentTitle());
     }
 

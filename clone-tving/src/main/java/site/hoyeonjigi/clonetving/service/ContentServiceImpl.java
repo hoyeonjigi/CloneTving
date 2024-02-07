@@ -142,14 +142,15 @@ public class ContentServiceImpl implements ContentService{
         List<ContentDto> contentDtos = null;
         int pageSize = 20;
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        int offset = (pageNumber) * pageSize;
         if(isConsonants(decodeContentTitle)){
             String whereQuery = getWhereClause(decodeContentTitle, "c.content_title");
-            List<MyBatisContentDto> myBatisContentDtos = contentMapper.getContentByTitle(whereQuery);
+            List<MyBatisContentDto> myBatisContentDtos = contentMapper.getContentByTitle(whereQuery,offset);
             return myBatisContentDtos;
         }
         if(isLastConsonants(decodeContentTitle)){
             String whereQuery = getWhereClauseConsonantsLast(decodeContentTitle, "c.content_title");
-            List<MyBatisContentDto> myBatisContentDtos = contentMapper.getContentByTitle(whereQuery);
+            List<MyBatisContentDto> myBatisContentDtos = contentMapper.getContentByTitle(whereQuery,offset);
             return myBatisContentDtos;
         }
         contentEntities = contentRepository.findByContentTitleContaining(decodeContentTitle , pageable);
