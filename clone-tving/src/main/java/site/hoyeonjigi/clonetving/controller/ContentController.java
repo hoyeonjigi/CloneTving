@@ -39,7 +39,7 @@ public class ContentController {
 	}	
 
 	@RequestMapping(value="/api/content/title={contenttitle}", method=RequestMethod.GET)
-	public List<ContentDto> openContentByTitle(@PathVariable("contenttitle")String contentTitle,
+	public List<?> openContentByTitle(@PathVariable("contenttitle")String contentTitle,
 												@RequestParam(value="page",defaultValue = "0")int pageNumber) throws UnsupportedEncodingException{
 		return contentService.selectContentByTitle(contentTitle,pageNumber);
 	}
