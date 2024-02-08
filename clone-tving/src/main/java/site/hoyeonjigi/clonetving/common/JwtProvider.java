@@ -46,13 +46,13 @@ public class JwtProvider {
         String accessToken = Jwts.builder()
                                 .setSubject(authentication.getName())
                                 .claim("auth", authorities)
-                                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 1))
                                 .signWith(key, SignatureAlgorithm.HS256)
                                 .compact();
 
         //Refresh Token 생성
         String refreshToken = Jwts.builder()
-                                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 1))
                                 .signWith(key, SignatureAlgorithm.HS256)
                                 .compact();
 

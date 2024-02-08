@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UserEntity> optional = userRepository.findByUserId(username);
         if (!optional.isPresent()) {
-            throw new UsernameNotFoundException("해당하는 유저가 존재하지 않습니다.");
+            throw new UsernameNotFoundException("해당 아이디가 존재하지 않습니다.");
         } 
         
         return User.builder()
