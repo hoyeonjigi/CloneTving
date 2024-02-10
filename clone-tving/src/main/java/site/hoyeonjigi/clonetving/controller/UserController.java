@@ -2,7 +2,8 @@ package site.hoyeonjigi.clonetving.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.dto.JsonWebTokenDto;
+import site.hoyeonjigi.clonetving.dto.UserDto;
+import site.hoyeonjigi.clonetving.dto.UserEditPasswordRequestDto;
+import site.hoyeonjigi.clonetving.dto.UserEditRequestDto;
 import site.hoyeonjigi.clonetving.dto.UserLoginRequsetDto;
 import site.hoyeonjigi.clonetving.dto.UserRegisterRequestDto;
 import site.hoyeonjigi.clonetving.service.UserService;
@@ -21,6 +25,15 @@ import site.hoyeonjigi.clonetving.service.UserService;
 public class UserController {
 
     private final UserService userService;
+
+    @RequestMapping(method=RequestMethod.GET)
+	public ResponseEntity<UserDto> userInfo(Authentication authentication) throws Exception{
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+        UserDto userDto = userService.inquireUserInfo(userId);
+    
+        return ResponseEntity.ok(userDto);
+	}
 
     @RequestMapping(value="/login", method=RequestMethod.POST)
 	public ResponseEntity<JsonWebTokenDto> userLogin(@RequestBody UserLoginRequsetDto userLoginRequsetDto) throws Exception{
@@ -39,8 +52,7 @@ public class UserController {
     
         return ResponseEntity.ok(jsonWebTokenDto);
 	}
-  
-    
+
     @RequestMapping(value="/register", method=RequestMethod.POST)
 	public ResponseEntity<?> userRegister(@RequestBody UserRegisterRequestDto userRegisterRequestDto) throws Exception{
 
@@ -49,17 +61,28 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
-    @RequestMapping(value="/edit", method=RequestMethod.POST)
-	public ResponseEntity<?> userEditInfo(@RequestBody UserRegisterRequestDto userRegisterRequestDto) throws Exception{
-
-        userService.register(userRegisterRequestDto);
+    @RequestMapping(value="/edit", method=RequestMethod.PUT)
+	public ResponseEntity<UserDto> userEditInfo(Authentication authentication, @RequestBody UserEditRequestDto userEditRequestDto) throws Exception{
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+        UserDto userDto = userService.editInfo(userId, userEditRequestDto);
         
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return ResponseEntity.ok(userDto);
 	}
 
-    @RequestMapping(value="/{userId}",method=RequestMethod.DELETE)
-	public ResponseEntity<?> userDelete(@PathVariable String userId) throws Exception{
+    @RequestMapping(value="/edit/password", method=RequestMethod.PATCH)
+	public ResponseEntity<?> userEditPassword(Authentication authentication, @RequestBody UserEditPasswordRequestDto userEditPasswordRequestDto) throws Exception{
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+        userService.editPassword(userId, userEditPasswordRequestDto);
+        
+		return ResponseEntity.ok().build();
+	}
 
+    @RequestMapping(method=RequestMethod.DELETE)
+	public ResponseEntity<?> userDelete(Authentication authentication) throws Exception{
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
         userService.delete(userId);
         
 		return ResponseEntity.ok().build();

@@ -19,6 +19,11 @@ public interface UserRepository extends JpaRepository<UserEntity, String>{
     @Query(value = "update UserEntity u set u.refreshToken = :refreshToken WHERE u.userId = :userId")
     void updateRefreshToken(String refreshToken, String userId);
 
-    void deleteByUserId(String userId);
+    //유저 비밀번호 변경
+    @Modifying
+    @Query(value = "update UserEntity u set u.userPassword = :userPassword WHERE u.userId = :userId")
+    void updateUserPassword(String userPassword, String userId);
+
+    void deleteById(String userId);
 
 }

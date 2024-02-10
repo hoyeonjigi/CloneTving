@@ -159,4 +159,13 @@ public class ContentsRepositoryTest {
         assertEquals("test", findContent.get(0).getContentId());
     }
 
+    @Test
+    void findContentByTitle(){
+        int pageNumber = 0;
+        int pageSize = 20;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<ContentEntity> contentEntities = contentsRepository.findByContentTitleContaining("아이",pageable);
+        assertEquals("아이언맨 2", contentEntities.get(0).getContentTitle());
+    }
+
 }

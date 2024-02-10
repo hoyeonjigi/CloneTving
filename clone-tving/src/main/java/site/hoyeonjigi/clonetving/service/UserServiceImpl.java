@@ -2,7 +2,6 @@ package site.hoyeonjigi.clonetving.service;
 
 import java.util.Optional;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -18,6 +17,9 @@ import site.hoyeonjigi.clonetving.common.JwtProvider;
 import site.hoyeonjigi.clonetving.common.TokenNotValidateException;
 import site.hoyeonjigi.clonetving.domain.UserEntity;
 import site.hoyeonjigi.clonetving.dto.JsonWebTokenDto;
+import site.hoyeonjigi.clonetving.dto.UserDto;
+import site.hoyeonjigi.clonetving.dto.UserEditPasswordRequestDto;
+import site.hoyeonjigi.clonetving.dto.UserEditRequestDto;
 import site.hoyeonjigi.clonetving.dto.UserRegisterRequestDto;
 import site.hoyeonjigi.clonetving.repository.UserRepository;
 
@@ -30,6 +32,19 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
+
+    @Override
+    public UserDto inquireUserInfo(String userId) throws IllegalArgumentException {
+        UserDto userDto = null;
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if(userEntity.isPresent()) {
+            userDto = new UserDto(userEntity.get());
+        } else{
+            throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
+        }
+
+        return userDto;
+    }
 
     @Override
     public JsonWebTokenDto login(String userId, String userPassword) throws UsernameNotFoundException {
@@ -104,18 +119,42 @@ public class UserServiceImpl implements UserService{
         }
         
     }
-
+    
     @Override
-    public void edit(UserRegisterRequestDto userRegisterRequestDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'edit'");
+    public UserDto editInfo(String userId, UserEditRequestDto userEditRequestDto) throws IllegalArgumentException{
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if(userEntity.isPresent()) {
+            userEntity.get().update(userEditRequestDto);
+            return new UserDto(userEntity.get());
+        } else{
+            throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
+        }
     }
 
     @Override
-    public void delete(String userId) {
-        userRepository.deleteByUserId(userId);
+    public void editPassword(String userId, UserEditPasswordRequestDto userEditPasswordRequestDto) throws IllegalArgumentException {
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if(encode.matches(userEditPasswordRequestDto.getCurrentPassword(), userEntity.get().getUserPassword())){
+            userRepository.updateUserPassword(encode.encode(userEditPasswordRequestDto.getChangePassword()), userId);
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    @Override
+    public void delete(String userId) throws IllegalArgumentException {
+        
+        //로그인한 아이디가 DB에 존재하는지 확인.
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        //존재한다면 그 아이디를 삭제.
+        if(userEntity.isPresent()) {
+            userRepository.deleteById(userId);
+        } else{
+            throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
+        }
+        
     }
 
     
-    
+
 }

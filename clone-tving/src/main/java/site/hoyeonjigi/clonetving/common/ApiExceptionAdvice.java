@@ -26,4 +26,10 @@ public class ApiExceptionAdvice {
     	return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(e.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> errorHandler (IllegalArgumentException e) {
+    	return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(e.getMessage());
+    }
 }
