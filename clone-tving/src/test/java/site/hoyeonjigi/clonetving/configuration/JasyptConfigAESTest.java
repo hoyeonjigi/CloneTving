@@ -1,35 +1,38 @@
 package site.hoyeonjigi.clonetving.configuration;
 
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.jasypt.iv.RandomIvGenerator;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.junit.jupiter.api.Test;
 
 public class JasyptConfigAESTest {
     @Test
 	void stringEncryptor() {
-        //db_url
-		String url = ""; 
-        //db_username
-		String username = "";
-        //db_password
-		String password = "";
-		//token secret key
-		String token_key = "VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa";
+		//test
+		String originalString = "abc123";
 
         String key = "encryptKey_hoyeonjigi";
 
-		// System.out.println(jasyptEncoding(url, key));
-		// System.out.println(jasyptEncoding(username, key));
-		// System.out.println(jasyptEncoding(password, key));
-		System.out.println(jasyptEncoding(token_key, key));
+		PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
+		SimpleStringPBEConfig config = new SimpleStringPBEConfig();
+
+		config.setPassword("encryptKey_hoyeonjigi"); // 암호화키
+		config.setAlgorithm("PBEWITHHMACSHA512ANDAES_256"); // 알고리즘
+		config.setKeyObtentionIterations("1000"); // 반복할 해싱 회수
+		config.setPoolSize("1"); // 인스턴스 pool
+		config.setProviderName("SunJCE");
+		config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator"); // salt 생성 클래스
+		config.setIvGeneratorClassName("org.jasypt.iv.RandomIvGenerator");
+        config.setStringOutputType("base64"); //인코딩 방식
+		encryptor.setConfig(config);
+
+		// 암호화
+        String encryptedString = encryptor.encrypt(originalString);
+        // 복호화
+        String decryptedString = encryptor.decrypt(encryptedString);
+
+        assertEquals(originalString, decryptedString);
 	}
 
-	public String jasyptEncoding(String value, String key) {
-
-		StandardPBEStringEncryptor pbeEnc = new StandardPBEStringEncryptor();
-		pbeEnc.setAlgorithm("PBEWITHHMACSHA512ANDAES_256");
-		pbeEnc.setPassword(key);
-		pbeEnc.setIvGenerator(new RandomIvGenerator());
-		return pbeEnc.encrypt(value);
-	}
 }

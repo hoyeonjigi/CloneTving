@@ -1,0 +1,39 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.hoyeonjigi.clonetving.mapper.ContentMapper">
+    <resultMap id="myBatisContentDtoMap" type="site.hoyeonjigi.clonetving.dto.ContentDto">
+        <id property="contentId" column="content_id"/>
+        <result property="contentClassification" column="content_classification"/>
+        <result property="contentTitle" column="content_title"/>
+        <result property="contentReleaseDate" column="content_release_date"/>
+        <result property="contentView" column="content_view"/>
+        <result property="contentOverview" column="content_overview"/>
+        <result property="contentImage" column="content_image"/>
+        <result property="contentRating" column="content_rating"/>
+        <result property="genreIds" column="genre_ids" javaType="String"/>
+    </resultMap>
+
+    <select id="getContentByTitle" resultMap="myBatisContentDtoMap">
+        SELECT 
+            c.content_id AS content_id,
+            c.content_classification AS content_classification,
+            c.content_title AS content_title,
+            c.content_release_date AS content_release_date,
+            c.content_view AS content_view,
+            c.content_overview AS content_overview,
+            c.content_image AS content_image,
+            c.content_rating AS content_rating,
+            GROUP_CONCAT(cg.genre_id) AS genre_ids
+        FROM
+            content c
+        JOIN
+            content_genre cg ON c.content_id = cg.content_id
+        <where>
+            ${InitialConsonantQuery}
+        </where>
+        GROUP BY
+            c.content_id
+        LIMIT #{offset}, 20
+    </select>
+</mapper>

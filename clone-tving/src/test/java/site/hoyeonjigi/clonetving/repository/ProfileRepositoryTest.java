@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
 import site.hoyeonjigi.clonetving.domain.ProfileEntity;
 import site.hoyeonjigi.clonetving.domain.ProfileEntityPK;
 import site.hoyeonjigi.clonetving.domain.ProfileImageEntity;
@@ -65,6 +64,13 @@ public class ProfileRepositoryTest {
     ProfileImageEntity findProfileImage(String profileImageId){
         ProfileImageEntity profileImage = profileImageRepository.findByImageId(profileImageId);
         return profileImage;
+    }
+
+    @Test
+    void findByUserId(){
+        UserEntity user = userRepository.findById("abc123").orElse(null);
+        ProfileEntity profileEntity = profileRepository.findByUserAndProfileName(user, null).orElse(null);
+        assertEquals(profileEntity,null);
     }
 
 }
