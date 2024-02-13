@@ -7,47 +7,80 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import HeaderMain from "@/components/HeaderMain";
 
-import { getData } from "@/utils/crud";
+import { getData, postData } from "@/utils/crud";
+import useLogin from "@/store/login";
 
 function Main() {
   const [data, setData] = useState(null);
   const [latestFilm, setLatestFilm] = useState([]);
 
+  const { accessToken, reToken, grantType, setAccessToken, setReToken } =
+    useLogin();
+
   useEffect(() => {
     const fetchData = async () => {
-      
-      const baseUrl =
-        "https://hoyeonjigi.site/api/release-date/classification=";
-      const query = "영화";
-      const encodedQuery = encodeURIComponent(query);
-      const url = `${baseUrl}${encodedQuery}`;
+      try {
+        const baseUrl =
+          "https://hoyeonjigi.site/api/release-date/classification=";
+        const query = "영화";
+        const encodedQuery = encodeURIComponent(query);
+        const url = `${baseUrl}${encodedQuery}`;
 
-      console.log(url);
+        const type = grantType;
+        const token = accessToken;
 
-      const type = localStorage.getItem("grantType");
-      const token = localStorage.getItem("accessToken");
+        const headers = {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Authorization: `${type} ${token}`,
+        };
+        const result = await getData(url, headers);
 
-      console.log(type);
-      console.log(token);
+        setData(result);
 
-      console.log(`${type} ${token}`);
+        const latestFilmData = result.map((item) => ({
+          src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
+          alt: item.contentTitle,
+        }));
+        setLatestFilm(latestFilmData);
+      } catch (error) {
+        const reUrl = `http://hoyeonjigi.site/user/refresh`;
 
-      const headers = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `${type} ${token}`,
-      };
-      const result = await getData(url, headers);
+        console.log(reUrl);
 
-      console.log(result[0].contentImage);
-      console.log(result[0].contentTitle);
-      setData(result);
+        console.log(grantType)
+        console.log(accessToken)
+        console.log(reToken)
+        // const data = {
+        //   `grantType: ${grantType}`
+        //   accessToken,
+        //   reToken,
+        // };
 
-      const latestFilmData = result.map((item) => ({
-        src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
-        alt: item.contentTitle,
-      }));
-      setLatestFilm(latestFilmData);
+        const headers = {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        };
+
+        const response = await postData(reUrl, data, headers);
+
+        console.log(response);
+        // console.log(error);
+        // if (error.response && error.response.data === 'Access token expired') {
+        //   console.log('Access token expired, refreshing...');
+        //   const newToken = await refreshAccessToken(reToken);
+        //   if (newToken) {
+        //     setAccessToken(newToken);
+        //     // 토큰을 새로 받아온 후 다시 요청을 시도합니다.
+        //     const result = await getData(url, headers);
+        //     // 이전 코드는 생략했습니다.
+        //   } else {
+        //     console.error('Failed to refresh token');
+        //   }
+        // } else {
+        //   console.error(error);
+        // }
+      }
     };
 
     fetchData();
