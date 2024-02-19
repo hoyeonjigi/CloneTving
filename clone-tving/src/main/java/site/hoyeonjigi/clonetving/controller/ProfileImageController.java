@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.dto.ProfileImageDto;
 import site.hoyeonjigi.clonetving.repository.ProfileRepository;
 import site.hoyeonjigi.clonetving.service.ProfileImageService;
-import site.hoyeonjigi.clonetving.service.ProfileService;
-
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @RestController
@@ -19,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfileImageController {
 
-    private final ProfileRepository profileRepository;
     private final ProfileImageService profileImageService;
 
     @GetMapping
