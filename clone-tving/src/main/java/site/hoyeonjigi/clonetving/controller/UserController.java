@@ -2,13 +2,19 @@ package site.hoyeonjigi.clonetving.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.dto.JsonWebTokenDto;
+import site.hoyeonjigi.clonetving.dto.UserDto;
+import site.hoyeonjigi.clonetving.dto.UserEditPasswordRequestDto;
+import site.hoyeonjigi.clonetving.dto.UserEditRequestDto;
 import site.hoyeonjigi.clonetving.dto.UserLoginRequsetDto;
 import site.hoyeonjigi.clonetving.dto.UserRegisterRequestDto;
 import site.hoyeonjigi.clonetving.service.UserService;
@@ -20,6 +26,15 @@ public class UserController {
 
     private final UserService userService;
 
+    @RequestMapping(method=RequestMethod.GET)
+	public ResponseEntity<UserDto> userInfo(Authentication authentication) throws Exception{
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+        UserDto userDto = userService.inquireUserInfo(userId);
+    
+        return ResponseEntity.ok(userDto);
+	}
+
     @RequestMapping(value="/login", method=RequestMethod.POST)
 	public ResponseEntity<JsonWebTokenDto> userLogin(@RequestBody UserLoginRequsetDto userLoginRequsetDto) throws Exception{
         String userId = userLoginRequsetDto.getUserId();
@@ -29,25 +44,48 @@ public class UserController {
         return ResponseEntity.ok(jsonWebTokenDto);
 	}
 
-    // //엑세스토큰의 유효기간이 지났다면, 리프레시 토큰을 받는다.
-    // @RequestMapping(value="/auto-login", method=RequestMethod.POST)
-	// public ResponseEntity<JsonWebTokenDto> userAutoLogin(@RequestBody UserLoginRequsetDto userLoginRequsetDto) throws Exception{
+    //엑세스토큰의 유효기간이 지났다면, 리프레시 토큰을 받는다.
+    @RequestMapping(value="/refresh", method=RequestMethod.POST)
+	public ResponseEntity<JsonWebTokenDto> userRefresh(HttpServletRequest request) throws Exception{
         
-    //     //유저테이블에서 해당 유저의 리프레시토큰 정보를 가져온다
-    //     //비교 후 맞다면 엑세스토큰, 리프레시토큰 반환
-    //     //비교 후 아니라면 해킹의 우려가 있으므로, 유저테이블의 리프레시토큰 정보를 null로 업데이트 후 다시 로그인하라고 클라이언트에 메세지를 보낸다.
-	// }
+        JsonWebTokenDto jsonWebTokenDto = userService.tokenRefresh(request);
+    
+        return ResponseEntity.ok(jsonWebTokenDto);
+	}
 
     @RequestMapping(value="/register", method=RequestMethod.POST)
-	public ResponseEntity userRegister(@RequestBody UserRegisterRequestDto userRegisterRequestDto){
+	public ResponseEntity<?> userRegister(@RequestBody UserRegisterRequestDto userRegisterRequestDto) throws Exception{
 
-        try {
-            userService.register(userRegisterRequestDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        userService.register(userRegisterRequestDto);
+        
 		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+    @RequestMapping(value="/edit", method=RequestMethod.PUT)
+	public ResponseEntity<UserDto> userEditInfo(Authentication authentication, @RequestBody UserEditRequestDto userEditRequestDto) throws Exception{
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+        UserDto userDto = userService.editInfo(userId, userEditRequestDto);
+        
+		return ResponseEntity.ok(userDto);
+	}
+
+    @RequestMapping(value="/edit/password", method=RequestMethod.PATCH)
+	public ResponseEntity<?> userEditPassword(Authentication authentication, @RequestBody UserEditPasswordRequestDto userEditPasswordRequestDto) throws Exception{
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+        userService.editPassword(userId, userEditPasswordRequestDto);
+        
+		return ResponseEntity.ok().build();
+	}
+
+    @RequestMapping(method=RequestMethod.DELETE)
+	public ResponseEntity<?> userDelete(Authentication authentication) throws Exception{
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+        userService.delete(userId);
+        
+		return ResponseEntity.ok().build();
 	}
 
 }

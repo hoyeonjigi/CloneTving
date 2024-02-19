@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import site.hoyeonjigi.clonetving.dto.UserEditRequestDto;
 
 
 @Entity
@@ -50,5 +51,13 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProfileEntity> profiles = new ArrayList<ProfileEntity>();
+
+    public void update(UserEditRequestDto userEditRequestDto) {
+        this.userEmail = userEditRequestDto.getUserEmail();
+        this.adultStatus = userEditRequestDto.isAdultStatus();
+        this.privacyAgreement = userEditRequestDto.isPrivacyAgreement();
+        this.smsAgreement = userEditRequestDto.isSmsAgreement();
+        this.emailAgreement = userEditRequestDto.isEmailAgreement();
+    }
 
 }
