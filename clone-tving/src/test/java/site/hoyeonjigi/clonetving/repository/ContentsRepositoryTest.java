@@ -156,7 +156,7 @@ public class ContentsRepositoryTest {
         int pageSize = 20;
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         List<ContentEntity> findContent = contentsRepository.findPopularContent("영화",pageable);
-        assertEquals("test", findContent.get(0).getContentId());
+        assertEquals("테스트", findContent.get(0).getContentId());
     }
 
     @Test
