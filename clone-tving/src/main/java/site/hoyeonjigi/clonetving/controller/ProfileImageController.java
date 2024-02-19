@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.dto.ProfileImageDto;
-import site.hoyeonjigi.clonetving.repository.ProfileRepository;
 import site.hoyeonjigi.clonetving.service.ProfileImageService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
