@@ -33,7 +33,7 @@ public class ContentController {
 		return contentService.selectContentByGenre(classification, genre, pageNumber);
 	}
 	
-	@RequestMapping(value="/{cla ssification}/popular", method=RequestMethod.GET)
+	@RequestMapping(value="/{classification}/popular", method=RequestMethod.GET)
 	public List<ContentDto> openPopularContent(@PathVariable("classification")String classification,
 												@RequestParam(value="page",defaultValue = "0")int pageNumber) throws Exception{
 		return contentService.selectPopularContent(classification,pageNumber);

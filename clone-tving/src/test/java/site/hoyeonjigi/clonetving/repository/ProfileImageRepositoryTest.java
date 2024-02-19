@@ -7,8 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,6 +47,12 @@ public class ProfileImageRepositoryTest {
     void testFindByImageName() {
         ProfileImageEntity profileImageEntity = profileImageRepository.findByImageName("기본1");
         assertEquals("1001", profileImageEntity.getImageId());
+    }
+
+    @Test
+    void profileListTest(){
+        List<ProfileImageEntity> profileImages = profileImageRepository.findAll();
+        Assertions.assertThat(profileImages.get(0).getImageName()).isEqualTo("default_01");
     }
 
 
