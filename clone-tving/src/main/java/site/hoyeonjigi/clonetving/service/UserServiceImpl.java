@@ -1,5 +1,6 @@
 package site.hoyeonjigi.clonetving.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import javassist.bytecode.Descriptor.Iterator;
 import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.common.JwtProvider;
 import site.hoyeonjigi.clonetving.common.TokenNotValidateException;
@@ -153,6 +155,18 @@ public class UserServiceImpl implements UserService{
             throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
         }
         
+    }
+
+    @Override
+    public String[] findUserList() {
+
+        List<UserEntity> userEntities = userRepository.findAll();
+        String[] userList = new String[userEntities.size()];
+        for(int i = 0; i < userList.length; i++){
+            userList[i] = userEntities.get(i).getUserId();
+        }
+        
+        return userList;
     }
 
     
