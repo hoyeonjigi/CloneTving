@@ -24,4 +24,6 @@ public interface UserService {
     void delete(String userId) throws IllegalArgumentException;
 
     UserDto inquireUserInfo(String userId) throws IllegalArgumentException;
+
+    String[] findUserList();
 }
