@@ -13,7 +13,6 @@ import org.springframework.util.StringUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
-import javassist.bytecode.Descriptor.Iterator;
 import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.common.JwtProvider;
 import site.hoyeonjigi.clonetving.common.TokenNotValidateException;

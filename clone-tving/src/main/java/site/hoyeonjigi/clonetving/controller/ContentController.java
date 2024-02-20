@@ -4,13 +4,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.dto.ContentDto;
 import site.hoyeonjigi.clonetving.service.ContentService;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/contents")
+@RequestMapping(value = "/content")
 public class ContentController {
     
     private final ContentService contentService;
@@ -47,10 +47,10 @@ public class ContentController {
 		return contentService.selectContentByTitle(contentTitle,pageNumber);
 	}
 
-	@RequestMapping(value="/content/view/click", method=RequestMethod.PATCH)
-	public ResponseEntity<?> userDelete(@PathVariable("classification") String classification) throws Exception{
+	@RequestMapping(value="/{contentId}/view/count", method=RequestMethod.PATCH)
+	public ResponseEntity<?> contentViewCount(@PathVariable("contentId") String contentId, HttpServletRequest request, HttpServletResponse response) throws Exception{
         
-        
+		contentService.updateView(contentId, request, response); // 조회수 증가
 		return ResponseEntity.ok().build();
 	}
 	
