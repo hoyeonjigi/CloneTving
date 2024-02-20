@@ -11,6 +11,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.domain.ContentEntity;
 import site.hoyeonjigi.clonetving.dto.ContentDto;
@@ -18,11 +22,13 @@ import site.hoyeonjigi.clonetving.mapper.ContentMapper;
 import site.hoyeonjigi.clonetving.repository.ContentRepository;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ContentServiceImpl implements ContentService{
 
     private final ContentRepository contentRepository;
     private final ContentMapper contentMapper;
+    
     private static final Map<Character, String[]> map = new HashMap<>();
     static {
         map.put('ㄱ', new String[]{"가", "까"});
@@ -154,6 +160,44 @@ public class ContentServiceImpl implements ContentService{
         contentDtos = contentEntities.stream().map(o->new ContentDto(o)).collect(Collectors.toList());
         return contentDtos;
 
+    }
+
+    @Override
+    public void updateView(String contentId, HttpServletRequest request, HttpServletResponse response) {
+        String viewCookieName = "alreadyViewCookie";
+        Cookie[] cookies = request.getCookies();
+        boolean checkCookie = false;
+
+        if(cookies != null) {
+            for (Cookie cookie : cookies)
+            {
+                // 이미 조회를 한 경우 체크
+                if (cookie.getName().equals(viewCookieName+contentId)) {
+                    checkCookie = true;
+                    return;
+                }
+            }
+            //조회결과 해당 컨텐츠에 대한 쿠키가 없다면 응답헤더에 쿠키 추가 후 조회수 증가.
+            if(!checkCookie){
+                Cookie newCookie = createCookieForViewCount(viewCookieName, contentId);
+                response.addCookie(newCookie);
+                contentRepository.updateView(contentId);
+            }
+        } else {
+            //쿠키가 없다면 생성.
+            Cookie newCookie = createCookieForViewCount(viewCookieName, contentId);
+            response.addCookie(newCookie);
+            contentRepository.updateView(contentId);
+        }
+
+        return;
+    }
+
+    private Cookie createCookieForViewCount(String viewCookieName, String contentId) {
+        Cookie cookie = new Cookie(viewCookieName+contentId, contentId);
+        cookie.setMaxAge(60 * 60 * 24); 	// 하루를 준다.
+        cookie.setHttpOnly(true);	// 웹 애플리케이션에서 서버로 전송되는 쿠키를 JavaScript로 접근하는 것을 막는 옵션, 서버에서만 조작 가능
+        return cookie;
     }
     
 }

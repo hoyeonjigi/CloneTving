@@ -35,6 +35,14 @@ public class UserController {
         return ResponseEntity.ok(userDto);
 	}
 
+    @RequestMapping(value="/list", method=RequestMethod.GET) 
+	public ResponseEntity<?> userFind() throws Exception{
+    
+        String[] userList = userService.findUserList();
+
+        return ResponseEntity.ok(userList);
+	}
+
     @RequestMapping(value="/login", method=RequestMethod.POST)
 	public ResponseEntity<JsonWebTokenDto> userLogin(@RequestBody UserLoginRequsetDto userLoginRequsetDto) throws Exception{
         String userId = userLoginRequsetDto.getUserId();
