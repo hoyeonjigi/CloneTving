@@ -33,6 +33,9 @@ public class ProfileImageEntity {
     @Column(nullable=false)
     private String imageUrl;
 
+    @Column(nullable = false)
+    private String category;
+
     @OneToMany(mappedBy = "profileImage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProfileEntity> profiles = new ArrayList<>();
 }
