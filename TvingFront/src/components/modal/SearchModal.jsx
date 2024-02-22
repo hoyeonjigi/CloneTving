@@ -47,7 +47,7 @@ function SearchModal({ visible, onClose }) {
 
   const handleSearch = async () => {
     try {
-      const baseUrl = "https://hoyeonjigi.site/api/content/title=";
+      const baseUrl = "https://hoyeonjigi.site/content/";
       // const query = "영화";
       const encodedQuery = encodeURIComponent(query);
       const url = `${baseUrl}${encodedQuery}`;
@@ -82,13 +82,13 @@ function SearchModal({ visible, onClose }) {
 
   // useEffect(() => {
   //   if (query) {
-  //     debouncedHandleSearch();
+  //     handleSearch();
   //   }
-  // }, [query, debouncedHandleSearch]);
+  // }, [query]);
 
   return (
     <div
-      className="fixed inset-0 flex flex-col items-center bg-[#191919] h-[90%] translate-y-20"
+      className="fixed inset-0 flex flex-col items-center bg-[#191919] h-[90%] translate-y-20 z-50"
       onClick={stopPropagation}
     >
       <label
@@ -108,7 +108,7 @@ function SearchModal({ visible, onClose }) {
         </button>
       </label>
       <div className="h-16"></div>
-      {/* <div className="flex flex-row w-[80%]">
+      <div className="flex flex-row w-[80%]">
         <ul className="w-[50%] border-r-[1px] border-r-[#2e2e2e]">
           <li className="text-[#dedede] text-2xl font-medium mb-5">
             최근 검색어
@@ -133,7 +133,7 @@ function SearchModal({ visible, onClose }) {
           </li>
           
         </ul>
-      </div> */}
+      </div>
     </div>
   );
 }
