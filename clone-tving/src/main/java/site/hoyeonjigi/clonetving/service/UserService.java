@@ -25,7 +25,5 @@ public interface UserService {
 
     UserDto inquireUserInfo(String userId) throws IllegalArgumentException;
 
-    String[] findUserList();
-
     boolean findUser(String userId);
 }
