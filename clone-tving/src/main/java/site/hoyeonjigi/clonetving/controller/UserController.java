@@ -36,14 +36,6 @@ public class UserController {
         return ResponseEntity.ok(userDto);
 	}
 
-    //@RequestMapping(value="/list", method=RequestMethod.GET) 
-	public ResponseEntity<?> userList() throws Exception{
-    
-        String[] userList = userService.findUserList();
-
-        return ResponseEntity.ok(userList);
-	}
-
     @RequestMapping(value="/exist/{userId}", method=RequestMethod.GET) 
 	public ResponseEntity<Boolean> userFind(@PathVariable("userId") String userId) throws Exception{
 
