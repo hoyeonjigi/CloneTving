@@ -157,18 +157,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String[] findUserList() {
-
-        List<UserEntity> userEntities = userRepository.findAll();
-        String[] userList = new String[userEntities.size()];
-        for(int i = 0; i < userList.length; i++){
-            userList[i] = userEntities.get(i).getUserId();
-        }
-        
-        return userList;
-    }
-
-    @Override
     public boolean findUser(String userId) {
         boolean exsitUser = false;
         //아이디가 DB에 존재하는지 확인.
