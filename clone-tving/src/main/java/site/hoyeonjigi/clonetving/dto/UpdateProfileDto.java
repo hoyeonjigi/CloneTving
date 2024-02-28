@@ -19,9 +19,6 @@ public class UpdateProfileDto {
 
     private String updateProfileName;
 
-    @NotEmpty
-    private String userId;
-
     private String imageName;
 
     private Boolean child;

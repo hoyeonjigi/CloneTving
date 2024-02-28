@@ -6,6 +6,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import site.hoyeonjigi.clonetving.exception.DuplicateProfileNameException;
+import site.hoyeonjigi.clonetving.exception.LackofAuthorityException;
+import site.hoyeonjigi.clonetving.exception.ResourceNotFoundException;
+
 @RestControllerAdvice
 public class ApiExceptionAdvice {
     
@@ -30,6 +34,30 @@ public class ApiExceptionAdvice {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> errorHandler (IllegalArgumentException e) {
     	return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(e.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateProfileNameException.class)
+    public ResponseEntity<String> errorHandler (DuplicateProfileNameException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+        .body(e.getMessage());
+    }
+
+    @ExceptionHandler(LackofAuthorityException.class)
+    public ResponseEntity<String> errorHandler (LackofAuthorityException e){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+        .body(e.getMessage());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> errorHandler (ResourceNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> errorHandler (Exception e){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(e.getMessage());
     }
 }
