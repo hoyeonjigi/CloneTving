@@ -1,5 +1,6 @@
 package site.hoyeonjigi.clonetving.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -153,6 +154,18 @@ public class UserServiceImpl implements UserService{
             throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
         }
         
+    }
+
+    @Override
+    public boolean findUser(String userId) {
+        boolean exsitUser = false;
+        //아이디가 DB에 존재하는지 확인.
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if(userEntity.isPresent()){
+            exsitUser = true;
+        }
+
+        return exsitUser;
     }
 
     

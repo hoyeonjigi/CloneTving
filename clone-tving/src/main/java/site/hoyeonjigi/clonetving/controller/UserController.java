@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +34,12 @@ public class UserController {
         UserDto userDto = userService.inquireUserInfo(userId);
     
         return ResponseEntity.ok(userDto);
+	}
+
+    @RequestMapping(value="/exist/{userId}", method=RequestMethod.GET) 
+	public ResponseEntity<?> userFind(@PathVariable("userId") String userId) throws Exception{
+    
+        return ResponseEntity.ok(userService.findUser(userId));
 	}
 
     @RequestMapping(value="/login", method=RequestMethod.POST)

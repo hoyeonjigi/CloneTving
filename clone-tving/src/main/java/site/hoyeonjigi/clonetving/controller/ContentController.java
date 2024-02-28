@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.dto.ContentDto;
 import site.hoyeonjigi.clonetving.service.ContentService;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/contents")
+@RequestMapping(value = "/content")
 public class ContentController {
     
     private final ContentService contentService;
@@ -43,6 +45,13 @@ public class ContentController {
 	public List<ContentDto> openContentByTitle(@PathVariable("contenttitle")String contentTitle,
 												@RequestParam(value="page",defaultValue = "0")int pageNumber) throws UnsupportedEncodingException{
 		return contentService.selectContentByTitle(contentTitle,pageNumber);
+	}
+
+	@RequestMapping(value="/{contentId}/view/count", method=RequestMethod.PATCH)
+	public ResponseEntity<?> contentViewCount(@PathVariable("contentId") String contentId, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        
+		contentService.updateView(contentId, request, response); // 조회수 증가
+		return ResponseEntity.ok().build();
 	}
 	
 }

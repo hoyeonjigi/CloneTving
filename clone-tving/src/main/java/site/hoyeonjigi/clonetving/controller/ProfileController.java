@@ -1,7 +1,6 @@
 package site.hoyeonjigi.clonetving.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
@@ -21,11 +20,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/profile")
 public class ProfileController {
     
     private final ProfileService profileService;
 
-    @RequestMapping(value ="/api/registprofile", method=RequestMethod.POST)
+    @RequestMapping(value ="/register", method=RequestMethod.POST)
     public ResponseEntity<String> registerProfile(@RequestBody @Valid RegistProfileDto registprofile){
         
         String response = profileService.registProfile(registprofile);
@@ -37,8 +37,8 @@ public class ProfileController {
         }   
     }    
 
-    @RequestMapping(value = "/api/searchprofiles/userid={userid}", method=RequestMethod.GET)
-    public ResponseEntity<?> searchProfile(@PathVariable("userid")String userId){
+    @RequestMapping(value = "/{userId}", method=RequestMethod.GET)
+    public ResponseEntity<?> searchProfile(@PathVariable("userId")String userId){
         List<ProfileDto> profiles = profileService.selectProfile(userId);
         if(profiles == null || profiles.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found");
@@ -47,7 +47,7 @@ public class ProfileController {
     }
     
 
-    @RequestMapping(value = "/api/updateprofile", method=RequestMethod.PATCH)
+    @RequestMapping(method=RequestMethod.PATCH)
     public ResponseEntity<String> updateProfile(@RequestBody @Valid UpdateProfileDto updateprofile){
 
         String response = profileService.updateProfile(updateprofile);
@@ -59,9 +59,9 @@ public class ProfileController {
         }
     }   
 
-    @RequestMapping(value ="api/deleteprofile/profilename={profilename}/userid={userid}", method=RequestMethod.DELETE)
-    public ResponseEntity<String> deleteProfile(@PathVariable("profilename")String ProfileName,
-                                                            @PathVariable("userid")String userId) throws UnsupportedEncodingException{
+    @RequestMapping(value ="/{profileName}/{userId}", method=RequestMethod.DELETE)
+    public ResponseEntity<String> deleteProfile(@PathVariable("profileName")String ProfileName,
+                                                            @PathVariable("userId")String userId) throws UnsupportedEncodingException{
         String response = profileService.deleteProfile(userId, ProfileName);
         if(response.contains("Not Found")){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);

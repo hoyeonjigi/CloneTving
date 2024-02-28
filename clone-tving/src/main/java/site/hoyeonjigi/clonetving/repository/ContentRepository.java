@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -35,4 +36,9 @@ public interface ContentRepository extends JpaRepository<ContentEntity, String>{
                 "order by avg(e.starRating) desc")
     List<ContentEntity> findPopularContent(@Param("ContentClassification")String classification,Pageable pageable);
     List<ContentEntity> findByContentTitleContaining(String contentTitle,Pageable pageable);
+
+    //해당 콘텐츠 조회수 증가
+    @Modifying
+    @Query(value = "update ContentEntity c set c.contentView = c.contentView + 1 WHERE c.contentId = :contentId")
+    void updateView(String contentId);
 }
