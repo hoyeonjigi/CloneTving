@@ -10,12 +10,10 @@ import lombok.RequiredArgsConstructor;
 import site.hoyeonjigi.clonetving.dto.RegistProfileDto;
 import site.hoyeonjigi.clonetving.dto.UpdateProfileDto;
 import site.hoyeonjigi.clonetving.service.ProfileService;
-
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
