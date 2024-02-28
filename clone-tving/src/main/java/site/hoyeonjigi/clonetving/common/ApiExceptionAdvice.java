@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import site.hoyeonjigi.clonetving.exception.DuplicateProfileNameException;
 import site.hoyeonjigi.clonetving.exception.LackofAuthorityException;
-import site.hoyeonjigi.clonetving.exception.UserNotFoundException;
+import site.hoyeonjigi.clonetving.exception.ResourceNotFoundException;
 
 @RestControllerAdvice
 public class ApiExceptionAdvice {
@@ -49,9 +49,15 @@ public class ApiExceptionAdvice {
         .body(e.getMessage());
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> errorHandler (UserNotFoundException e){
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> errorHandler (ResourceNotFoundException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> errorHandler (Exception e){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(e.getMessage());
     }
 }

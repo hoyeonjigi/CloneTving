@@ -51,15 +51,10 @@ public class ProfileController {
     
 
     @RequestMapping(method=RequestMethod.PATCH)
-    public ResponseEntity<String> updateProfile(@RequestBody @Valid UpdateProfileDto updateprofile){
-
-        String response = profileService.updateProfile(updateprofile);
-        if(response.contains("success")){
-            return ResponseEntity.ok().body(response);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-        }
+    public ResponseEntity<ProfileDto> updateProfile(Authentication authentication,@RequestBody @Valid UpdateProfileDto updateprofile) throws Exception{
+        String authenticationUserId = getAuthenticationUserId(authentication);
+        ProfileDto profileDto = profileService.updateProfile(authenticationUserId,updateprofile);
+        return ResponseEntity.ok().body(profileDto);
     }   
 
     @RequestMapping(value ="/{profileName}/{userId}", method=RequestMethod.DELETE)

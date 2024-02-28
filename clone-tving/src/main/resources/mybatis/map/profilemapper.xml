@@ -2,6 +2,12 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="site.hoyeonjigi.clonetving.mapper.ProfileMapper">
+    <resultMap id="myBatisProfileDtoMap" type="site.hoyeonjigi.clonetving.dto.ProfileDto">
+        <id property="profileName" column="profile_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="profileImageUrl" column="image_url"/>
+        <result property="child" column="child"/>
+    </resultMap>
     <update id="updateProfile" parameterType="site.hoyeonjigi.clonetving.dto.UpdateProfileDto">
         UPDATE profile
         <set>
@@ -16,5 +22,16 @@
 	    DELETE FROM profile
 	    WHERE profile_name = #{profileName} AND user_id = #{userId}
     </delete>
+
+    <select id="selectProfile" resultMap="myBatisProfileDtoMap">
+        SELECT 
+            p.profile_name,
+            p.user_id,
+            pi.image_url,
+            p.child
+        FROM profile p JOIN profile_image pi ON p.image_id = pi.image_id
+        WHERE profile_name = #{profileName} AND user_id = #{userId}
+    </select>
+
 
 </mapper>
