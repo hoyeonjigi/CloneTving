@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public interface ProfileService {
-    String registProfile(RegistProfileDto profile);
+    ProfileDto registProfile(String userId ,RegistProfileDto profile);
     String updateProfile(UpdateProfileDto updateProfile);
     List<ProfileDto> selectProfile(String userId);
     String deleteProfile(String userId, String profileName) throws UnsupportedEncodingException;
