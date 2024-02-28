@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 
@@ -57,16 +56,11 @@ public class ProfileController {
         return ResponseEntity.ok().body(profileDto);
     }   
 
-    @RequestMapping(value ="/{profileName}/{userId}", method=RequestMethod.DELETE)
-    public ResponseEntity<String> deleteProfile(@PathVariable("profileName")String ProfileName,
-                                                            @PathVariable("userId")String userId) throws UnsupportedEncodingException{
-        String response = profileService.deleteProfile(userId, ProfileName);
-        if(response.contains("Not Found")){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-        else{
-            return ResponseEntity.ok().body(response);
-        }
+    @RequestMapping(value ="/{profileName}", method=RequestMethod.DELETE)
+    public ResponseEntity<String> deleteProfile(Authentication authentication, @PathVariable("profileName")String ProfileName) throws Exception{
+        String authenticationUserId = getAuthenticationUserId(authentication);
+        String response = profileService.deleteProfile(authenticationUserId, ProfileName);
+        return ResponseEntity.ok().body(response);
     }
 
     private String getAuthenticationUserId(Authentication authentication) {

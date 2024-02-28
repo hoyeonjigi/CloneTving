@@ -8,14 +8,14 @@
         <result property="profileImageUrl" column="image_url"/>
         <result property="child" column="child"/>
     </resultMap>
-    <update id="updateProfile" parameterType="site.hoyeonjigi.clonetving.dto.UpdateProfileDto">
+    <update id="updateProfile" parameterType="map">
         UPDATE profile
         <set>
-            <if test="updateProfileName != null">profile_name = #{updateProfileName},</if>
-            <if test="imageName != null">image_id = (SELECT image_id FROM profile_image WHERE image_name = #{imageName}),</if>
-            <if test="child != null">child = #{child},</if>
+            <if test="updateProfileDto.updateProfileName != null">profile_name = #{updateProfileDto.updateProfileName},</if>
+            <if test="updateProfileDto.imageName != null">image_id = (SELECT image_id FROM profile_image WHERE image_name = #{updateProfileDto.imageName}),</if>
+            <if test="updateProfileDto.child != null">child = #{updateProfileDto.child},</if>
         </set>
-        WHERE profile_name = #{profileName} AND user_id = #{userId}
+        WHERE profile_name = #{updateProfileDto.profileName} AND user_id = #{userId}
     </update>
 
     <delete id="deleteProfile">

@@ -8,7 +8,7 @@ import site.hoyeonjigi.clonetving.dto.UpdateProfileDto;
 
 @Mapper
 public interface ProfileMapper {
-    int updateProfile(UpdateProfileDto UpdateProfileDto);
+    int updateProfile(@Param("userId")String userId ,@Param("updateProfileDto") UpdateProfileDto UpdateProfileDto);
     int deleteProfile(@Param("userId")String userId, @Param("profileName")String profileName);
     ProfileDto selectProfile(@Param("profileName")String profileName, @Param("userId")String userId);
 

@@ -2,7 +2,6 @@ package site.hoyeonjigi.clonetving.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -97,7 +96,7 @@ public class ProfileServiceImpl implements ProfileService{
         if(isDuplicateProfileName(userId, updateProfile.getUpdateProfileName())){
             throw new DuplicateProfileNameException("동일한 프로필 이름이 존재합니다");
         }
-        int rowAffected = profileMapper.updateProfile(updateProfile);
+        int rowAffected = profileMapper.updateProfile(userId,updateProfile);
         if(rowAffected > 0){
             ProfileDto profileDto = null;
 
@@ -129,7 +128,7 @@ public class ProfileServiceImpl implements ProfileService{
 
     @Override
     @Transactional
-    public String deleteProfile(String userId, String profileName) throws UnsupportedEncodingException {
+    public String deleteProfile(String userId, String profileName) throws Exception {
         String decodeUserId = URLDecoder.decode(userId, "UTF-8");
         String decodeProfileName = URLDecoder.decode(profileName, "UTF-8");
         UserEntity user = userRepository.findById(decodeUserId).orElse(null);
@@ -142,8 +141,8 @@ public class ProfileServiceImpl implements ProfileService{
         }
         int rowAffected = profileMapper.deleteProfile(decodeUserId, decodeProfileName);
         if(rowAffected > 0){
-            return null;
+            return "프로필 삭제 완료";
         }
-        return null;
+        throw new Exception("서버 오류");
     }
 }
