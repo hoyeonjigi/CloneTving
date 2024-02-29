@@ -8,14 +8,26 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { postData } from "@/utils/crud";
+import useLogin from "@/store/login";
+import Cookies from "js-cookie";
 
 function SignIn() {
 	const navigate = useNavigate(); // useNavigate 훅 사용
-	const [isChecked, setIsChecked] = useState(false);
 
-	const [userId, setUserId] = useState(""); // username 상태 변수 추가
-	const [userPassword, setuserPassword] = useState(""); // password 상태 변수 추가
-	const [isLoginSuccess, setIsLoginSuccess] = useState(false); // 로그인 성공 여부를 추적하는 상태 변수 추가
+	const {
+		accessToken,
+		reToken,
+		userId,
+		userPassword,
+		grantType,
+		setAccessToken,
+		setReToken,
+		setGrantType,
+		setUserId,
+		setUserPassword,
+	} = useLogin();
+
+	const [isChecked, setIsChecked] = useState(false);
 
 	const url = "https://hoyeonjigi.site/user/login"; // 변경해야 함
 	const data = { userId, userPassword };
@@ -33,9 +45,32 @@ function SignIn() {
 
 		try {
 			const response = await postData(url, data, headers);
-			localStorage.setItem("grantType", response.grantType);
-			localStorage.setItem("accessToken", response.accessToken);
-			setIsLoginSuccess(true); // 로그인 성공 상태를 true로 변경
+
+			Cookies.set("accessToken", response.accessToken, {
+				secure: true,
+				sameSite: "strict",
+			});
+			Cookies.set("refreshToken", response.refreshToken, {
+				secure: true,
+				sameSite: "strict",
+			});
+			Cookies.set("grantType", response.grantType, {
+				secure: true,
+				sameSite: "strict",
+			});
+
+			setAccessToken(response.accessToken);
+			setReToken(response.refreshToken);
+			setGrantType(response.grantType);
+
+			const a = Cookies.get("accessToken");
+			const r = Cookies.get("refreshToken");
+			const g = Cookies.get("grantType");
+
+			console.log(a);
+			console.log(r);
+			console.log(g);
+
 			navigate("/user/profiles");
 		} catch (error) {
 			console.error(`Error in sending POST request: ${error}`);
@@ -44,31 +79,9 @@ function SignIn() {
 				`일치하는 회원정보가 없습니다.\n아이디, 비밀번호를 다시 확인해주세요`
 			);
 			setUserId(""); // 아이디 상태 초기화
-			setuserPassword(""); // 비밀번호 상태 초기화
+			setUserPassword(""); // 비밀번호 상태 초기화
 		}
 	};
-
-	useEffect(() => {
-		if (!isLoginSuccess) return; // 로그인이 성공하지 않았다면 아무 것도 하지 않음
-
-		const refreshLogin = async () => {
-			try {
-				const response = await postData(url, data, headers);
-				localStorage.setItem("grantType", response.grantType);
-				localStorage.setItem("accessToken", response.accessToken);
-
-				// 여기서 응답 데이터를 처리
-			} catch (error) {
-				console.error(`Error in sending POST request: ${error}`);
-			}
-		};
-
-		const intervalId = setInterval(refreshLogin, 30 * 60 * 1000); // 29분을 밀리초로 변환
-
-		return () => {
-			clearInterval(intervalId);
-		};
-	}, [isLoginSuccess]); // 의존성 배열에 isLoginSuccess 추가
 
 	return (
 		<>
@@ -106,7 +119,7 @@ function SignIn() {
 								required
 								className="bg-[#212121] px-5 py-5 text-2xl  rounded text-white  placeholder:text-xl placeholder:text-gray_05 w-[580px]"
 								value={userPassword} // 상태 변수를 value 속성에 연결
-								onChange={(e) => setuserPassword(e.target.value)} // 사용자 입력을 상태 변수에 저장
+								onChange={(e) => setUserPassword(e.target.value)} // 사용자 입력을 상태 변수에 저장
 							/>
 						</div>
 						<div className="flex flex-row items-center pt-3 pb-7">

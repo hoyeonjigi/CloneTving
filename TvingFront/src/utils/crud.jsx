@@ -40,4 +40,15 @@ const deleteData = async (url) => {
   }
 };
 
-export { getData, postData, putData, deleteData };
+const patchData = async (url, data, headers) => {
+  // Patch 요청을 위한 함수
+  try {
+    const response = await axios.patch(url, data, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(`Error in patchData: ${error}`);
+    throw error;
+  }
+};
+
+export { getData, postData, putData, deleteData, patchData };
