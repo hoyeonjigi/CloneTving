@@ -9,7 +9,7 @@ import HeaderMain from "@/components/HeaderMain";
 import left from "@/assets/navigation/icon_slide_left.svg";
 import right from "@/assets/navigation/icon_slide_right.svg";
 
-import { getData, postData } from "@/utils/crud";
+import { getData, patchData, postData } from "@/utils/crud";
 import useLogin from "@/store/login";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
@@ -62,6 +62,21 @@ function Main() {
     // } else {
     //   console.log(response.message);
     // }
+  };
+  const testMe = async () => {
+    const url = `https://hoyeonjigi.site/content/1001835/view/count`;
+    const type = Cookies.get("grantType");
+    const token = Cookies.get("accessToken");
+
+    const headers = {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Authorization: `${type} ${token}`,
+    };
+
+    const body = {};
+    const response = await patchData(url, body, headers);
+    console.log(response);
   };
 
   useEffect(() => {
@@ -195,6 +210,7 @@ function Main() {
                     src="https://image.tving.com/ntgs/operation/banner/2024/02/22/1708530936_1.jpg/dims/resize/F_webp,1920"
                     alt="아이 러브 유 바로가기 이미지"
                     className="rounded-lg"
+                    onClick={testMe}
                   />
                 </div>
               </SwiperSlide>
