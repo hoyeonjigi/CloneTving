@@ -45,7 +45,10 @@
   transition-timing-function: linear !important;
 }
 
-.swiper-button-next-base, .swiper-button-prev-base, .swiper-button-next-yumi, .swiper-button-prev-yumi {
+.swiper-button-next-base,
+.swiper-button-prev-base,
+.swiper-button-next-yumi,
+.swiper-button-prev-yumi {
   background: white;
   width: 30px;
   height: 30px;
