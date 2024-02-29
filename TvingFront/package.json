@@ -13,6 +13,8 @@
     "animate.css": "^4.1.1",
     "axios": "^1.6.6",
     "framer-motion": "^10.16.12",
+    "js-cookie": "^3.0.5",
+    "lodash": "^4.17.21",
     "pnpm": "^8.11.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",

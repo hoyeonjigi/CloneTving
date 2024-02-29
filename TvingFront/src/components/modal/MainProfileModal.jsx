@@ -6,7 +6,7 @@ import LogoutButton from "./LogoutModal";
 function MainProfileModal() {
   return (
     <motion.div
-      className="absolute w-72 bg-[#212121] border border-[#4d4d4d] rounded-sm right-0 top-10"
+      className="absolute w-72 bg-[#212121] border border-[#4d4d4d] rounded-sm right-0 top-10 z-50"
       initial={{ y: -10, opacity: 0 }} // 처음에는 아래에 있고 투명하게
       animate={{ y: 0, opacity: 1 }} // 애니메이션 후에는 원래 위치에 불투명하게
       transition={{ duration: 0.2 }} // 0.2초 동안 애니메이션
