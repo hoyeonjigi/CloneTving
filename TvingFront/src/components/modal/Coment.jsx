@@ -3,7 +3,7 @@ import React from "react";
 function Coment() {
   return (
     <div>
-      {/* <div className="flex">
+      <div className="flex">
               {[1, 2, 3, 4, 5].map((starIndex) => (
                 <svg
                   key={starIndex}
@@ -26,7 +26,7 @@ function Coment() {
                   />
                 </svg>
               ))}
-            </div> */}
+            </div>
     </div>
   );
 }

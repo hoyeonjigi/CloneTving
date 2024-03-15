@@ -12,7 +12,7 @@ function SearchModal({ visible, onClose }) {
   // const [shouldSearch, setShouldSearch] = useState(false); // 검색이 필요한지 여부를 상태로 관리
 
   const refresh = async () => {
-    const reUrl = `https://hoyeonjigi.site/user/refresh`;
+    const reUrl = `http://hoyeonjigi.site:8080/user/refresh`;
 
     const headers = {
       "Content-Type": "application/json",
@@ -52,7 +52,7 @@ function SearchModal({ visible, onClose }) {
     debounce(async (query) => {
       // handleSearch 함수 구현
       try {
-        const baseUrl = "https://hoyeonjigi.site/content/";
+        const baseUrl = "http://hoyeonjigi.site:8080/content/";
         const encodedQuery = encodeURIComponent(query);
         const url = `${baseUrl}${encodedQuery}`;
 
@@ -138,12 +138,12 @@ function SearchModal({ visible, onClose }) {
         </button>
       </label>
       {searchContent.length > 0 && query !== "" ? (
-        <div className="h-16 mt-10" id="test1">
-          <ul className="flex flex-row gap-3">
+        <div className="w-[80%] mt-10" id="test1">
+          <ul className="flex  gap-3 justify-start">
             {searchContent.slice(0, 6).map((item, index) => (
-              <li key={index}>
-                <a href="/">
-                  <img src={item.src} alt="" className="w-48 h-[90%] rounded" />
+              <li key={index} className="w-48">
+                <a href="/" className="overflow-hidden whitespace-nowrap text-ellipsis">
+                  <img src={item.src} alt="w-48 h-84" className="rounded" />
                   <p>{item.alt}</p>
                 </a>
               </li>
