@@ -10,5 +10,5 @@ public interface EvaluationMapper {
     int save(@Param("userId")String userId, @Param("dto")EvaluationDto evaluationDto);
     EvaluationDto findEvaluation(@Param("userId")String userId, @Param("profileName")String profileName, @Param("contentId")String contentId);
     int delete(@Param("userId")String userId, @Param("profileName")String profileName ,@Param("contentId")String contentId);
-    List<EvaluationDto> findByContentId(@Param("contentId") String contentId);
+    List<EvaluationDto> findByContentId(@Param("contentId") String contentId ,@Param("offset") int offset);
 }

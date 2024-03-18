@@ -64,13 +64,13 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
-    public List<EvaluationDto> evaluationByContentId(String contentId) {
+    public List<EvaluationDto> evaluationByContentId(String contentId, int offset) {
 
         if(contentRepository.findByContentId(contentId).isEmpty()){
             throw new ResourceNotFoundException("콘텐츠가 없습니다");
         }
 
-        List<EvaluationDto> evaluationList = evaluationMapper.findByContentId(contentId);
+        List<EvaluationDto> evaluationList = evaluationMapper.findByContentId(contentId, offset);
         return evaluationList;
     }
 }

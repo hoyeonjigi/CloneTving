@@ -44,8 +44,9 @@ public class EvaluationController {
     }
 
     @GetMapping("/{contentId}")
-    public ResponseEntity<List<EvaluationDto>> evaluationList(@PathVariable("contentId")String contentId){
-        List<EvaluationDto> evaluationDtos = evaluationService.evaluationByContentId(contentId);
+    public ResponseEntity<List<EvaluationDto>> evaluationList(@PathVariable("contentId")String contentId
+    ,@RequestParam(value="page",defaultValue = "0")int offset){
+        List<EvaluationDto> evaluationDtos = evaluationService.evaluationByContentId(contentId,offset);
         return ResponseEntity.ok().body(evaluationDtos);
     }
     public String getMethodName(@RequestParam String param) {
