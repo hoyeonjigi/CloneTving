@@ -30,5 +30,6 @@
         select profile_name, content_id, star_rating, review, rating_date
         from evaluation
         where content_id=#{contentId}
+        LIMIT #{offset}, 20
     </select>
 </mapper>
