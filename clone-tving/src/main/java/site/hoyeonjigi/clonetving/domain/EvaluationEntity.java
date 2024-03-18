@@ -3,6 +3,7 @@ package site.hoyeonjigi.clonetving.domain;
 
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,6 +48,7 @@ public class EvaluationEntity {
     private String review;
 
     @Column(nullable=false)
-    private Date ratingDate;
+    private LocalDate ratingDate;
 
 }
+
