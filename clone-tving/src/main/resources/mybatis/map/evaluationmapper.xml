@@ -1,0 +1,34 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.hoyeonjigi.clonetving.mapper.EvaluationMapper">
+    <resultMap id="myBatisEvaluationDtoMap" type="site.hoyeonjigi.clonetving.dto.EvaluationDto">
+        <result property="profileName" column="profile_name"/>
+        <result property="contentId" column="content_id"/>
+        <result property="starRating" column="star_rating"/>
+        <result property="review" column="review"/>
+        <result property="ratingDate" column="rating_date"/>
+    </resultMap>
+
+    <insert id="save">
+        insert into evaluation(profile_name, user_id, content_id, star_rating, review, rating_date)
+        values (#{dto.profileName}, #{userId}, #{dto.contentId}, #{dto.starRating}, #{dto.review}, #{dto.ratingDate})
+    </insert>
+
+    <select id="findEvaluation" resultMap="myBatisEvaluationDtoMap">
+        select profile_name, content_id, star_rating, review, rating_date 
+        from evaluation
+        where user_id=#{userId} and profile_name=#{profileName} and content_id =#{contentId}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM evaluation
+        WHERE user_id = #{userId} and profile_name = #{profileName} and content_id=#{contentId}
+    </delete>
+
+    <select id="findByContentId" resultMap="myBatisEvaluationDtoMap">
+        select profile_name, content_id, star_rating, review, rating_date
+        from evaluation
+        where content_id=#{contentId}
+    </select>
+</mapper>

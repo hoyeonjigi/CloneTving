@@ -1,30 +1,25 @@
 package site.hoyeonjigi.clonetving.dto;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import site.hoyeonjigi.clonetving.domain.EvaluationEntity;
+import site.hoyeonjigi.clonetving.domain.ProfileEntity;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor 
-@Builder
+@ToString
 public class EvaluationDto {
 
-    private String profile;
-    private String content;
+    private String profileName;
+    private String contentId;
     private float starRating;
     private String review;
-    private Date ratingDate;
-
-    public EvaluationDto (EvaluationEntity evaluationEntity) {
-        this.profile = evaluationEntity.getProfile().getProfileName();
-        this.content = evaluationEntity.getContent().getContentId();
-        this.starRating = evaluationEntity.getStarRating();
-        this.review = evaluationEntity.getReview();
-        this.ratingDate = evaluationEntity.getRatingDate();
-    }
+    private String ratingDate;
 }

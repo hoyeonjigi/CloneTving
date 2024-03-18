@@ -8,8 +8,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
-import java.util.List;
 import java.util.Optional;
+import java.util.List;
+
+import org.assertj.core.api.Assertions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -166,6 +168,12 @@ public class ContentsRepositoryTest {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         List<ContentEntity> contentEntities = contentsRepository.findByContentTitleContaining("아이",pageable);
         assertEquals("아이언맨 2", contentEntities.get(0).getContentTitle());
+    }
+
+    @Test
+    void findByIdTest(){
+        ContentEntity content = contentsRepository.findByContentId("1001835").get();
+        Assertions.assertThat(content.getContentId()).isEqualTo("1001835");
     }
 
 }
