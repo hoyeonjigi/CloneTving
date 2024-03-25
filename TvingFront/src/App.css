@@ -59,3 +59,7 @@
   background-color: rgba(255, 255, 255, 0.5); /* 흰색의 반투명 배경 */
   box-shadow: 0 0 10px black; /* 검은색 그림자 */
 }
+
+.star {
+  background-color: aqua;
+}

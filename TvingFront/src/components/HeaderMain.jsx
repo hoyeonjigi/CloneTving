@@ -39,7 +39,7 @@ function HeaderMain() {
             <h1 className="sr-only">티빙</h1>
             <img src={Logo} alt="tving 메인으로 바로가기" className="top-1" />
           </Link>
-          <ul className="text-[#d9d9d9] text-lg flex flex-row gap-8 ml-8 font-medium">
+          {/* <ul className="text-[#d9d9d9] text-lg flex flex-row gap-8 ml-8 font-medium">
             <li className="hover:text-white">
               <Link to="/main">시리즈</Link>
             </li>
@@ -52,7 +52,7 @@ function HeaderMain() {
             <li className="hover:text-white">
               <Link to="/main">파라마운트+</Link>
             </li>
-          </ul>
+          </ul> */}
         </div>
         <div className="flex flex-row">
           <button
