@@ -92,7 +92,6 @@ function Main() {
 				};
 
 				//최신 영화
-
 				const movieQuery = "영화";
 				const encodedQueryMovie = encodeURIComponent(movieQuery);
 				const movieUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/lastest20`;
