@@ -75,7 +75,7 @@ function Detail() {
                 width="32"
                 height="32"
                 viewBox="0 0 32 32"
-                class="fill-white"
+                className="fill-white"
               >
                 <path fill="rgba(20,20,20,0)" d="M0 0h32v32H0z"></path>
                 <path

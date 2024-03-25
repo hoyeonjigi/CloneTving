@@ -29,19 +29,29 @@ function ReviewModal({ isOpen, closeModal }) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-90 ">
-      <motion.div className="bg-gray_03 rounded flex flex-col w-[680px] h-[85%] items-center relative p-7">
+      <motion.div
+        className="bg-gray_03 rounded flex flex-col w-[680px] h-[85%] items-center relative p-7"
+        initial={{ y: "20vh" }} // 초기 위치는 화면 아래쪽
+        animate={{ y: 0 }} // 애니메이션을 통해 y축 위치를 0으로 변경
+        exit={{ y: "100vh" }} // 컴포넌트가 제거될 때 화면 아래로 슬라이드
+        transition={{ duration: 0.4, ease: "easeInOut" }} // 애니메이션 지속 시간과 타이밍 함수 설정
+      >
         <button onClick={closeModal} className="absolute right-4 top-4">
           <img src={close} alt="" className="w-10" />
         </button>
 
         <h3 className="text-white w-full text-xl font-extrabold">리뷰 달기</h3>
         <p className="text-white w-full text-sm">snl코리아</p>
-        <div className="w-full flex justify-center items-center">
-   
+        <div className="w-full flex flex-col justify-center items-center">
           <div className="w-full flex justify-center items-center mt-4">
-            <p className="text-white">{ratingTexts[hover]}</p>
+            <p className="text-white text-3.5xl font-extrabold">
+              {" "}
+              {hover || rating
+                ? ratingTexts[hover || rating]
+                : "별점을 선택해주세요"}
+            </p>
           </div>
-          <div className="flex">
+          <div className="flex mt-5">
             {[1, 2, 3, 4, 5].map((starIndex) => (
               <svg
                 key={starIndex}
@@ -57,8 +67,8 @@ function ReviewModal({ isOpen, closeModal }) {
                 fill="none"
               >
                 <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
                   d="M21.9591 9.2598C21.8668 8.9763 21.6301 8.76371 21.3384 8.70226L15.6279 7.49988L12.7235 2.41971C12.575 2.16013 12.299 2 12 2C11.701 2 11.425 2.16013 11.2765 2.41971L8.37208 7.49988L2.66162 8.70226C2.36991 8.76371 2.1332 8.9763 2.04095 9.2598C1.94866 9.5433 2.01483 9.85446 2.2145 10.0758L6.13167 14.4191L5.50612 20.2443C5.47425 20.5413 5.60371 20.8326 5.84546 21.0079C6.08725 21.1833 6.40437 21.2158 6.67671 21.0933L12 18.6975L17.3233 21.0933C17.4327 21.1425 17.5492 21.1667 17.6652 21.1667C17.8381 21.1667 18.0098 21.1129 18.1546 21.0079C18.3963 20.8326 18.5258 20.5413 18.4939 20.2443L17.8683 14.4191L21.7855 10.0758C21.9851 9.85446 22.0513 9.5433 21.9591 9.2598Z"
                   fill={starIndex <= (hover || rating) ? "#00a7f6" : "#e0e0e0"}
                 />

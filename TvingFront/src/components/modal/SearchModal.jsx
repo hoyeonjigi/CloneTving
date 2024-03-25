@@ -87,9 +87,6 @@ function SearchModal({ visible, onClose }) {
     }, 500),
     []
   );
-  useEffect(() => {
-    console.log(searchContent);
-  }, [searchContent]);
 
   debouncedSearch.current = handleSearch;
 
