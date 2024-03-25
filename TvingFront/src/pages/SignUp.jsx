@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { postData } from "@/utils/crud";
+import { getData, postData } from "@/utils/crud";
+import debounce from "lodash/debounce";
 
 function SignUp() {
 	//초기값 세팅
@@ -18,15 +19,19 @@ function SignUp() {
 	const [marketingAgreement, setMarketingAgreement] = useState(false);
 	const [smsAgreement, setSmsAgreement] = useState(false);
 	const [emailAgreement, setEmailAgreement] = useState(false);
-
+	const [query, setQuery] = useState(""); // 입력 값을 상태로 관리
+	const [searchContent, setSearchContent] = useState([]);
 	//오류 메세지
-	const [idMessage, setIdMessage] = useState("");
+	const [idMessage, setIdMessage] = useState(
+		"영문 또는 영문, 숫자 조합 6-12자리"
+	);
 	const [passwordMessage, setPasswordMessage] = useState(
 		"영문, 숫자, 특수문자(~!@#$%^&*) 조합 8~15자리"
 	);
 
 	//유효성 검사
 	const [isId, setIsId] = useState(false);
+	const [isIdExist, setIsIdExist] = useState(false);
 	const [isPassword, setIsPassword] = useState(false);
 	const [isPasswordCheck, setIsPasswordCheck] = useState(false);
 	const [isEmail, setIsEmail] = useState(false);
@@ -37,7 +42,7 @@ function SignUp() {
 	//회원가입 성공 여부
 	const [isSignUpSuccess, setIsSignUpSuccess] = useState(false);
 
-	const url = "https://hoyeonjigi.site/user/register";
+	const url = "http://hoyeonjigi.site:8080/user/register";
 	const data = {
 		userId,
 		userPassword,
@@ -47,10 +52,6 @@ function SignUp() {
 		smsAgreement,
 		emailAgreement,
 	};
-	const headers = {
-		"Content-Type": "application/json",
-		"Access-Control-Allow-Origin": "*",
-	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault(); // 폼 제출 시 페이지 리로딩 방지
@@ -58,7 +59,7 @@ function SignUp() {
 		try {
 			const response = await postData(url, data, headers);
 			setIsSignUpSuccess(true); // 로그인 성공 상태를 true로 변경
-			console.log("성공");
+			console.log("회원가입 성공");
 		} catch (error) {
 			console.error(`Error in sending POST request: ${error}`);
 
@@ -68,24 +69,35 @@ function SignUp() {
 	};
 
 	useEffect(() => {
-		if (!isSignUpSuccess) return; // 로그인이 성공하지 않았다면 아무 것도 하지 않음
-
-		const refreshLogin = async () => {
-			try {
-				const response = await postData(url, data, headers);
-				console.log("성공");
-				// 여기서 응답 데이터를 처리
-			} catch (error) {
-				console.error(`Error in sending POST request: ${error}`);
-			}
-		};
-
-		const intervalId = setInterval(refreshLogin, 30 * 60 * 1000); // 29분을 밀리초로 변환
-
-		return () => {
-			clearInterval(intervalId);
-		};
-	}, [isSignUpSuccess]); // 의존성 배열에 isLoginSuccess 추가
+		if (
+			adultStatus &&
+			agree01 &&
+			agree02 &&
+			agree03 &&
+			privacyAgreement &&
+			marketingAgreement &&
+			smsAgreement &&
+			emailAgreement
+		) {
+			setIsCheckedAll(true);
+		} else {
+			setIsCheckedAll(false);
+		}
+		if (smsAgreement && emailAgreement) {
+			setMarketingAgreement(true);
+		} else {
+			setMarketingAgreement(false);
+		}
+	}, [
+		adultStatus,
+		agree01,
+		agree02,
+		agree03,
+		privacyAgreement,
+		marketingAgreement,
+		smsAgreement,
+		emailAgreement,
+	]); //
 
 	const handleCheckboxAll = () => {
 		let newValue = !isCheckedAll;
@@ -100,16 +112,104 @@ function SignUp() {
 		setEmailAgreement(newValue);
 	};
 
-	//아이디 유효성 검사
-	const onChangeId = (e) => {
-		setUserId(e.target.value);
-		const idRegExp = /^[a-zA-z0-9]{6,12}$/;
-		if (!idRegExp.test(userId)) {
-			setIsId(false);
-		} else {
-			setIsId(true);
-		}
+	const handleCheckboxMarketing = () => {
+		let newValue2 = !marketingAgreement;
+		setMarketingAgreement(newValue2);
+		setSmsAgreement(newValue2);
+		setEmailAgreement(newValue2);
 	};
+
+	// const onChangeId = (e) => {
+	// 	setUserId(e.target.value);
+	// 	const idRegExp = /^[a-zA-z0-9]{6,12}$/;
+	// 	if (!idRegExp.test(userId)) {
+	// 		setIsId(false);
+	// 	} else {
+	// 		setIsId(true);
+	// 	}
+	// 	getIdExist(userId);
+	// 	if (isIdExist) {
+	// 		setIdMessage("이미 사용 중인 아이디입니다.");
+	// 	} else {
+	// 		setIdMessage("영문 또는 영문, 숫자 조합 6-12자리");
+	// 	}
+	// };
+
+	//아이디 중복 확인
+	// const getIdExist = async () => {
+	// 	try {
+	// 		const response = await getData(idExistUrl, headers);
+	// 		setIsIdExist(response);
+	// 		console.log("보낸 url : " + idExistUrl);
+	// 		console.log({ isIdExist });
+	// 	} catch (error) {
+	// 		console.error(`Error in sending POST request: ${error}`);
+	// 	}
+	// };
+
+	//디바운스
+	const debouncedSearch = useRef(null);
+
+	const handleDuplication = useCallback(
+		debounce(async (query) => {
+			// handleSearch 함수 구현
+			try {
+				// const baseUrl = "http://hoyeonjigi.site:8080/content/";
+				// const encodedQuery = encodeURIComponent(query);
+				// const url = `${baseUrl}${encodedQuery}`;
+				const idExistUrl = `http://hoyeonjigi.site:8080/user/exist/${userId}`;
+				const headers = {
+					"Content-Type": "application/json",
+					"Access-Control-Allow-Origin": "*",
+				};
+
+				// console.log(url);
+				// const type = Cookies.get("grantType");
+				// const token = Cookies.get("accessToken");
+				// const headers = {
+				// 	"Content-Type": "application/json",
+				// 	"Access-Control-Allow-Origin": "*",
+				// 	Authorization: `${type} ${token}`,
+				// };
+				const result = await getData(url, headers);
+
+				console.log(result);
+				// // result에 값이 있으면 그대로 저장하고, 없으면 빈 배열을 저장합니다.
+				// const searchData =
+				// 	result.length > 0
+				// 		? result.map((item) => ({
+				// 				src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
+				// 				alt: item.contentTitle,
+				// 		  }))
+				// 		: [];
+
+				// setSearchContent(searchData);
+				// // console.log(searchContent);
+			} catch (error) {
+				console.error(`Error in sending get request: ${error}`);
+				// refresh();
+			}
+		}, 500),
+		[]
+	);
+	useEffect(() => {
+		console.log(searchContent);
+	}, [searchContent]);
+
+	debouncedSearch.current = handleDuplication;
+
+	const handleChange = (e) => {
+		const value = e.target.value;
+		setQuery(value);
+		setSearchContent([]); // 검색 결과 초기화
+		debouncedSearch.current(value);
+	};
+
+	useEffect(() => {
+		return () => {
+			debouncedSearch.current.cancel();
+		};
+	}, []);
 
 	//비밀번호 유효성 검사
 	const onChangePassword = (e) => {
@@ -147,26 +247,6 @@ function SignUp() {
 		}
 	};
 
-	// //조건 모두 만족
-	// const handleSubmitButton = () => {
-	// 	if (
-	// 		isId &&
-	// 		isPassword &&
-	// 		isPasswordCheck &&
-	// 		isEmail &&
-	// 		adultState &&
-	// 		agree01 &&
-	// 		agree02 &&
-	// 		agree03
-	// 	) {
-	// 		setIsButtonEnabled(true);
-	// 		return true;
-	// 	} else {
-	// 		setIsButtonEnabled(false);
-	// 		return false;
-	// 	}
-	// };
-
 	return (
 		<>
 			<Helmet>
@@ -189,19 +269,19 @@ function SignUp() {
 								type="text"
 								id="signUpId"
 								placeholder="아이디"
-								value={userId}
+								value={query}
 								className="bg-[#212121] p-7 text-xl rounded text-white font-extralight w-[732px] focus:border-slate-100"
-								onChange={(e) => setUserId(e.target.value)}
-								onKeyUp={onChangeId}
+								onChange={handleChange}
+								// onKeyUp={onChangeId}
 							/>
 							<p
 								className={`pb-6 text-[#6B6B6B] text-lg ${
-									(isId && userId) || !userId
+									((isId && userId) || !userId) && !isIdExist
 										? "text-[#6B6B6B]"
 										: "text-[#FF153C]"
 								}`}
 							>
-								영문 또는 영문, 숫자 조합 6-12자리
+								{idMessage}
 							</p>
 							<label htmlFor="signUpPwd" className="sr-only">
 								비밀번호
@@ -264,7 +344,7 @@ function SignUp() {
 								type="checkbox"
 								id="agreeAll"
 								checked={isCheckedAll}
-								onChange={handleCheckboxAll}
+								onClick={handleCheckboxAll}
 							/>
 							<label
 								htmlFor="agreeAll"
@@ -278,6 +358,7 @@ function SignUp() {
 								<input
 									type="checkbox"
 									id="isAdult"
+									checked={adultStatus}
 									onChange={() => {
 										setAdultStatus(!adultStatus);
 									}}
@@ -293,6 +374,7 @@ function SignUp() {
 								<input
 									type="checkbox"
 									id="agree01"
+									checked={agree01}
 									onChange={() => {
 										setAgree01(!agree01);
 									}}
@@ -308,6 +390,7 @@ function SignUp() {
 								<input
 									type="checkbox"
 									id="agree02"
+									checked={agree02}
 									onChange={() => {
 										setAgree02(!agree02);
 									}}
@@ -323,6 +406,7 @@ function SignUp() {
 								<input
 									type="checkbox"
 									id="agree03"
+									checked={agree03}
 									onChange={() => {
 										setAgree03(!agree03);
 									}}
@@ -338,6 +422,7 @@ function SignUp() {
 								<input
 									type="checkbox"
 									id="agreePrivacy"
+									checked={privacyAgreement}
 									onChange={() => {
 										setPrivacyAgreement(!privacyAgreement);
 									}}
@@ -353,9 +438,8 @@ function SignUp() {
 								<input
 									type="checkbox"
 									id="agreeMarketingAll"
-									onChange={() => {
-										setMarketingAgreement(!marketingAgreement);
-									}}
+									checked={marketingAgreement}
+									onClick={handleCheckboxMarketing}
 								/>
 								<label
 									htmlFor="agreeMarketingAll"
@@ -370,6 +454,7 @@ function SignUp() {
 								<input
 									type="checkbox"
 									id="agreeSms"
+									checked={smsAgreement}
 									onChange={() => {
 										setSmsAgreement(!smsAgreement);
 									}}
@@ -385,6 +470,7 @@ function SignUp() {
 								<input
 									type="checkbox"
 									id="agreeEmail"
+									checked={emailAgreement}
 									onChange={() => {
 										setEmailAgreement(!emailAgreement);
 									}}
