@@ -13,6 +13,7 @@ import { getData, patchData, postData } from "@/utils/crud";
 import useLogin from "@/store/login";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
+import Footer from "@/components/Footer";
 
 function Main() {
 	const [latestFilm, setLatestFilm] = useState([]);
@@ -30,7 +31,7 @@ function Main() {
 		useLogin();
 
 	const refresh = async () => {
-		const reUrl = `https://hoyeonjigi.site/user/refresh`;
+		const reUrl = `http://hoyeonjigi.site:8080/user/refresh`;
 
 		const headers = {
 			"Content-Type": "application/json",
@@ -64,19 +65,19 @@ function Main() {
 		// }
 	};
 	const testMe = async () => {
-		const url = `https://hoyeonjigi.site/content/1001835/view/count`;
+		const url = `http://hoyeonjigi.site:8080/content/1001835/view/count`;
 		const type = Cookies.get("grantType");
 		const token = Cookies.get("accessToken");
 
 		const headers = {
 			"Content-Type": "application/json",
-			"Access-Control-Allow-Origin": "*",
 			Authorization: `${type} ${token}`,
 		};
 
 		const body = {};
 		const response = await patchData(url, body, headers);
 		console.log(response);
+		console.log(Cookies.get("count"));
 	};
 
 	useEffect(() => {
@@ -94,9 +95,10 @@ function Main() {
 				//최신 영화
 				const movieQuery = "영화";
 				const encodedQueryMovie = encodeURIComponent(movieQuery);
-				const movieUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/lastest20`;
+				const movieUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryMovie}/lastest20`;
 
 				const resultMovie = await getData(movieUrl, headers);
+				console.log(resultMovie);
 
 				const latestFilmData = resultMovie.map((item) => ({
 					src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
@@ -107,7 +109,7 @@ function Main() {
 				//최신 드라마
 				const dramaQuery = "드라마";
 				const encodedQueryDrama = encodeURIComponent(dramaQuery);
-				const dramaUrl = `https://hoyeonjigi.site/content/${encodedQueryDrama}/lastest20`;
+				const dramaUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryDrama}/lastest20`;
 
 				const resultDrama = await getData(dramaUrl, headers);
 
@@ -121,7 +123,7 @@ function Main() {
 
 				const comedyQuery = "코미디";
 				const encodedQueryComedy = encodeURIComponent(comedyQuery);
-				const comedyUrl = `https://hoyeonjigi.site/content/${encodedQueryDrama}/${encodedQueryComedy}`;
+				const comedyUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryDrama}/${encodedQueryComedy}`;
 
 				const resultComedy = await getData(comedyUrl, headers);
 
@@ -135,7 +137,7 @@ function Main() {
 
 				const romanceQuery = "로맨스";
 				const encodedQueryRomance = encodeURIComponent(romanceQuery);
-				const romanceUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/${encodedQueryRomance}`;
+				const romanceUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryMovie}/${encodedQueryRomance}`;
 
 				const resultRomance = await getData(romanceUrl, headers);
 
@@ -147,7 +149,7 @@ function Main() {
 
 				//인기 컨텐츠
 
-				const popularUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/popular`;
+				const popularUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryMovie}/popular`;
 
 				const resultPopular = await getData(popularUrl, headers);
 
@@ -549,6 +551,7 @@ function Main() {
 					</div>
 				</section>
 			</div>
+			<Footer />
 		</>
 	);
 }

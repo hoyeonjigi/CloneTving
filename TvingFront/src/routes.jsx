@@ -11,6 +11,7 @@ import UserTving from "./pages/UserTving.jsx";
 import ProfileForCreate from "./pages/profileForCreate.jsx";
 import ProfileForEditDetail from "./pages/ProfileForEditDetail.jsx";
 import FindPassword from "./pages/FindPassword.jsx";
+import Detail from "./pages/Detail.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
 			{
 				path: "/user/profileForEdit",
 				element: <ProfileForEditDetail />,
+			},
+			{
+				path: "/main/detail",
+				element: <Detail />,
 			},
 		],
 	},
