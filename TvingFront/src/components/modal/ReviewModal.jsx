@@ -29,14 +29,18 @@ function ReviewModal({ isOpen, closeModal }) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-90 ">
-      <div className="bg-gray_03 rounded flex flex-col w-[680px] h-[85%] items-center relative p-7">
-        <button onClick={closeModal} className="absolute right-1">
+      <motion.div className="bg-gray_03 rounded flex flex-col w-[680px] h-[85%] items-center relative p-7">
+        <button onClick={closeModal} className="absolute right-4 top-4">
           <img src={close} alt="" className="w-10" />
         </button>
 
         <h3 className="text-white w-full text-xl font-extrabold">리뷰 달기</h3>
         <p className="text-white w-full text-sm">snl코리아</p>
         <div className="w-full flex justify-center items-center">
+   
+          <div className="w-full flex justify-center items-center mt-4">
+            <p className="text-white">{ratingTexts[hover]}</p>
+          </div>
           <div className="flex">
             {[1, 2, 3, 4, 5].map((starIndex) => (
               <svg
@@ -74,7 +78,7 @@ function ReviewModal({ isOpen, closeModal }) {
             등록하기
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
