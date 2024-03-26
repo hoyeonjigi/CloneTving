@@ -19,9 +19,6 @@ public class RegistProfileDto {
     private String profileName;
 
     @NotEmpty
-    private String userId;
-
-    @NotEmpty
     private String imageName;
 
     @NotNull

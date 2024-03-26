@@ -53,6 +53,7 @@ public class WebSecurityConfig implements WebMvcConfigurer{
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("*")                
                 .allowedHeaders("*")
+                .allowCredentials(true)
                 .maxAge(3600);
         
     }

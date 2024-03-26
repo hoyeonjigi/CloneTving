@@ -2,19 +2,36 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="site.hoyeonjigi.clonetving.mapper.ProfileMapper">
-    <update id="updateProfile" parameterType="site.hoyeonjigi.clonetving.dto.UpdateProfileDto">
+    <resultMap id="myBatisProfileDtoMap" type="site.hoyeonjigi.clonetving.dto.ProfileDto">
+        <id property="profileName" column="profile_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="profileImageUrl" column="image_url"/>
+        <result property="child" column="child"/>
+    </resultMap>
+    <update id="updateProfile" parameterType="map">
         UPDATE profile
         <set>
-            <if test="updateProfileName != null">profile_name = #{updateProfileName},</if>
-            <if test="imageName != null">image_id = (SELECT image_id FROM profile_image WHERE image_name = #{imageName}),</if>
-            <if test="child != null">child = #{child},</if>
+            <if test="updateProfileDto.updateProfileName != null">profile_name = #{updateProfileDto.updateProfileName},</if>
+            <if test="updateProfileDto.imageName != null">image_id = (SELECT image_id FROM profile_image WHERE image_name = #{updateProfileDto.imageName}),</if>
+            <if test="updateProfileDto.child != null">child = #{updateProfileDto.child},</if>
         </set>
-        WHERE profile_name = #{profileName} AND user_id = #{userId}
+        WHERE profile_name = #{updateProfileDto.profileName} AND user_id = #{userId}
     </update>
 
     <delete id="deleteProfile">
 	    DELETE FROM profile
 	    WHERE profile_name = #{profileName} AND user_id = #{userId}
     </delete>
+
+    <select id="selectProfile" resultMap="myBatisProfileDtoMap">
+        SELECT 
+            p.profile_name,
+            p.user_id,
+            pi.image_url,
+            p.child
+        FROM profile p JOIN profile_image pi ON p.image_id = pi.image_id
+        WHERE profile_name = #{profileName} AND user_id = #{userId}
+    </select>
+
 
 </mapper>
