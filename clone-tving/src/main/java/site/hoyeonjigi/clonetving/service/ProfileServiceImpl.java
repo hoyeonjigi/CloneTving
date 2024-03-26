@@ -2,13 +2,13 @@ package site.hoyeonjigi.clonetving.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import site.hoyeonjigi.clonetving.domain.ProfileEntity;
 import site.hoyeonjigi.clonetving.domain.ProfileImageEntity;
 import site.hoyeonjigi.clonetving.domain.RecentViewEntity;
@@ -16,6 +16,8 @@ import site.hoyeonjigi.clonetving.domain.UserEntity;
 import site.hoyeonjigi.clonetving.dto.ProfileDto;
 import site.hoyeonjigi.clonetving.dto.RegistProfileDto;
 import site.hoyeonjigi.clonetving.dto.UpdateProfileDto;
+import site.hoyeonjigi.clonetving.exception.DuplicateProfileNameException;
+import site.hoyeonjigi.clonetving.exception.ResourceNotFoundException;
 import site.hoyeonjigi.clonetving.mapper.ProfileMapper;
 import site.hoyeonjigi.clonetving.repository.ProfileImageRepository;
 import site.hoyeonjigi.clonetving.repository.ProfileRepository;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService{
 
@@ -35,21 +38,21 @@ public class ProfileServiceImpl implements ProfileService{
 
     @Override
     @Transactional
-    public String registProfile(RegistProfileDto profile) {
-        UserEntity userEntity = userRepository.findById(profile.getUserId()).orElse(null);
-
+    public ProfileDto registProfile(String userId, RegistProfileDto profile) {
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
+        log.info("UserEntity = {}", userEntity);
         if(userEntity == null){
-            return createErrorMessage("not found user");
+            throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
         }
         
-        if(isDuplicateProfileName(profile.getUserId(), profile.getProfileName())){
-            return createErrorMessage("duplicate profileName");
+        if(isDuplicateProfileName(userId, profile.getProfileName())){
+            throw new DuplicateProfileNameException("동일한 프로필 이름이 존재합니다");
         }
 
         ProfileImageEntity profileImageEntity = profileImageRepository.findByImageName(profile.getImageName());
         ProfileEntity saveProfileEntity = insertProfileEntity(profile.getProfileName(), userEntity, profileImageEntity, profile.getChild());
-        return createSuccessMessage(saveProfileEntity.getUser().getUserId(), saveProfileEntity.getProfileName(),
-                                    saveProfileEntity.getProfileImage().getImageName(),saveProfileEntity.isChild(),"regist success");
+        ProfileDto profileDto = new ProfileDto(saveProfileEntity);
+        return profileDto;
         
     }
     
@@ -80,42 +83,33 @@ public class ProfileServiceImpl implements ProfileService{
         return profileEntity;
     }
 
-    String createSuccessMessage(String userId, String profileName, String profileImageName, boolean child, String message){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("success",true);
-        jsonObject.put("userId",userId);
-        jsonObject.put("profileImageName",profileImageName);
-        jsonObject.put("child",child);
-        jsonObject.put("message",message);
-        String jsonString = jsonObject.toString();
-        return jsonString;
-    }
-
-    String createErrorMessage(String message){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("success",false);
-        jsonObject.put("message",message);
-        String jsonString = jsonObject.toString();
-        return jsonString;
-    }
-
-
     @Override
     @Transactional
-    public String updateProfile(UpdateProfileDto updateProfile) {
-        UserEntity userEntity = userRepository.findById(updateProfile.getUserId()).orElse(null);
+    public ProfileDto updateProfile(String userId, UpdateProfileDto updateProfile) throws Exception {
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
         if(userEntity == null){
-            return createErrorMessage("Not Found User");
+            throw new ResourceNotFoundException("해당 유저가 존재하지 않습니다");
         }
-        if(isDuplicateProfileName(updateProfile.getUserId(), updateProfile.getUpdateProfileName())){
-            return createErrorMessage("Duplicate Profile");
+        if(profileRepository.findByUserAndProfileName(userEntity, updateProfile.getProfileName()).isEmpty()){
+            throw new ResourceNotFoundException("프로필이 존재하지 않습니다");
         }
-        int rowAffected = profileMapper.updateProfile(updateProfile);
+        if(isDuplicateProfileName(userId, updateProfile.getUpdateProfileName())){
+            throw new DuplicateProfileNameException("동일한 프로필 이름이 존재합니다");
+        }
+        int rowAffected = profileMapper.updateProfile(userId,updateProfile);
         if(rowAffected > 0){
-            return createSuccessMessage(updateProfile.getUserId(),updateProfile.getProfileName(),
-                            updateProfile.getImageName(),updateProfile.getChild(),"success");
+            ProfileDto profileDto = null;
+
+            if(updateProfile.getUpdateProfileName() != null){
+                profileDto = profileMapper.selectProfile(updateProfile.getUpdateProfileName(), userId);
+            }
+            else{
+                profileDto = profileMapper.selectProfile(updateProfile.getProfileName(), userId);
+            }
+
+            return profileDto;
         }
-        return createErrorMessage("update fail");
+        throw new Exception("서버 오류");
     }
 
     @Override
@@ -125,7 +119,7 @@ public class ProfileServiceImpl implements ProfileService{
         List<ProfileDto> profileDtos = null;
         UserEntity user = userRepository.findByUserId(userId).orElse(null);
         if(user == null){
-            return null;
+            throw new ResourceNotFoundException("해당 유저가 존재하지 않습니다");
         }
         profileEntities = profileRepository.findByUser(user);
         profileDtos = profileEntities.stream().map(o->new ProfileDto(o)).collect(Collectors.toList());
@@ -134,22 +128,21 @@ public class ProfileServiceImpl implements ProfileService{
 
     @Override
     @Transactional
-    public String deleteProfile(String userId, String profileName) throws UnsupportedEncodingException {
+    public String deleteProfile(String userId, String profileName) throws Exception {
         String decodeUserId = URLDecoder.decode(userId, "UTF-8");
         String decodeProfileName = URLDecoder.decode(profileName, "UTF-8");
         UserEntity user = userRepository.findById(decodeUserId).orElse(null);
         if(user == null){
-            return createErrorMessage("Not Found User");
+            throw new ResourceNotFoundException("해당 유저가 존재하지 않습니다");
         }
         ProfileEntity profile = profileRepository.findByUserAndProfileName(user, decodeProfileName).orElse(null);
         if(profile == null){
-            return createErrorMessage("Not Found Profile");
+            throw new ResourceNotFoundException("프로필이 존재하지 않습니다");
         }
         int rowAffected = profileMapper.deleteProfile(decodeUserId, decodeProfileName);
         if(rowAffected > 0){
-            return createSuccessMessage(profile.getUser().getUserId(), profile.getProfileName(),
-                profile.getProfileImage().getImageName(), profile.isChild(), "success");
+            return "프로필 삭제 완료";
         }
-        return createErrorMessage("delete fail");
+        throw new Exception("서버 오류");
     }
 }

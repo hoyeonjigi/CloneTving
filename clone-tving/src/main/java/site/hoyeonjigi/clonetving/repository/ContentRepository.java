@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import site.hoyeonjigi.clonetving.domain.ContentEntity;
-
+import java.util.Optional;
 
 @Repository
 public interface ContentRepository extends JpaRepository<ContentEntity, String>{
@@ -41,4 +41,6 @@ public interface ContentRepository extends JpaRepository<ContentEntity, String>{
     @Modifying
     @Query(value = "update ContentEntity c set c.contentView = c.contentView + 1 WHERE c.contentId = :contentId")
     void updateView(String contentId);
+
+    Optional<ContentEntity> findByContentId(String contentId);
 }
