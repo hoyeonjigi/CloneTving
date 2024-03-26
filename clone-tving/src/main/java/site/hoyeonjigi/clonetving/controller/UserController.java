@@ -37,8 +37,8 @@ public class UserController {
 	}
 
     @RequestMapping(value="/exist/{userId}", method=RequestMethod.GET) 
-	public ResponseEntity<?> userFind(@PathVariable("userId") String userId) throws Exception{
-    
+	public ResponseEntity<Boolean> userFind(@PathVariable("userId") String userId) throws Exception{
+
         return ResponseEntity.ok(userService.findUser(userId));
 	}
 
