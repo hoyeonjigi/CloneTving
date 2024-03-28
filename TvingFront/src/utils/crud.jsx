@@ -41,14 +41,18 @@ const deleteData = async (url) => {
 };
 
 const patchData = async (url, data, headers) => {
-  // Patch 요청을 위한 함수
+  // Patch 요청을 위한 함수, credentials 옵션 포함
   try {
-    const response = await axios.patch(url, data, { headers });
+    const response = await axios.patch(url, data, {
+      headers,
+      withCredentials: true // 여기에 credentials 옵션 추가
+    });
     return response.data;
   } catch (error) {
     console.error(`Error in patchData: ${error}`);
     throw error;
   }
 };
+
 
 export { getData, postData, putData, deleteData, patchData };

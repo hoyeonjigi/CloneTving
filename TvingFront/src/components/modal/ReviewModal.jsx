@@ -28,7 +28,7 @@ function ReviewModal({ isOpen, closeModal }) {
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-90 ">
+    <form className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-90 ">
       <motion.div
         className="bg-gray_03 rounded flex flex-col w-[680px] h-[85%] items-center relative p-7"
         initial={{ y: "20vh" }} // 초기 위치는 화면 아래쪽
@@ -89,7 +89,7 @@ function ReviewModal({ isOpen, closeModal }) {
           </button>
         </div>
       </motion.div>
-    </div>
+    </form>
   );
 }
 
