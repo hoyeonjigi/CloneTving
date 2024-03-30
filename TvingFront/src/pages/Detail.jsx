@@ -7,20 +7,26 @@ import useContent from "@/store/useContent";
 import { useEffect } from "react";
 import { getData } from "@/utils/crud";
 import Cookies from "js-cookie";
-
-// import star from "@/assets/main/star.svg";
+import useReview from "@/store/useReview";
 
 function Detail() {
-  const [rating, setRating] = useState(0); // 초기 별점 상태 설정
-  const [hover, setHover] = useState(0); // 마우스 호버 상태 설정
+  const { review, setReview } = useReview();
 
-  // contentTitle과 contentId를 사용하는 로직
-  const { content, genre, setGenre } = useContent();
-
-  console.log(content);
+  const { content, genre, setGenre, setContent } = useContent();
 
   // 모달 창 상태를 관리하는 state
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //평점 평균을 계산하는 함수
+  // const calculateAverageRating = () => {
+  //   // console.log(review.length);
+  //   const totalRating = review.reduce((acc, curr) => acc + curr.starRating, 0);
+  //   const averageRating = review.length > 0 ? totalRating / review.length : 0;
+  //   // console.log(averageRating)
+  //   return averageRating.toFixed(1); // 평균 평점을 소수점 첫째 자리까지 표현합니다.
+
+    
+  // };
 
   // 모달 창을 여는 함수
   const openModal = () => {
@@ -33,6 +39,14 @@ function Detail() {
   };
 
   useEffect(() => {
+    // 로컬 스토리지에서 "contents" 키로 저장된 데이터가 있는지 확인합니다.
+    const storedContents = localStorage.getItem("contents");
+
+    // 만약 "contents" 데이터가 이미 있다면, 함수를 더 이상 실행하지 않습니다.
+    if (storedContents) {
+      return;
+    }
+
     const contentData = async () => {
       try {
         const type = Cookies.get("grantType");
@@ -42,6 +56,9 @@ function Detail() {
           "Content-Type": "application/json",
           Authorization: `${type} ${token}`,
         };
+
+        // 이 시점에서 "contents" 데이터가 로컬 스토리지에 없으므로, 저장합니다.
+        localStorage.setItem("contents", JSON.stringify(content));
 
         const str = content.genreIds;
         const genreIds = str.split(",");
@@ -55,9 +72,12 @@ function Detail() {
         // Promise.all을 사용하여 모든 프로미스가 완료되길 기다립니다.
         const results = await Promise.all(promises);
 
-        setGenre(results);
-        // results 배열에는 각 genreId에 대한 요청 결과가 들어 있습니다.
-        console.log(genre);
+        // 장르 데이터를 로컬 스토리지에 저장합니다.
+        localStorage.setItem("genres", JSON.stringify(results));
+
+        // 저장된 장르 데이터를 불러와서 상태를 업데이트합니다.
+        const storedGenres = localStorage.getItem("genres");
+        setGenre(JSON.parse(storedGenres));
       } catch (error) {
         console.log(error);
         console.log("에러출력");
@@ -65,6 +85,62 @@ function Detail() {
     };
 
     contentData();
+  }, []); // 이 효과는 컴포넌트가 마운트될 때만 실행됩니다.
+
+  useEffect(() => {
+    const reviewData = async () => {
+      try {
+        // 로컬 스토리지에서 리뷰 데이터를 먼저 확인합니다.
+        const storedReviews = localStorage.getItem("reviews");
+
+        // 리뷰 데이터가 이미 로컬 스토리지에 있다면 아무것도 하지 않고 함수를 종료합니다.
+        if (storedReviews) {
+          setReview(JSON.parse(storedReviews));
+          return; // 이 부분이 중요합니다. 이미 데이터가 있다면 여기서 함수 실행을 멈춥니다.
+        }
+
+        // 로컬 스토리지에 리뷰 데이터가 없는 경우, API 호출을 통해 데이터를 가져옵니다.
+        const type = Cookies.get("grantType");
+        const token = Cookies.get("accessToken");
+
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `${type} ${token}`,
+        };
+
+        const url = `http://hoyeonjigi.site:8080/evaluation/${content.contentId}`;
+
+        const response = await getData(url, headers);
+
+        // API 호출을 통해 가져온 데이터를 로컬 스토리지에 저장합니다.
+        localStorage.setItem("reviews", JSON.stringify(response));
+        setReview(response); // 가져온 데이터로 상태를 업데이트합니다.
+      } catch (error) {
+        console.log(error);
+        console.log("에러출력");
+      }
+    };
+
+    reviewData();
+  }, []); // 의존성 배열이 비어있기 때문에 컴포넌트가 마운트될 때만 이 효과가 실행됩니다.
+
+  useEffect(() => {
+    const storedContents = localStorage.getItem("contents");
+    // console.log(storedContents);
+    if (storedContents) {
+      setContent(JSON.parse(storedContents));
+    }
+    const storedGenres = localStorage.getItem("genres");
+    // console.log(storedGenres);
+    if (storedGenres) {
+      setGenre(JSON.parse(storedGenres));
+    }
+
+    const storedReviews = localStorage.getItem("reviews");
+    // console.log(storedReviews);
+    if (storedReviews) {
+      setReview(JSON.parse(storedReviews));
+    }
   }, []);
 
   return (
@@ -141,22 +217,35 @@ function Detail() {
             </div>
           </div>
 
-          <p className="text-gray_06 font-semibold w-[70%] text-lg">{content.contentOverview}</p>
+          <p className="text-gray_06 font-semibold w-[70%] text-lg">
+            {content.contentOverview}
+          </p>
         </div>
         <div className="flex-[0.3] relative">
-          <img src={content.src} alt={content.alt} className=" h-full absolute right-[4rem]" />
+          <img
+            src={content.src}
+            alt={content.alt}
+            className=" h-full absolute right-[4rem]"
+          />
         </div>
       </div>
       <div>
-        <div className="flex items-center">
-          <div className="text-5xl text-white font-extrabold mr-4">4.4</div>
-          <div className="flex flex-col">
-            <p className="text-white">444,444 조회수</p>
+        <div>
+          <div className="flex items-center">
+            <div className="text-5xl text-white font-extrabold mr-4">
+              {calculateAverageRating()}
+            </div>
+            <div className="flex flex-col">
+              <p className="text-white">444,444 평점</p>
+            </div>
           </div>
+          <button onClick={openModal}>리뷰달기</button>
+          <ReviewModal
+            isOpen={isModalOpen}
+            closeModal={closeModal}
+          ></ReviewModal>
         </div>
-
-        <button onClick={openModal}>리뷰달기</button>
-        <ReviewModal isOpen={isModalOpen} closeModal={closeModal}></ReviewModal>
+        <div></div>
       </div>
       <Footer />
     </div>

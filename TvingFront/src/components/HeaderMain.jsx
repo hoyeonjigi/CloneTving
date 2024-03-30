@@ -33,7 +33,11 @@ function HeaderMain() {
         <title>TvingFront - Header</title>
       </Helmet>
       {/* onboarding과 main의 header를 구별해줘야함 */}
-      <div className="py-6 px-16 bg-black flex flex-row items-center justify-between">
+      <div
+        className={`py-6 px-16 flex flex-row items-center justify-between ${
+          isSearchClicked ? "bg-[#191919]" : "bg-black"
+        }`}
+      >
         <div className="flex flex-row">
           <Link to="/main" className="inline-block w-[120px]">
             <h1 className="sr-only">티빙</h1>
@@ -67,18 +71,7 @@ function HeaderMain() {
               <img src={isHovered ? searchHover : search} alt="검색 버튼" />
             )}
           </button>
-          {/* <button
-            onMouseOver={() => {
-              setIsProfileHovered(true);
-              setIsVisible(true);
-            }}
-            onMouseOut={() => {
-              setIsProfileHovered(false);
-              setIsVisible(false);
-            }}
-          >
-            <img src={myProfile} alt="" className="w-8" />
-          </button> */}
+
           <div
             className="relative p-1"
             onMouseEnter={() => setIsVisible(true)}
@@ -87,14 +80,11 @@ function HeaderMain() {
             <button className="w-8">
               <img src={myProfile} alt="" className="w-8" />
             </button>
-            {isVisible && (
-             
-              <MainProfileModal />
-            )}
+            {isVisible && <MainProfileModal />}
           </div>
         </div>
       </div>
-      
+
       <SearchModal visible={isSearchClicked} onClose={handleSearchClick} />
     </>
   );

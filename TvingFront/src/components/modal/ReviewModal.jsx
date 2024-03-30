@@ -3,15 +3,28 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 
 import close from "@/assets/profiles/icon_x.svg";
+import useContent from "@/store/useContent";
+
+import Cookies from "js-cookie";
+import { postData } from "@/utils/crud";
+import { toast } from "react-hot-toast";
 
 function ReviewModal({ isOpen, closeModal }) {
   const [rating, setRating] = useState(0); // 초기 별점 상태 설정
 
   const [hover, setHover] = useState(0); // 마우스 호버 상태 설정
 
+  const [review, setReview] = useState(""); // 리뷰 텍스트 상태 설정
+
+  const { content } = useContent();
+
   // 별점을 설정하는 함수
   const handleSetRating = (newRating) => {
     setRating(newRating);
+  };
+
+  const handleReviewChange = (e) => {
+    setReview(e.target.value);
   };
 
   // 별점에 따른 텍스트 설명
@@ -23,12 +36,65 @@ function ReviewModal({ isOpen, closeModal }) {
     5: "5.0 최고",
   };
 
+  const handleSubmit = async () => {
+    try {
+      const type = Cookies.get("grantType");
+      const token = Cookies.get("accessToken");
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `${type} ${token}`,
+      };
+
+      // 현재 시간을 0000년 00월 00일 형식으로 변환
+      const currentDate = new Date()
+        .toLocaleDateString("ko-KR", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        })
+        .replace(/\. /g, "-")
+        .replace(/\./g, "");
+
+      const data = {
+        profileName: "이재호",
+        contentId: content.contentId,
+        starRating: rating,
+        review: review,
+        ratingDate: currentDate,
+      };
+
+      const url = `http://hoyeonjigi.site:8080/evaluation`;
+
+      const response = await postData(url, data, headers);
+      // return postData(url, data, headers); // getData 함수가 각 URL에 대해 요청을 수행하고, 프로미스를 반환한다고 가정합니다.
+
+      toast.success(`리뷰가 성공적으로 등록되었습니다`, {
+        // icon: "🎉",
+        duration: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+      console.log("에러출력");
+      toast.error(`이미 리뷰를 등록했습니다.`, {
+        duration: 2000,
+      });
+    }
+  };
+
   if (!isOpen) {
     return null;
   }
 
   return (
-    <form className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-90 ">
+    <form
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-90 "
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit();
+        closeModal();
+      }}
+    >
       <motion.div
         className="bg-gray_03 rounded flex flex-col w-[680px] h-[85%] items-center relative p-7"
         initial={{ y: "20vh" }} // 초기 위치는 화면 아래쪽
@@ -41,11 +107,11 @@ function ReviewModal({ isOpen, closeModal }) {
         </button>
 
         <h3 className="text-white w-full text-xl font-extrabold">리뷰 달기</h3>
-        <p className="text-white w-full text-sm">snl코리아</p>
+        <p className="text-white w-full text-sm mt-2">{content.contentTitle}</p>
         <div className="w-full flex flex-col justify-center items-center">
           <div className="w-full flex justify-center items-center mt-4">
             <p className="text-white text-3.5xl font-extrabold">
-              {" "}
+              {/* {" "} */}
               {hover || rating
                 ? ratingTexts[hover || rating]
                 : "별점을 선택해주세요"}
@@ -81,6 +147,8 @@ function ReviewModal({ isOpen, closeModal }) {
             name="review"
             placeholder="이 콘텐츠의 어떤 점이 좋거나 싫었는지 다른 사용자들에게 알려주세요. 고객님의 리뷰는 다른 사용자들에게 큰 도움이 됩니다."
             className=" w-full min-h-[250px] max-h-72 border border-[#777] rounded bg-gray_03 text-white text-sm placeholder:text-[#777] placeholder:text-sm p-3 resize-y "
+            value={review}
+            onChange={handleReviewChange}
           ></textarea>
         </div>
         <div className="w-full flex items-center justify-center mt-10">

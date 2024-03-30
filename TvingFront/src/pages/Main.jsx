@@ -17,7 +17,11 @@ import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
 import useContent from "@/store/useContent";
 
+import { useLocation } from "react-router-dom";
+
 function Main() {
+  const location = useLocation();
+
   const [latestFilm, setLatestFilm] = useState([]);
   const [latestDrama, setLatestDrama] = useState([]);
   const [comedyDrama, setComedyDrama] = useState([]);
@@ -48,7 +52,7 @@ function Main() {
 
     const response = await postData(reUrl, body, headers);
 
-    console.log(response);
+    // console.log(response);
     Cookies.set("accessToken", response.accessToken, {
       secure: true,
       sameSite: "strict",
@@ -61,6 +65,10 @@ function Main() {
       secure: true,
       sameSite: "strict",
     });
+
+    localStorage.removeItem("isDataLoaded");
+    // 페이지 새로고침이나 필요한 추가 로직을 여기에 구현할 수 있습니다.
+    // window.location.reload(); // 예시로 페이지를 새로고침하는 코드를 추가했습니다.
 
     // if (response.success) {
     //
@@ -80,13 +88,20 @@ function Main() {
 
     const body = {};
     const response = await patchData(url, body, headers);
-    console.log(response);
-    console.log(Cookies.get("count"));
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const isDataLoaded = localStorage.getItem("isDataLoaded");
+
+        localStorage.removeItem("genres");
+        localStorage.removeItem("contents");
+        localStorage.removeItem("reviews");
+
+        // 데이터가 이미 로드되었다면, 함수를 종료하여 추가 로드를 방지
+        if (isDataLoaded) return;
+
         const type = Cookies.get("grantType");
         const token = Cookies.get("accessToken");
 
@@ -102,7 +117,7 @@ function Main() {
         const movieUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryMovie}/lastest20`;
 
         const resultMovie = await getData(movieUrl, headers);
-        console.log(resultMovie);
+        // console.log(resultMovie);
 
         const latestFilmData = resultMovie.map((item) => ({
           contentId: item.contentId,
@@ -112,9 +127,11 @@ function Main() {
           src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
           alt: item.contentTitle,
         }));
+
+        localStorage.setItem("latestFilm", JSON.stringify(latestFilmData));
         setLatestFilm(latestFilmData);
 
-        console.log(latestFilmData);
+        // console.log(latestFilmData);
 
         //최신 드라마
         const dramaQuery = "드라마";
@@ -132,6 +149,7 @@ function Main() {
           src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
           alt: item.contentTitle,
         }));
+        localStorage.setItem("latestDrama", JSON.stringify(latestDramaData));
         setLatestDrama(latestDramaData);
 
         //코미디 드라마
@@ -150,6 +168,7 @@ function Main() {
           src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
           alt: item.contentTitle,
         }));
+        localStorage.setItem("comedyDrama", JSON.stringify(comedyDramaData));
         setComedyDrama(comedyDramaData);
 
         //로맨스 영화
@@ -168,6 +187,8 @@ function Main() {
           src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
           alt: item.contentTitle,
         }));
+
+        localStorage.setItem("romanceFilm", JSON.stringify(romanceFilmData));
         setRomanceFilm(romanceFilmData);
 
         //인기 컨텐츠
@@ -184,16 +205,65 @@ function Main() {
           src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
           alt: item.contentTitle,
         }));
+
+        localStorage.setItem("popularContent", JSON.stringify(popularData));
         setPopularContent(popularData);
+
+        localStorage.setItem("isDataLoaded", "true");
       } catch (error) {
         console.log(error);
         console.log("에러출력");
+        localStorage.removeItem("isDataLoaded");
         refresh();
       }
     };
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const storedLatestFlim = localStorage.getItem("latestFilm");
+    // console.log(storedContents);
+    if (storedLatestFlim) {
+      setLatestFilm(JSON.parse(storedLatestFlim));
+    }
+    const storedLatestDrama = localStorage.getItem("latestDrama");
+    // console.log(storedGenres);
+    if (storedLatestDrama) {
+      setLatestDrama(JSON.parse(storedLatestDrama));
+    }
+
+    const storedComedyDrama = localStorage.getItem("comedyDrama");
+    // console.log(storedReviews);
+    if (storedComedyDrama) {
+      setComedyDrama(JSON.parse(storedComedyDrama));
+    }
+
+    const storedRomanceFilm = localStorage.getItem("romanceFilm");
+    // console.log(storedReviews);
+    if (storedRomanceFilm) {
+      setRomanceFilm(JSON.parse(storedRomanceFilm));
+    }
+
+    const storedPopularContent = localStorage.getItem("popularContent");
+    // console.log(storedReviews);
+    if (storedPopularContent) {
+      setPopularContent(JSON.parse(storedPopularContent));
+    }
+  }, []);
+
+  useEffect(() => {
+    // 페이지 경로가 /home과 일치할 때만 isDataLoaded 삭제
+    if (
+      location.pathname === "/" ||
+      location.pathname === "/signin" ||
+      location.pathname === "/signup" ||
+      location.pathname === "/FindID" ||
+      location.pathname === "/FindPassword"
+    ) {
+      localStorage.removeItem("isDataLoaded");
+    }
+  }, [location]); // location 객체가 변경될 때마다 useEffect 훅이 실행됩니다.
 
   return (
     <>
