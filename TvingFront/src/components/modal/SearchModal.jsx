@@ -108,12 +108,32 @@ function SearchModal({ visible, onClose }) {
     };
   }, []);
 
+  useEffect(() => {
+    // 모달이 보일 때 body의 overflow를 hidden으로 설정
+    if (visible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      // 모달이 닫힐 때 원래대로 돌려놓음
+      document.body.style.overflow = "unset";
+    }
+
+    // 컴포넌트가 언마운트 될 때 스크롤을 원래대로 돌려놓음
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [visible]); // visible 상태가 변경될 때마다 실행
+
   if (!visible) return null;
+
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
 
   return (
+    // <div
+    //   className="fixed inset-0 flex flex-col items-center bg-[#191919] h-[90%] translate-y-20 z-50"
+    //   onClick={stopPropagation}
+    // >
     <div
       className="fixed inset-0 flex flex-col items-center bg-[#191919] h-[90%] translate-y-20 z-50"
       onClick={stopPropagation}
@@ -139,9 +159,11 @@ function SearchModal({ visible, onClose }) {
           <ul className="flex  gap-3 justify-start">
             {searchContent.slice(0, 6).map((item, index) => (
               <li key={index} className="w-48">
-                <a href="/" className="overflow-hidden whitespace-nowrap text-ellipsis">
-                  <img src={item.src} alt="w-48 h-84" className="rounded" />
-                  <p>{item.alt}</p>
+                <a href="/" className="">
+                  <img src={item.src} alt="" className="rounded h-72" />
+                  <p className="mt-2 font-semibold text-lg text-gray_06 truncate">
+                    {item.alt}
+                  </p>
                 </a>
               </li>
             ))}
@@ -149,15 +171,15 @@ function SearchModal({ visible, onClose }) {
         </div>
       ) : (
         <div className="flex flex-row w-[80%]" id="test2">
-          <ul className="w-[50%] border-r-[1px] border-r-[#2e2e2e]">
-            <li className="text-[#dedede] text-2xl font-medium mb-5">
+          <ul className="w-[50%] border-r-[1px] border-r-[#2e2e2e] mt-20">
+            <li className="text-[#dedede] text-2xl font-medium mb-5 mt-[22px]">
               최근 검색어
             </li>
             <li className="text-[#dededeb2] text-xl font-medium">
               검색 내용이 없습니다.
             </li>
           </ul>
-          <ul className="flex flex-col gap-4 w-[50%] pl-12 py-5">
+          <ul className="flex flex-col gap-4 w-[50%] pl-12 py-5 mt-20">
             <h2 className="text-[#dedede] text-2xl font-bold mb-6">
               실시간 인기 검색어
             </h2>
