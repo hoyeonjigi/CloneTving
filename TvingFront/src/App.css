@@ -45,21 +45,89 @@
   transition-timing-function: linear !important;
 }
 
-.swiper-button-next-base,
+/* .swiper-button-next-base,
 .swiper-button-prev-base,
 .swiper-button-next-yumi,
 .swiper-button-prev-yumi {
   background: white;
   width: 30px;
   height: 30px;
-}
+} */
 
-.custom-prev-button,
+/* .custom-prev-button,
 .custom-next-button {
-  background-color: rgba(255, 255, 255, 0.5); /* 흰색의 반투명 배경 */
-  box-shadow: 0 0 10px black; /* 검은색 그림자 */
+  background-color: rgba(255, 255, 255, 0.5); 
+  box-shadow: 0 0 10px black;
+} */
+
+.banner-custom-swiper .swiper-button-prev,
+.banner-custom-swiper .swiper-button-next {
+  color: #898989;
 }
 
-.star {
-  background-color: aqua;
+.banner-custom-swiper .swiper-button-prev.swiper-button-disabled,
+.banner-custom-swiper .swiper-button-next.swiper-button-disabled {
+  opacity: 0;
+}
+
+.banner-custom-swiper .swiper-button-prev:hover,
+.banner-custom-swiper .swiper-button-next:hover {
+  color: #fff;
+}
+
+.banner-custom-swiper .swiper-pagination {
+  padding-left: 80%;
+  padding-bottom: 20px;
+}
+
+.banner-custom-swiper .swiper-pagination-bullet {
+  background-color: #fff;
+  width: 10px;
+  height: 10px;
+}
+
+.content-custom-swiper .swiper-button-prev,
+.content-custom-swiper .swiper-button-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: 50% 40%;
+  width: 3.888rem;
+  height: 100%;
+  background-image: radial-gradient(
+    106.25% 50% at 106.25% 50%,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.6) 52.6%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  color: white;
+  opacity: 0;
+}
+
+.content-custom-swiper:hover .swiper-button-prev,
+.content-custom-swiper:hover .swiper-button-next {
+  opacity: 1;
+}
+
+.content-custom-swiper .swiper-button-prev.swiper-button-disabled,
+.content-custom-swiper
+  .swiper-button-next.swiper-button-next.swiper-button-disabled {
+  opacity: 0;
+}
+
+.content-custom-swiper .swiper-pagination-bullet {
+  width: 6px;
+  height: 6px;
+  background-color: #898989;
+  opacity: 0;
+}
+
+.content-custom-swiper .swiper-pagination-bullet-active {
+  background-color: #fff;
+}
+
+.content-custom-swiper:hover .swiper-pagination-bullet {
+  opacity: 1;
 }

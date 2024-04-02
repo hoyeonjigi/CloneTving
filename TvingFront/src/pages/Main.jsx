@@ -420,20 +420,11 @@ function Main() {
               spaceBetween={10}
               slidesPerView={7.1}
               slidesPerGroup={7}
-              navigation={{
-                nextEl: ".custom-next-button",
-                prevEl: ".custom-prev-button",
-              }}
+              navigation
               pagination={{
                 clickable: true,
               }}
-              onReachBeginning={() => setIsBeginning(true)}
-              onReachEnd={() => setIsEnd(true)}
-              onSlideChange={(swiper) => {
-                setIsBeginning(swiper.isBeginning);
-                setIsEnd(swiper.isEnd);
-              }}
-              className="px-16 content-custom-swiper z-0"
+              className="px-16 content-custom-swiper z-10"
             >
               {latestFilm.map((film, index) => (
                 <SwiperSlide
@@ -463,7 +454,7 @@ function Main() {
                 </SwiperSlide>
               ))}
             </Swiper>
-            <button
+            {/* <button
               className={`custom-prev-button absolute left-0 top-0 h-full ${
                 isBeginning ? "hidden" : ""
               }`}
@@ -493,9 +484,10 @@ function Main() {
                 alt="메인 컨텐츠 오른쪽으로 넘기기"
                 className="w-16"
               />
-            </button>
+            </button> */}
           </div>
         </section>
+
         <section className="pt-5 relative mt-10">
           <div>
             <h3 className="text-white text-2.5xl font-bold ml-16">

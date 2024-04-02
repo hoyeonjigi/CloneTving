@@ -17,16 +17,8 @@ function Detail() {
   // 모달 창 상태를 관리하는 state
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  //평점 평균을 계산하는 함수
-  // const calculateAverageRating = () => {
-  //   // console.log(review.length);
-  //   const totalRating = review.reduce((acc, curr) => acc + curr.starRating, 0);
-  //   const averageRating = review.length > 0 ? totalRating / review.length : 0;
-  //   // console.log(averageRating)
-  //   return averageRating.toFixed(1); // 평균 평점을 소수점 첫째 자리까지 표현합니다.
-
-    
-  // };
+  const [averageRating, setAverageRating] = useState("0.0");
+  const [numberOfReviews, setNumberOfReviews] = useState(0);
 
   // 모달 창을 여는 함수
   const openModal = () => {
@@ -112,12 +104,13 @@ function Detail() {
 
         const response = await getData(url, headers);
 
+
         // API 호출을 통해 가져온 데이터를 로컬 스토리지에 저장합니다.
         localStorage.setItem("reviews", JSON.stringify(response));
         setReview(response); // 가져온 데이터로 상태를 업데이트합니다.
       } catch (error) {
         console.log(error);
-        console.log("에러출력");
+        console.log("리뷰에러");
       }
     };
 
@@ -141,7 +134,36 @@ function Detail() {
     if (storedReviews) {
       setReview(JSON.parse(storedReviews));
     }
+
+    // setRating(calculateAverageRating());
   }, []);
+
+  useEffect(() => {
+    // 로컬 스토리지에서 리뷰 데이터를 가져오는 함수
+    const fetchReviews = () => {
+      const reviewsString = localStorage.getItem("reviews");
+      if (!reviewsString) {
+        console.log("리뷰 데이터가 없습니다.");
+        return;
+      }
+      const reviews = JSON.parse(reviewsString);
+      if (!Array.isArray(reviews) || reviews.length === 0) {
+        console.log("유효한 리뷰 데이터가 없습니다.");
+        return;
+      }
+      const totalRating = reviews.reduce(
+        (acc, curr) => acc + curr.starRating,
+        0
+      );
+      const averageRating = (totalRating / reviews.length).toFixed(1);
+      // 상태 업데이트
+      setAverageRating(averageRating);
+      setNumberOfReviews(reviews.length);
+    };
+
+    // 컴포넌트 마운트 시 리뷰 데이터 가져오기
+    fetchReviews();
+  }, []); // 빈 배열을 의존성 배열로 전달하여 컴포넌트가 마운트될 때만 실행되도록 함
 
   return (
     <div className="bg-black">
@@ -233,10 +255,10 @@ function Detail() {
         <div>
           <div className="flex items-center">
             <div className="text-5xl text-white font-extrabold mr-4">
-              {calculateAverageRating()}
+              {averageRating}
             </div>
             <div className="flex flex-col">
-              <p className="text-white">444,444 평점</p>
+              <p className="text-white">{} 평점</p>
             </div>
           </div>
           <button onClick={openModal}>리뷰달기</button>
