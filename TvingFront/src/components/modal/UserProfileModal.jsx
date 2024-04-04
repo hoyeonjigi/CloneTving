@@ -38,7 +38,6 @@ function UserProfileModal({ isOpen, closeModal }) {
   if (!isOpen) {
     return null;
   }
-
   const baseProfiles = [
     { src: profile1, alt: "기본 프로필 1" },
     { src: profile2, alt: "기본 프로필 2" },

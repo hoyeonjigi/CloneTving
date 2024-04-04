@@ -12,9 +12,128 @@
 
     color: #333;
   }
-
 }
 
 .smooth-swiper .swiper-wrapper {
   transition-timing-function: linear !important;
+}
+/* 
+.banner-custom-swiper .swiper-button-prev,
+.banner-custom-swiper .swiper-button-next {
+  color: #898989;
+
+} */
+
+/* 왼쪽 화살표의 크기 조절 */
+.banner-custom-swiper .swiper-button-prev::after {
+  position: absolute;
+  background-image: url("https://www.tving.com/img/icon_slide_left.svg");
+  content: ""; /* 필수: 가상 요소에 내용을 추가하기 위해 필요 */
+
+  display: block; /* 이미지를 정상적으로 표시하기 위해 */
+  width: 200%; /* 화살표 이미지의 너비를 조절 */
+  height: 200%; /* 화살표 이미지의 높이를 조절 */
+  /* background-size: contain; 이미지가 요소 내부에 맞게 조절되도록 설정 */
+  background-size: 100% 100%;
+  background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+  
+}
+
+/* 오른쪽 화살표의 크기 조절 */
+.banner-custom-swiper .swiper-button-next::after {
+  position: absolute;
+  background-image: url("https://www.tving.com/img/icon_slide_right.svg");
+  content: ""; /* 필수: 가상 요소에 내용을 추가하기 위해 필요 */
+
+  display: block; /* 이미지를 정상적으로 표시하기 위해 */
+  width: 200%; /* 화살표 이미지의 너비를 조절 */
+  height: 200%; /* 화살표 이미지의 높이를 조절 */
+  /* background-size: contain; 이미지가 요소 내부에 맞게 조절되도록 설정 */
+  background-size: 100% 100%;
+  background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+  opacity: 60%;
+  z-index: 10;
+}
+
+.banner-custom-swiper .swiper-button-next:hover{
+  opacity: 100%;
+}
+
+.banner-custom-swiper .swiper-button-prev.swiper-button-disabled,
+.banner-custom-swiper .swiper-button-next.swiper-button-disabled {
+  opacity: 0;
+}
+
+.banner-custom-swiper .swiper-button-prev:hover,
+.banner-custom-swiper .swiper-button-next:hover {
+  color: #fff;
+}
+
+.banner-custom-swiper .swiper-pagination {
+  padding-left: 80%;
+  padding-bottom: 20px;
+}
+
+.banner-custom-swiper .swiper-pagination-bullet {
+  background-color: #fff;
+  width: 10px;
+  height: 10px;
+}
+
+.content-custom-swiper .swiper-button-prev,
+.content-custom-swiper .swiper-button-next {
+  position: absolute;
+  top: 63%;
+  /* right: 0;
+  left: 0; */
+  transform: translateY(-50%);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  /* background-position: 50% 40%; */
+  width: 3.888rem;
+  height: 100%;
+  /* height: 20px; */
+  background-image: radial-gradient(
+    106.25% 50% at 106.25% 50%,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.6) 52.6%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  color: white;
+  opacity: 0;
+}
+
+.content-custom-swiper .swiper-button-prev {
+  /* width: 20px; */
+  left: 0;
+}
+
+.content-custom-swiper .swiper-button-next {
+  right: 0;
+}
+
+.content-custom-swiper:hover .swiper-button-prev,
+.content-custom-swiper:hover .swiper-button-next {
+  opacity: 1;
+}
+
+.content-custom-swiper .swiper-button-prev.swiper-button-disabled,
+.content-custom-swiper
+  .swiper-button-next.swiper-button-next.swiper-button-disabled {
+  opacity: 0;
+}
+
+.content-custom-swiper .swiper-pagination-bullet {
+  width: 6px;
+  height: 6px;
+  background-color: #898989;
+  opacity: 0;
+}
+
+.content-custom-swiper .swiper-pagination-bullet-active {
+  background-color: #fff;
+}
+
+.content-custom-swiper:hover .swiper-pagination-bullet {
+  opacity: 1;
 }

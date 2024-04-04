@@ -63,13 +63,13 @@ function SignIn() {
 			setReToken(response.refreshToken);
 			setGrantType(response.grantType);
 
-			const a = Cookies.get("accessToken");
-			const r = Cookies.get("refreshToken");
-			const g = Cookies.get("grantType");
+			// const a = Cookies.get("accessToken");
+			// const r = Cookies.get("refreshToken");
+			// const g = Cookies.get("grantType");
 
-			console.log(a);
-			console.log(r);
-			console.log(g);
+			// console.log(a);
+			// console.log(r);
+			// console.log(g);
 
 			navigate("/user/profiles");
 		} catch (error) {

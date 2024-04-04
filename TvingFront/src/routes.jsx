@@ -63,7 +63,7 @@ const router = createBrowserRouter([
 				element: <ProfileForEditDetail />,
 			},
 			{
-				path: "/main/detail",
+				path: `/main/detail/:id`,
 				element: <Detail />,
 			},
 		],
