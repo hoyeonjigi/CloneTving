@@ -1,5 +1,6 @@
 import { AnimatePresence } from "framer-motion";
 import { RouterProvider } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import router from "./routes.jsx";
 import "./index.css";
 import { HelmetProvider } from "react-helmet-async";
@@ -9,6 +10,7 @@ function App() {
     <>
       <HelmetProvider>
         <AnimatePresence>
+          <Toaster />
           <RouterProvider router={router} />
         </AnimatePresence>
       </HelmetProvider>
