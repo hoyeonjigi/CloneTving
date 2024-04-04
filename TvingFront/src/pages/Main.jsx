@@ -98,6 +98,8 @@ function Main() {
         localStorage.removeItem("genres");
         localStorage.removeItem("contents");
         localStorage.removeItem("reviews");
+        localStorage.removeItem("averageRating");
+        localStorage.removeItem("numberOfReviews");
 
         // 데이터가 이미 로드되었다면, 함수를 종료하여 추가 로드를 방지
         if (isDataLoaded) return;
