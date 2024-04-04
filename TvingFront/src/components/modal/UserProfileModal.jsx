@@ -1,4 +1,4 @@
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { getData } from "@/utils/crud";
 import { motion } from "framer-motion";
@@ -14,7 +14,6 @@ import right from "@/assets/profiles/icon-right.svg";
 import left from "@/assets/profiles/icon-left.svg";
 
 function UserProfileModal({ isOpen, closeModal }) {
-<<<<<<< HEAD
 	if (!isOpen) {
 		return null;
 	}
@@ -22,23 +21,6 @@ function UserProfileModal({ isOpen, closeModal }) {
 	const [profileImages, setProfileImages] = useState([]);
 	const [baseProfileImages, setBaseProfileImages] = useState([]);
 	const [yumiProfileImages, setYumiProfileImages] = useState([]);
-=======
-  if (!isOpen) {
-    return null;
-  }
-  const baseProfiles = [
-    { src: profile1, alt: "기본 프로필 1" },
-    { src: profile2, alt: "기본 프로필 2" },
-    { src: profile3, alt: "기본 프로필 3" },
-    { src: profile4, alt: "기본 프로필 4" },
-    { src: profile5, alt: "기본 프로필 5" },
-    { src: profile6, alt: "기본 프로필 6" },
-    { src: profile7, alt: "기본 프로필 7" },
-    { src: profile8, alt: "기본 프로필 8" },
-    { src: profile9, alt: "기본 프로필 9" },
-    { src: profile10, alt: "기본 프로필 10" },
-  ];
->>>>>>> FrontEnd
 
 	const [baseSlideIndex, setBaseSlideIndex] = useState(0);
 	const [yumiSlideIndex, setYumiSlideIndex] = useState(0);
