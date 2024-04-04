@@ -5,21 +5,57 @@ import profile2 from "@/assets/profiles/profile2.png";
 import profilePlus from "@/assets/profiles/icon-plus.png";
 import profileEdit from "@/assets/profiles/icon-edit.svg";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getData } from "@/utils/crud";
 
 function ProfilesForEdit() {
+	const [userProfiles, setUserProfiles] = useState([]);
+
+	const getUserData = async () => {
+		try {
+			const testUrl = "http://hoyeonjigi.site:8080/profile/test001";
+			const type = Cookies.get("grantType");
+			const token = Cookies.get("accessToken");
+
+			const headers = {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
+				Authorization: `${type} ${token}`,
+			};
+
+			const result = await getData(testUrl, headers);
+			setUserProfiles(
+				result.map((item) => ({
+					userProfileName: item.profileName,
+					userProfileImageUrl: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.profileImageUrl}`,
+					alt: `테스트 이미지`,
+				}))
+			);
+			console.log(result);
+		} catch (error) {
+			console.log(error);
+			console.log("에러출력");
+		}
+	};
+
 	const navigate = useNavigate();
 
-	const handleProfileDetail = () => {
+	const handleProfileDetail = (profileName, userProfileUrl) => {
 		navigate("/user/profileForEdit", {
 			state: {
-				profileName: "가져온 이름",
+				profileName: `${profileName}`,
 				userId: "test123",
-				imageName: `@/assets/profiles/profile1.png`,
+				imageUrl: `${userProfileUrl}`,
 			},
 		});
 	};
+
+	useEffect(() => {
+		getUserData();
+	}, []);
 
 	return (
 		<div className="bg-black font-noto">
@@ -35,48 +71,42 @@ function ProfilesForEdit() {
 				{/* 프로필 아이콘 */}
 				<div className="mt-12 flex items-center justify-center">
 					<ul className="flex flex-row justify-center items-center gap-10 w-[70%]">
-						<li className="flex flex-col text-center gap-6 flex-grow relative">
-							<motion.button
-								className="w-full overflow-hidden relative"
-								whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
-								transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
+						{userProfiles.map((user, index) => (
+							<li
+								key={user.profileName}
+								className="flex flex-col text-center gap-6 flex-grow relative"
 							>
-								<div onClick={() => handleProfileDetail()}>
-									<img
-										src={profile1}
-										alt="첫번째 프로필"
-										className="w-full h-auto"
-									/>
-									<div className="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
-									<img
-										src={profileEdit}
-										alt="프로필 편집 아이콘"
-										className="absolute w-[25%] h-auto top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-									/>
-								</div>
-							</motion.button>
-							<p className="text-[#888888] text-xl font-medium">이재호</p>
-						</li>
-						<li className="flex flex-col text-center gap-6 flex-grow relative">
-							<motion.button
-								className="w-full overflow-hidden relative"
-								whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
-								transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
-							>
-								<img
-									src={profile2}
-									alt="두번째 프로필"
-									className="w-full h-auto"
-								/>
-								<div className="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
-								<img
-									src={profileEdit}
-									alt="프로필 편집 아이콘"
-									className="absolute w-[25%] h-auto top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-								/>
-							</motion.button>
-							<p className="text-[#888888] text-xl font-medium">박세웅</p>
-						</li>
+								<motion.button
+									className="w-full overflow-hidden relative"
+									whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
+									transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
+								>
+									<div
+										onClick={() =>
+											handleProfileDetail(
+												user.userProfileName,
+												user.userProfileImageUrl
+											)
+										}
+									>
+										<img
+											src={user.userProfileImageUrl}
+											alt="프로필 이미지"
+											className="w-full h-auto"
+										/>
+										<div className="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
+										<img
+											src={profileEdit}
+											alt="프로필 편집 아이콘"
+											className="absolute w-[25%] h-auto top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+										/>
+									</div>
+								</motion.button>
+								<p className="text-[#888888] text-xl font-medium">
+									{user.userProfileName}
+								</p>
+							</li>
+						))}
 
 						{/* <li className="flex flex-col text-center gap-6 flex-grow relative">
               <button className="bg-[#4e4e4e] w-full h-full p-[6.6rem]">

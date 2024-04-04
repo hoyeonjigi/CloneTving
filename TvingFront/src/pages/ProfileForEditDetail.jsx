@@ -4,6 +4,8 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
+import { deleteData } from "@/utils/crud";
 
 import profile1 from "@/assets/profiles/profile1.png";
 import profile2 from "@/assets/profiles/profile2.png";
@@ -36,8 +38,10 @@ function ProfileForEditDetail() {
 	const location = useLocation();
 	const userInfo = { ...location.state };
 
-	const [name, setName] = useState("");
-	const [currentProfile, setCurrentProfile] = useState(profiles[0]);
+	const [name, setName] = useState(userInfo.profileName);
+	const [currentProfile, setCurrentProfile] = useState([
+		{ src: userInfo.imageUrl, alt: "기본 프로필" },
+	]);
 
 	const handleNameChange = (e) => {
 		const inputName = e.target.value;
@@ -50,7 +54,28 @@ function ProfileForEditDetail() {
 		}
 	};
 
+	const handleDelete = async (e) => {
+		e.preventDefault();
+		try {
+			const testUrl = `http://hoyeonjigi.site:8080/profile/${name}`;
+			const type = Cookies.get("grantType");
+			const token = Cookies.get("accessToken");
+
+			const headers = {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
+				Authorization: `${type} ${token}`,
+			};
+			const result = await deleteData(testUrl);
+			console.log(result);
+		} catch (error) {
+			console.log(error);
+			console.log("에러출력");
+		}
+	};
+
 	useEffect(() => {
+		console.log(currentProfile);
 		// const randomIndex = Math.floor(Math.random() * profiles.length);
 		// setCurrentProfile(profiles[randomIndex]);
 		// setCurrentProfile()
@@ -96,7 +121,7 @@ function ProfileForEditDetail() {
 							type="text"
 							id="name"
 							className="bg-[#191919] w-full focus:border-red-700 text-white px-5 py-4 rounded-sm placeholder:text-[#4d4d4d] text-xl"
-							placeholder={userInfo.profileName}
+							placeholder="프로필 이름"
 							defaultValue={name}
 							onChange={handleNameChange}
 							minLength={2}
@@ -118,7 +143,10 @@ function ProfileForEditDetail() {
 								취소
 							</button>
 						</Link>
-						<button className="px-[2rem] py-5 font-normal text-1.5xl  text-btnText border border-btnBorder rounded hover:text-[#dedede] hover:border-[#888888]">
+						<button
+							className="px-[2rem] py-5 font-normal text-1.5xl  text-btnText border border-btnBorder rounded hover:text-[#dedede] hover:border-[#888888]"
+							onClick={handleDelete}
+						>
 							프로필 삭제
 						</button>
 					</div>

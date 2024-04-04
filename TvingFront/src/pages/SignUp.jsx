@@ -11,6 +11,9 @@ function SignUp() {
 	const [userPassword, setuserPassword] = useState("");
 	const [userPasswordVerify, setUserPasswordVerify] = useState("");
 	const [userEmail, setUserEmail] = useState("");
+	const idRegExp = /^[a-zA-z0-9]{6,12}$/;
+
+	//체크박스 상태
 	const [adultStatus, setAdultStatus] = useState(false);
 	const [agree01, setAgree01] = useState(false);
 	const [agree02, setAgree02] = useState(false);
@@ -20,7 +23,6 @@ function SignUp() {
 	const [smsAgreement, setSmsAgreement] = useState(false);
 	const [emailAgreement, setEmailAgreement] = useState(false);
 	const [query, setQuery] = useState(""); // 입력 값을 상태로 관리
-	const [searchContent, setSearchContent] = useState([]);
 	//오류 메세지
 	const [idMessage, setIdMessage] = useState(
 		"영문 또는 영문, 숫자 조합 6-12자리"
@@ -51,6 +53,10 @@ function SignUp() {
 		privacyAgreement,
 		smsAgreement,
 		emailAgreement,
+	};
+	const headers = {
+		"Content-Type": "application/json",
+		"Access-Control-Allow-Origin": "*",
 	};
 
 	const handleSubmit = async (e) => {
@@ -147,44 +153,38 @@ function SignUp() {
 	// 	}
 	// };
 
+	//문제점
+	//idRegExp 작동하지 않음
+
 	//디바운스
-	const debouncedSearch = useRef(null);
+	const debouncedDuplication = useRef(null);
 
 	const handleDuplication = useCallback(
 		debounce(async (query) => {
-			// handleSearch 함수 구현
+			if (!query.trim()) {
+				return;
+			}
+
 			try {
-				// const baseUrl = "http://hoyeonjigi.site:8080/content/";
-				// const encodedQuery = encodeURIComponent(query);
-				// const url = `${baseUrl}${encodedQuery}`;
-				const idExistUrl = `http://hoyeonjigi.site:8080/user/exist/${userId}`;
+				setUserId(query);
+				const url = `http://hoyeonjigi.site:8080/user/exist/${query}`;
 				const headers = {
 					"Content-Type": "application/json",
 					"Access-Control-Allow-Origin": "*",
 				};
 
-				// console.log(url);
-				// const type = Cookies.get("grantType");
-				// const token = Cookies.get("accessToken");
-				// const headers = {
-				// 	"Content-Type": "application/json",
-				// 	"Access-Control-Allow-Origin": "*",
-				// 	Authorization: `${type} ${token}`,
-				// };
 				const result = await getData(url, headers);
-
-				console.log(result);
-				// // result에 값이 있으면 그대로 저장하고, 없으면 빈 배열을 저장합니다.
-				// const searchData =
-				// 	result.length > 0
-				// 		? result.map((item) => ({
-				// 				src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
-				// 				alt: item.contentTitle,
-				// 		  }))
-				// 		: [];
-
-				// setSearchContent(searchData);
-				// // console.log(searchContent);
+				setIsIdExist(result);
+				if (!idRegExp.test(query)) {
+					setIsId(false);
+				} else {
+					setIsId(true);
+				}
+				if (result) {
+					setIdMessage("이미 사용 중인 아이디입니다.");
+				} else {
+					setIdMessage("영문 또는 영문, 숫자 조합 6-12자리");
+				}
 			} catch (error) {
 				console.error(`Error in sending get request: ${error}`);
 				// refresh();
@@ -192,22 +192,22 @@ function SignUp() {
 		}, 500),
 		[]
 	);
-	useEffect(() => {
-		console.log(searchContent);
-	}, [searchContent]);
 
-	debouncedSearch.current = handleDuplication;
+	debouncedDuplication.current = handleDuplication;
 
 	const handleChange = (e) => {
 		const value = e.target.value;
 		setQuery(value);
-		setSearchContent([]); // 검색 결과 초기화
-		debouncedSearch.current(value);
+		debouncedDuplication.current(value);
 	};
 
 	useEffect(() => {
 		return () => {
-			debouncedSearch.current.cancel();
+			debouncedDuplication.current.cancel();
+
+			// console.log(`query : ${query}`);
+			// console.log(`isId : ${isId}`);
+			// console.log(`isIdExist : ${isIdExist}`);
 		};
 	}, []);
 
@@ -272,11 +272,10 @@ function SignUp() {
 								value={query}
 								className="bg-[#212121] p-7 text-xl rounded text-white font-extralight w-[732px] focus:border-slate-100"
 								onChange={handleChange}
-								// onKeyUp={onChangeId}
 							/>
 							<p
 								className={`pb-6 text-[#6B6B6B] text-lg ${
-									((isId && userId) || !userId) && !isIdExist
+									(isId && !isIdExist) || query.length == 0
 										? "text-[#6B6B6B]"
 										: "text-[#FF153C]"
 								}`}
@@ -344,7 +343,7 @@ function SignUp() {
 								type="checkbox"
 								id="agreeAll"
 								checked={isCheckedAll}
-								onClick={handleCheckboxAll}
+								onChange={() => handleCheckboxAll()}
 							/>
 							<label
 								htmlFor="agreeAll"
@@ -439,7 +438,7 @@ function SignUp() {
 									type="checkbox"
 									id="agreeMarketingAll"
 									checked={marketingAgreement}
-									onClick={handleCheckboxMarketing}
+									onChange={() => handleCheckboxMarketing()}
 								/>
 								<label
 									htmlFor="agreeMarketingAll"
@@ -487,6 +486,7 @@ function SignUp() {
 							type="submit"
 							className={`rounded text-[#898989] p-7 w-[732px] text-2xl font-extrabold text-center ${
 								isId &&
+								!isIdExist &&
 								isPassword &&
 								isPasswordCheck &&
 								isEmail &&
