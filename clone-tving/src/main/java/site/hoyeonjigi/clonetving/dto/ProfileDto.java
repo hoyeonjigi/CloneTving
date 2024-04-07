@@ -15,12 +15,14 @@ public class ProfileDto {
     private String profileName;
     private String userId;
     private String profileImageUrl;
+    private String profileImageName;
     private boolean child;
 
     public ProfileDto(ProfileEntity profileEntity){
         this.profileName = profileEntity.getProfileName();
         this.userId = profileEntity.getUser().getUserId();
         this.profileImageUrl = profileEntity.getProfileImage().getImageUrl();
+        this.profileImageName = profileEntity.getProfileImage().getImageName();
         this.child = profileEntity.isChild();
     }
 }
