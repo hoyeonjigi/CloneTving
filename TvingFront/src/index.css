@@ -36,7 +36,6 @@
   /* background-size: contain; 이미지가 요소 내부에 맞게 조절되도록 설정 */
   background-size: 100% 100%;
   background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
-  
 }
 
 /* 오른쪽 화살표의 크기 조절 */
@@ -55,7 +54,7 @@
   z-index: 10;
 }
 
-.banner-custom-swiper .swiper-button-next:hover{
+.banner-custom-swiper .swiper-button-next:hover {
   opacity: 100%;
 }
 
@@ -137,3 +136,4 @@
 .content-custom-swiper:hover .swiper-pagination-bullet {
   opacity: 1;
 }
+
