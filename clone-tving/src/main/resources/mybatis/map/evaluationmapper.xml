@@ -30,6 +30,15 @@
         select profile_name, content_id, star_rating, review, rating_date
         from evaluation
         where content_id=#{contentId}
-        LIMIT #{offset}, 20
+        order by rating_date DESC
+        LIMIT 5 OFFSET #{offset}
+    </select>
+
+    <select id="findEvaluationStatsByContentId" resultType="map">
+        SELECT 
+            COUNT(*) AS evaluationCount, 
+            AVG(star_rating) AS avg
+        FROM evaluation
+        WHERE content_id = #{contentId}
     </select>
 </mapper>
