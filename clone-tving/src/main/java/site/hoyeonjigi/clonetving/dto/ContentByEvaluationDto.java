@@ -8,15 +8,7 @@ import java.util.List;
 @AllArgsConstructor 
 @ToString
 public class ContentByEvaluationDto {
-    private int evaluationCount;
+    private Long evaluationCount;
     private double avg;
     List<EvaluationDto> evaluationList;
-    static class EvaluationDto{
-        private String profileName;
-        private String contentId;
-        private float starRating;
-        private String review;
-        private String ratingDate;
-    }
-
 }

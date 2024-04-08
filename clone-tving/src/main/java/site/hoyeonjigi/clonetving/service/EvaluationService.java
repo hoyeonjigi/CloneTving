@@ -7,5 +7,5 @@ import java.util.List;
 public interface EvaluationService {
     EvaluationDto registerEvaluation(String userId, EvaluationDto evaluationDto) throws Exception;
     void deleteEvaluation(String userId, String profileName, String contentId);
-    ContentByEvaluationDto evaluationByContentId(String contentId, int offset);
+    ContentByEvaluationDto evaluationByContentId(String contentId, int page);
 }

@@ -6,11 +6,13 @@ import org.apache.ibatis.annotations.Param;
 import site.hoyeonjigi.clonetving.dto.ContentByEvaluationDto;
 import site.hoyeonjigi.clonetving.dto.EvaluationDto;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface EvaluationMapper {
     int save(@Param("userId")String userId, @Param("dto")EvaluationDto evaluationDto);
     EvaluationDto findEvaluation(@Param("userId")String userId, @Param("profileName")String profileName, @Param("contentId")String contentId);
     int delete(@Param("userId")String userId, @Param("profileName")String profileName ,@Param("contentId")String contentId);
-    ContentByEvaluationDto findByContentId(@Param("contentId") String contentId ,@Param("offset") int offset);
+    List<EvaluationDto> findByContentId(@Param("contentId") String contentId ,@Param("offset") int offset);
+    Map<String, Object> findEvaluationStatsByContentId(@Param("contentId") String contentId);
 }

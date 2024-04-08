@@ -2,7 +2,7 @@ package site.hoyeonjigi.clonetving.service;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +18,7 @@ import site.hoyeonjigi.clonetving.mapper.EvaluationMapper;
 import site.hoyeonjigi.clonetving.repository.ContentRepository;
 import site.hoyeonjigi.clonetving.repository.ProfileRepository;
 import site.hoyeonjigi.clonetving.repository.UserRepository;
+
 
 @Service
 @RequiredArgsConstructor
@@ -65,13 +66,20 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
-    public ContentByEvaluationDto evaluationByContentId(String contentId, int offset) {
+    public ContentByEvaluationDto evaluationByContentId(String contentId, int page) {
 
         if(contentRepository.findByContentId(contentId).isEmpty()){
             throw new ResourceNotFoundException("콘텐츠가 없습니다");
         }
-
-        ContentByEvaluationDto evaluationList = evaluationMapper.findByContentId(contentId, offset);
-        return evaluationList;
+        int offset = page*5;
+        List<EvaluationDto> evaluationList = evaluationMapper.findByContentId(contentId, offset);
+        Map<String, Object> stats = evaluationMapper.findEvaluationStatsByContentId(contentId);
+        log.info("Count ={}, avg ={}",stats.get("evaluationCount"),stats.get("avg"));
+        Long evaluationCount = (Long) stats.get("evaluationCount");
+        double avg = (double) stats.get("avg");
+        avg = Math.round(avg * 10) / 10.0;
+        ContentByEvaluationDto dto = new ContentByEvaluationDto(evaluationCount, avg, evaluationList);
+    
+        return dto;
     }
 }
