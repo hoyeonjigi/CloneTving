@@ -1,7 +1,5 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import profile1 from "@/assets/profiles/profile1.png";
-import profile2 from "@/assets/profiles/profile2.png";
 import profilePlus from "@/assets/profiles/icon-plus.png";
 import profileEdit from "@/assets/profiles/icon-edit.svg";
 import { Link } from "react-router-dom";
@@ -10,13 +8,29 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getData } from "@/utils/crud";
+import useLogin from "@/store/login";
+import useEdit from "@/store/useEdit";
+import useCreate from "@/store/useCreate";
 
 function ProfilesForEdit() {
 	const [userProfiles, setUserProfiles] = useState([]);
+	const { userId } = useLogin();
+	const {
+		profileName,
+		imageName,
+		userProfileUrl,
+		child,
+		setProfileName,
+		setImageName,
+		setUserProfileUrl,
+		setChild,
+	} = useEdit();
+
+	const { isImageSelected, setIsImageSelected } = useCreate();
 
 	const getUserData = async () => {
 		try {
-			const testUrl = "http://hoyeonjigi.site:8080/profile/test001";
+			const testUrl = `http://hoyeonjigi.site:8080/profile/${userId}`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
 
@@ -31,7 +45,9 @@ function ProfilesForEdit() {
 				result.map((item) => ({
 					userProfileName: item.profileName,
 					userProfileImageUrl: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.profileImageUrl}`,
-					alt: `테스트 이미지`,
+					userProfileImageName: item.profileImageName,
+					alt: `대체 이미지`,
+					child: item.child,
 				}))
 			);
 			console.log(result);
@@ -43,18 +59,23 @@ function ProfilesForEdit() {
 
 	const navigate = useNavigate();
 
-	const handleProfileDetail = (profileName, userProfileUrl) => {
-		navigate("/user/profileForEdit", {
-			state: {
-				profileName: `${profileName}`,
-				userId: "test123",
-				imageUrl: `${userProfileUrl}`,
-			},
-		});
+	const handleProfileDetail = (
+		profileName,
+		userProfileUrl,
+		userProfileImageName,
+		isChild
+	) => {
+		setProfileName(profileName);
+		setImageName(userProfileImageName);
+		setUserProfileUrl(userProfileUrl);
+		setChild(isChild);
+		navigate("/user/profileForEdit");
 	};
 
 	useEffect(() => {
+		localStorage.removeItem("editProfile");
 		getUserData();
+		setIsImageSelected(false);
 	}, []);
 
 	return (
@@ -85,7 +106,9 @@ function ProfilesForEdit() {
 										onClick={() =>
 											handleProfileDetail(
 												user.userProfileName,
-												user.userProfileImageUrl
+												user.userProfileImageUrl,
+												user.userProfileImageName,
+												user.child
 											)
 										}
 									>
@@ -118,22 +141,30 @@ function ProfilesForEdit() {
               </button>
               <p className="text-[#888888] text-xl font-medium">프로필 추가</p>
             </li> */}
-						<li className="flex flex-col text-center gap-6 flex-grow relative">
-							<Link to="/user/profile">
-								<motion.button
-									className="bg-[#4e4e4e] w-full h-full p-[6.6rem] relative" // 버튼에 relative를 추가
-									whileHover={{ y: -15 }}
-									transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
-								>
-									<img
-										src={profilePlus}
-										alt="프로필 추가 아이콘"
-										className="absolute w-[35%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" // 이미지의 위치를 버튼 중앙으로 설정
-									/>
-								</motion.button>
-							</Link>
-							<p className="text-[#888888] text-xl font-medium">프로필 추가</p>
-						</li>
+						{userProfiles.length < 4 && (
+							<li className="flex flex-col text-center gap-6 flex-grow relative">
+								<Link to="/user/profile">
+									<motion.button
+										className="bg-[#4e4e4e] w-full h-full p-[6.6rem] relative" // 버튼에 relative를 추가
+										whileHover={{ y: -15 }}
+										transition={{
+											type: "tween",
+											stiffness: 300,
+											duration: 0.2,
+										}}
+									>
+										<img
+											src={profilePlus}
+											alt="프로필 추가 아이콘"
+											className="absolute w-[35%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" // 이미지의 위치를 버튼 중앙으로 설정
+										/>
+									</motion.button>
+								</Link>
+								<p className="text-[#888888] text-xl font-medium">
+									프로필 추가
+								</p>
+							</li>
+						)}
 					</ul>
 				</div>
 				<div className="mt-16 mb-24">

@@ -1,7 +1,5 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import profile1 from "@/assets/profiles/profile1.png";
-import profile2 from "@/assets/profiles/profile2.png";
 import profilePlus from "@/assets/profiles/icon-plus.png";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -9,13 +7,27 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { getData } from "@/utils/crud";
 import { useEffect, useState } from "react";
+import useCreate from "@/store/useCreate";
+import useLogin from "@/store/login";
+import useProfile from "@/store/useProfile";
+import useProfileList from "@/store/useProfileList";
 
 function Profile() {
-	const [userProfiles, setUserProfiles] = useState([]);
+	const { userProfiles, setUserProfiles } = useProfileList();
+	const { isImageSelected, setIsImageSelected } = useCreate();
+	const { userId } = useLogin();
+	const {
+		profileName,
+		userProfileUrl,
+		child,
+		setProfileName,
+		setUserProfileUrl,
+		setChild,
+	} = useProfile();
 
 	const getUserData = async () => {
 		try {
-			const testUrl = "http://hoyeonjigi.site:8080/profile/test001";
+			const testUrl = `http://hoyeonjigi.site:8080/profile/${userId}`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
 
@@ -31,6 +43,7 @@ function Profile() {
 					userProfileName: item.profileName,
 					userProfileImageUrl: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.profileImageUrl}`,
 					alt: `테스트 이미지`,
+					child: item.child,
 				}))
 			);
 			console.log(result);
@@ -46,7 +59,16 @@ function Profile() {
 		navigate("/user/profile"); // 프로필 추가 버튼을 눌렀을 때 '/profilesForEdit'로 이동
 	};
 
+	const handleSelectProfile = (name, url, isChild) => {
+		setProfileName(name);
+		setUserProfileUrl(url);
+		setChild(isChild);
+	};
+
 	useEffect(() => {
+		localStorage.removeItem("myProfile");
+		localStorage.removeItem("editProfile");
+		setIsImageSelected(false);
 		getUserData();
 	}, []);
 
@@ -69,17 +91,30 @@ function Profile() {
 								key={user.userProfileName}
 								className="flex flex-col text-center gap-6 flex-grow"
 							>
-								<motion.button
-									className="w-full"
-									whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
-									transition={{ type: "tween", stiffness: 300, duration: 0.2 }} // transition 설정
-								>
-									<img
-										src={user.userProfileImageUrl}
-										alt="프로필 이미지"
-										className="w-full h-auto"
-									/>
-								</motion.button>
+								<Link to="/main">
+									<motion.button
+										className="w-full"
+										whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
+										transition={{
+											type: "tween",
+											stiffness: 300,
+											duration: 0.2,
+										}} // transition 설정
+										onClick={() =>
+											handleSelectProfile(
+												user.userProfileName,
+												user.userProfileImageUrl,
+												user.child
+											)
+										}
+									>
+										<img
+											src={user.userProfileImageUrl}
+											alt="프로필 이미지"
+											className="w-full h-auto"
+										/>
+									</motion.button>
+								</Link>
 								<p className="text-[#888888] text-xl font-medium">
 									{user.userProfileName}
 								</p>

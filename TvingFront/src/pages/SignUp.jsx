@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getData, postData } from "@/utils/crud";
 import debounce from "lodash/debounce";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
 	//초기값 세팅
@@ -59,6 +60,8 @@ function SignUp() {
 		"Access-Control-Allow-Origin": "*",
 	};
 
+	const navigate = useNavigate();
+
 	const handleSubmit = async (e) => {
 		e.preventDefault(); // 폼 제출 시 페이지 리로딩 방지
 
@@ -66,6 +69,7 @@ function SignUp() {
 			const response = await postData(url, data, headers);
 			setIsSignUpSuccess(true); // 로그인 성공 상태를 true로 변경
 			console.log("회원가입 성공");
+			navigate("/");
 		} catch (error) {
 			console.error(`Error in sending POST request: ${error}`);
 

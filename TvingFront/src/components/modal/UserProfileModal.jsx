@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 import "swiper/css";
 import "swiper/css/navigation";
+import useCreate from "@/store/useCreate";
 
 // import required modules
 import { Navigation } from "swiper/modules";
@@ -14,31 +15,53 @@ import right from "@/assets/profiles/icon-right.svg";
 import left from "@/assets/profiles/icon-left.svg";
 
 function UserProfileModal({ isOpen, closeModal }) {
-	if (!isOpen) {
-		return null;
-	}
-
-	const [profileImages, setProfileImages] = useState([]);
-	const [baseProfileImages, setBaseProfileImages] = useState([]);
-	const [yumiProfileImages, setYumiProfileImages] = useState([]);
+	// const [profileImages, setProfileImages] = useState([]);
+	// const [baseProfileImages, setBaseProfileImages] = useState([]);
+	// const [yumiProfileImages, setYumiProfileImages] = useState([]);
+	const {
+		profileData,
+		profileImages,
+		baseProfileImages,
+		yumiProfileImages,
+		selectedImageName,
+		selectedImageUrl,
+		isImageSelected,
+		setProfileData,
+		setProfileImages,
+		setBaseProfileImages,
+		setYumiProfileImages,
+		setSelectedImageName,
+		setSelectedImageUrl,
+		setIsImageSelected,
+	} = useCreate();
 
 	const [baseSlideIndex, setBaseSlideIndex] = useState(0);
 	const [yumiSlideIndex, setYumiSlideIndex] = useState(0);
 
-	const getProfileImage = async () => {
-		try {
-			const url = "http://hoyeonjigi.site:8080/profileimages";
-			const type = Cookies.get("grantType");
-			const token = Cookies.get("accessToken");
-			const headers = {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				Authorization: `${type} ${token}`,
-			};
+	const [imgTest, setImgTest] = useState([]);
 
-			const result = await getData(url, headers);
+	const getProfileImage = async () => {
+		// const storedImages = localStorage.getItem("imageInfo");
+		// const parseStoredImages = JSON.parse(storedImages);
+
+		// if (storedImages) {
+		// 	return;
+		// }
+
+		try {
+			// const url = "http://hoyeonjigi.site:8080/profileimages";
+			// const type = Cookies.get("grantType");
+			// const token = Cookies.get("accessToken");
+			// const headers = {
+			// 	"Content-Type": "application/json",
+			// 	"Access-Control-Allow-Origin": "*",
+			// 	Authorization: `${type} ${token}`,
+			// };
+
+			// const result = await getData(url, headers);
+
 			setProfileImages(
-				result.map((item) => ({
+				profileData.map((item) => ({
 					profileImageId: item.profileImageId,
 					profileImageName: item.profileImageName,
 					image_url: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.image_url}`,
@@ -47,32 +70,32 @@ function UserProfileModal({ isOpen, closeModal }) {
 				}))
 			);
 
-			console.log(profileImages);
-
 			setBaseProfileImages(
 				profileImages.filter((item) => item.profileImageId <= 10)
 			);
 			setYumiProfileImages(
 				profileImages.filter((item) => item.profileImageId > 10)
 			);
-
-			console.log(baseProfileImages);
-			console.log(yumiProfileImages);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
+	// 이미지 클릭 시
 	const handleImageClick = (clickedImageName, clickedImageUrl) => {
-		alert(
-			`[imageUrl] : ${clickedImageUrl} \n[imageName] :  ${clickedImageName}`
-		);
+		setSelectedImageName(clickedImageName);
+		setSelectedImageUrl(clickedImageUrl);
+		setIsImageSelected(true);
 		closeModal();
 	};
 
 	useEffect(() => {
 		getProfileImage();
 	}, []);
+
+	if (!isOpen) {
+		return null;
+	}
 
 	return (
 		<div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 ">
@@ -182,7 +205,12 @@ function UserProfileModal({ isOpen, closeModal }) {
 											duration: 0.2,
 										}}
 										className="mt-4 rounded-sm"
-										onClick={() => handleImageClick(profile.profileImageName)}
+										onClick={() =>
+											handleImageClick(
+												profile.profileImageName,
+												profile.image_url
+											)
+										}
 									/>
 								</SwiperSlide>
 							))}
