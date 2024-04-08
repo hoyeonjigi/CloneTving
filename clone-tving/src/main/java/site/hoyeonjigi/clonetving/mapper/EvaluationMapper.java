@@ -2,8 +2,11 @@ package site.hoyeonjigi.clonetving.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import site.hoyeonjigi.clonetving.dto.ContentByEvaluationDto;
 import site.hoyeonjigi.clonetving.dto.EvaluationDto;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface EvaluationMapper {
@@ -11,4 +14,5 @@ public interface EvaluationMapper {
     EvaluationDto findEvaluation(@Param("userId")String userId, @Param("profileName")String profileName, @Param("contentId")String contentId);
     int delete(@Param("userId")String userId, @Param("profileName")String profileName ,@Param("contentId")String contentId);
     List<EvaluationDto> findByContentId(@Param("contentId") String contentId ,@Param("offset") int offset);
+    Map<String, Object> findEvaluationStatsByContentId(@Param("contentId") String contentId);
 }
