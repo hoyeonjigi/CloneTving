@@ -5,15 +5,15 @@ import profileEdit from "@/assets/profiles/icon-edit.svg";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getData } from "@/utils/crud";
 import useLogin from "@/store/login";
 import useEdit from "@/store/useEdit";
 import useCreate from "@/store/useCreate";
+import useProfileList from "@/store/useProfileList";
 
 function ProfilesForEdit() {
-	const [userProfiles, setUserProfiles] = useState([]);
+	const { userProfiles, setUserProfiles } = useProfileList();
 	const { userId } = useLogin();
 	const {
 		profileName,
@@ -57,8 +57,6 @@ function ProfilesForEdit() {
 		}
 	};
 
-	const navigate = useNavigate();
-
 	const handleProfileDetail = (
 		profileName,
 		userProfileUrl,
@@ -69,7 +67,6 @@ function ProfilesForEdit() {
 		setImageName(userProfileImageName);
 		setUserProfileUrl(userProfileUrl);
 		setChild(isChild);
-		navigate("/user/profileForEdit");
 	};
 
 	useEffect(() => {
@@ -97,34 +94,40 @@ function ProfilesForEdit() {
 								key={user.profileName}
 								className="flex flex-col text-center gap-6 flex-grow relative"
 							>
-								<motion.button
-									className="w-full overflow-hidden relative"
-									whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
-									transition={{ type: "tween", stiffness: 300, duration: 0.2 }}
-								>
-									<div
-										onClick={() =>
-											handleProfileDetail(
-												user.userProfileName,
-												user.userProfileImageUrl,
-												user.userProfileImageName,
-												user.child
-											)
-										}
+								<Link to="/user/profileForEdit">
+									<motion.button
+										className="w-full overflow-hidden relative"
+										whileHover={{ y: -15 }} // 마우스 호버 시 y축으로 -10 이동
+										transition={{
+											type: "tween",
+											stiffness: 300,
+											duration: 0.2,
+										}}
 									>
-										<img
-											src={user.userProfileImageUrl}
-											alt="프로필 이미지"
-											className="w-full h-auto"
-										/>
-										<div className="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
-										<img
-											src={profileEdit}
-											alt="프로필 편집 아이콘"
-											className="absolute w-[25%] h-auto top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-										/>
-									</div>
-								</motion.button>
+										<div
+											onClick={() =>
+												handleProfileDetail(
+													user.userProfileName,
+													user.userProfileImageUrl,
+													user.userProfileImageName,
+													user.child
+												)
+											}
+										>
+											<img
+												src={user.userProfileImageUrl}
+												alt="프로필 이미지"
+												className="w-full h-auto"
+											/>
+											<div className="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
+											<img
+												src={profileEdit}
+												alt="프로필 편집 아이콘"
+												className="absolute w-[25%] h-auto top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+											/>
+										</div>
+									</motion.button>
+								</Link>
 								<p className="text-[#888888] text-xl font-medium">
 									{user.userProfileName}
 								</p>
