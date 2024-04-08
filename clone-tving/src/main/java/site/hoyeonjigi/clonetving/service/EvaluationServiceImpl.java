@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.hoyeonjigi.clonetving.domain.EvaluationEntity;
 import site.hoyeonjigi.clonetving.domain.UserEntity;
+import site.hoyeonjigi.clonetving.dto.ContentByEvaluationDto;
 import site.hoyeonjigi.clonetving.dto.EvaluationDto;
 import site.hoyeonjigi.clonetving.exception.DuplicateEvaluationException;
 import site.hoyeonjigi.clonetving.exception.ResourceNotFoundException;
@@ -64,13 +65,13 @@ public class EvaluationServiceImpl implements EvaluationService {
     }
 
     @Override
-    public List<EvaluationDto> evaluationByContentId(String contentId, int offset) {
+    public ContentByEvaluationDto evaluationByContentId(String contentId, int offset) {
 
         if(contentRepository.findByContentId(contentId).isEmpty()){
             throw new ResourceNotFoundException("콘텐츠가 없습니다");
         }
 
-        List<EvaluationDto> evaluationList = evaluationMapper.findByContentId(contentId, offset);
+        ContentByEvaluationDto evaluationList = evaluationMapper.findByContentId(contentId, offset);
         return evaluationList;
     }
 }

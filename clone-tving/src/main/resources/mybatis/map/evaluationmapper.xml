@@ -10,6 +10,18 @@
         <result property="ratingDate" column="rating_date"/>
     </resultMap>
 
+    <resultMap id="myBatisContentByEvaluationDtoMap" type="site.hoyeonjigi.clonetving.dto.ContentByEvaluationDto">
+        <result property="evaluationCount" column="evaluationCount"/>
+        <result property="avg" column="avg"/>
+       <collection property="EvaluationList" ofType="site.hoyeonjigi.clonetving.dto.ContentByEvaluationDto$EvaluationDto">
+            <result property="profileName" column="profile_name"/>
+            <result property="contentId" column="content_id"/>
+            <result property="starRating" column="star_rating"/>
+            <result property="review" column="review"/>
+            <result property="ratingDate" column="rating_date"/>
+        </collection>
+    </resultMap>
+
     <insert id="save">
         insert into evaluation(profile_name, user_id, content_id, star_rating, review, rating_date)
         values (#{dto.profileName}, #{userId}, #{dto.contentId}, #{dto.starRating}, #{dto.review}, #{dto.ratingDate})
@@ -26,8 +38,8 @@
         WHERE user_id = #{userId} and profile_name = #{profileName} and content_id=#{contentId}
     </delete>
 
-    <select id="findByContentId" resultMap="myBatisEvaluationDtoMap">
-        select profile_name, content_id, star_rating, review, rating_date
+    <select id="findByContentId" resultMap="myBatisContentByEvaluationDtoMap">
+        select     COUNT(*) AS evaluationCount, AVG(star_rating) AS avg, profile_name, content_id, star_rating, review, rating_date
         from evaluation
         where content_id=#{contentId}
         LIMIT #{offset}, 20
