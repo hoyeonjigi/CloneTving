@@ -15,9 +15,10 @@ import useLogin from "@/store/login";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
-import useContent from "@/store/useContent";
+// import useContent from "@/store/useContent";
 
 import { useLocation } from "react-router-dom";
+import useContents from "@/store/useContent";
 
 function Main() {
   const location = useLocation();
@@ -33,7 +34,8 @@ function Main() {
   const [isEnd, setIsEnd] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const { setContent } = useContent();
+  // const { setContent } = useContent();
+  const { setContent } = useContents();
 
   const { accessToken, reToken, grantType, setAccessToken, setReToken } =
     useLogin();
@@ -95,7 +97,6 @@ function Main() {
       try {
         const isDataLoaded = localStorage.getItem("isDataLoaded");
 
-        localStorage.removeItem("genres");
         localStorage.removeItem("contents");
         localStorage.removeItem("reviews");
 
@@ -280,7 +281,11 @@ function Main() {
               slidesPerView={1.1}
               navigation
               pagination={{ clickable: true }}
-              autoplay={{ delay: 5000 }}
+              autoplay={{
+                delay: 5000,
+                disableOnInteraction: false, // 사용자 상호작용 후에도 자동 재생이 계속되도록 합니다.
+                pauseOnMouseEnter: true, // 마우스 오버 시 자동 재생을 멈춥니다.
+              }}
               loop={false}
               centeredSlides={true}
               onMouseEnter={() => setIsHovered(true)}
@@ -420,20 +425,11 @@ function Main() {
               spaceBetween={10}
               slidesPerView={7.1}
               slidesPerGroup={7}
-              navigation={{
-                nextEl: ".custom-next-button",
-                prevEl: ".custom-prev-button",
-              }}
+              navigation
               pagination={{
                 clickable: true,
               }}
-              onReachBeginning={() => setIsBeginning(true)}
-              onReachEnd={() => setIsEnd(true)}
-              onSlideChange={(swiper) => {
-                setIsBeginning(swiper.isBeginning);
-                setIsEnd(swiper.isEnd);
-              }}
-              className="px-16 content-custom-swiper z-0"
+              className="px-16 content-custom-swiper z-10"
             >
               {latestFilm.map((film, index) => (
                 <SwiperSlide
@@ -463,7 +459,7 @@ function Main() {
                 </SwiperSlide>
               ))}
             </Swiper>
-            <button
+            {/* <button
               className={`custom-prev-button absolute left-0 top-0 h-full ${
                 isBeginning ? "hidden" : ""
               }`}
@@ -493,9 +489,10 @@ function Main() {
                 alt="메인 컨텐츠 오른쪽으로 넘기기"
                 className="w-16"
               />
-            </button>
+            </button> */}
           </div>
         </section>
+
         <section className="pt-5 relative mt-10">
           <div>
             <h3 className="text-white text-2.5xl font-bold ml-16">

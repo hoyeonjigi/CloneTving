@@ -26,31 +26,23 @@ function MainProfileModal() {
       </div>
       <hr className="border border-gray_03 mb-4" />
       <ul className="text-[#a3a3a3] font-medium text-lg mb-4">
-        <Link to="/main">
-          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">MY</li>
-        </Link>
+        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">MY</li>
 
-        <Link to="/main">
-          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
-            <a href="/main">이용권</a>
-          </li>
-        </Link>
-        <Link to="/main">
-          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
-            <a href="/main">쿠폰등록</a>
-          </li>
-        </Link>
-        <Link to="/main">
-          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
-            <a href="/main">고객센터</a>
-          </li>
-        </Link>
-        <Link to="/main">
-          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
-            {/* <a href="/main">로그아웃</a> */}
-            <LogoutButton/>
-          </li>
-        </Link>
+        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
+          <a href="/main">이용권</a>
+        </li>
+
+        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
+          <a href="/main">쿠폰등록</a>
+        </li>
+
+        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
+          <a href="/main">고객센터</a>
+        </li>
+
+        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
+          <LogoutButton />
+        </li>
       </ul>
     </motion.div>
   );
