@@ -8,10 +8,10 @@ import OnBoarding from "./pages/OnBoarding.jsx";
 import Profile from "./pages/Profile.jsx";
 import ProfilesForEdit from "./pages/ProfilesForEdit.jsx";
 import UserTving from "./pages/UserTving.jsx";
-import ProfileForCreate from "./pages/profileForCreate.jsx";
 import ProfileForEditDetail from "./pages/ProfileForEditDetail.jsx";
 import FindPassword from "./pages/FindPassword.jsx";
 import Detail from "./pages/Detail.jsx";
+import ProfileForCreate from "./pages/ProfileForCreate.jsx";
 
 const router = createBrowserRouter([
 	{
