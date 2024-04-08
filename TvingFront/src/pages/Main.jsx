@@ -15,9 +15,10 @@ import useLogin from "@/store/login";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
-import useContent from "@/store/useContent";
+// import useContent from "@/store/useContent";
 
 import { useLocation } from "react-router-dom";
+import useContents from "@/store/useContent";
 
 function Main() {
   const location = useLocation();
@@ -33,7 +34,8 @@ function Main() {
   const [isEnd, setIsEnd] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const { setContent } = useContent();
+  // const { setContent } = useContent();
+  const { setContent } = useContents();
 
   const { accessToken, reToken, grantType, setAccessToken, setReToken } =
     useLogin();
@@ -95,11 +97,8 @@ function Main() {
       try {
         const isDataLoaded = localStorage.getItem("isDataLoaded");
 
-        localStorage.removeItem("genres");
         localStorage.removeItem("contents");
         localStorage.removeItem("reviews");
-        localStorage.removeItem("averageRating");
-        localStorage.removeItem("numberOfReviews");
 
         // 데이터가 이미 로드되었다면, 함수를 종료하여 추가 로드를 방지
         if (isDataLoaded) return;
@@ -282,7 +281,11 @@ function Main() {
               slidesPerView={1.1}
               navigation
               pagination={{ clickable: true }}
-              autoplay={{ delay: 5000 }}
+              autoplay={{
+                delay: 5000,
+                disableOnInteraction: false, // 사용자 상호작용 후에도 자동 재생이 계속되도록 합니다.
+                pauseOnMouseEnter: true, // 마우스 오버 시 자동 재생을 멈춥니다.
+              }}
               loop={false}
               centeredSlides={true}
               onMouseEnter={() => setIsHovered(true)}
