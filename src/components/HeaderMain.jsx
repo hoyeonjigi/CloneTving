@@ -10,9 +10,10 @@ import searchHover from "@/assets/search/icon_search_white.svg";
 
 import close from "@/assets/search/x.svg";
 import closeHover from "@/assets/search/x_white.svg";
-import myProfile from "@/assets/profiles/profile_s1.webp";
+// import myProfile from "@/assets/profiles/profile_s1.webp";
 import SearchModal from "./modal/SearchModal";
 import MainProfileModal from "./modal/MainProfileModal";
+import useProfile from "@/store/useProfile";
 
 function HeaderMain() {
   const [isHovered, setIsHovered] = useState(false);
@@ -21,6 +22,8 @@ function HeaderMain() {
   // 프로필 이미지
 
   const [isVisible, setIsVisible] = useState(false);
+
+  const { userProfileUrl } = useProfile();
 
   const handleSearchClick = () => {
     // 추가된 코드
@@ -78,7 +81,7 @@ function HeaderMain() {
             onMouseLeave={() => setIsVisible(false)}
           >
             <button className="w-8">
-              <img src={myProfile} alt="" className="w-8" />
+              <img src={userProfileUrl} alt="" className="w-8" />
             </button>
             {isVisible && <MainProfileModal />}
           </div>

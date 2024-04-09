@@ -19,6 +19,7 @@ import Footer from "@/components/Footer";
 
 import { useLocation } from "react-router-dom";
 import useContents from "@/store/useContent";
+import useReviews from "@/store/useReviews";
 
 function Main() {
   const location = useLocation();
@@ -36,6 +37,7 @@ function Main() {
 
   // const { setContent } = useContent();
   const { setContent } = useContents();
+  const { reset } = useReviews();
 
   const { accessToken, reToken, grantType, setAccessToken, setReToken } =
     useLogin();
@@ -99,6 +101,7 @@ function Main() {
 
         localStorage.removeItem("contents");
         localStorage.removeItem("reviews");
+        reset();
 
         // 데이터가 이미 로드되었다면, 함수를 종료하여 추가 로드를 방지
         if (isDataLoaded) return;
