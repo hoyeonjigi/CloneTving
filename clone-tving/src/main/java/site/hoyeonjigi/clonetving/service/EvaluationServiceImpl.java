@@ -73,8 +73,10 @@ public class EvaluationServiceImpl implements EvaluationService {
         }
         int offset = page*5;
         List<EvaluationDto> evaluationList = evaluationMapper.findByContentId(contentId, offset);
+        if(evaluationList.isEmpty()){
+            throw new ResourceNotFoundException("평가가 없습니다");
+        }
         Map<String, Object> stats = evaluationMapper.findEvaluationStatsByContentId(contentId);
-        log.info("Count ={}, avg ={}",stats.get("evaluationCount"),stats.get("avg"));
         Long evaluationCount = (Long) stats.get("evaluationCount");
         double avg = (double) stats.get("avg");
         avg = Math.round(avg * 10) / 10.0;
