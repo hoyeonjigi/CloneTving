@@ -27,7 +27,7 @@ function Detail() {
   // 모달 창 상태를 관리하는 state
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  // const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   // 모달 창을 여는 함수
   const openModal = () => {
@@ -112,15 +112,20 @@ function Detail() {
           Authorization: `${type} ${token}`,
         };
 
+        console.log(content.contentId)
         const url = `http://hoyeonjigi.site:8080/evaluation/${content.contentId}`;
 
         const response = await getData(url, headers);
         console.log(response)
+        // console.log(response.evaluationCount)
+        // console.log(response.evaluationList)
 
-        setReview(response);
-        setIsReview(false);
+        setAverageRating(response.avg);
+        setNumberOfReviews(response.evaluationCount);
+        setReview(response.evaluationList);
+        // setIsReview(false);
 
-        setIsDataLoaded(true); // 데이터 저장 후 로딩 상태를 true로 설정
+        // setIsDataLoaded(true); // 데이터 저장 후 로딩 상태를 true로 설정
       } catch (error) {
         console.log(error);
         console.log("리뷰에러");
@@ -129,29 +134,29 @@ function Detail() {
     };
 
     reviewData();
-  }, [isReview]); // 의존성 배열이 비어있기 때문에 컴포넌트가 마운트될 때만 이 효과가 실행됩니다.
+  }, []); // 의존성 배열이 비어있기 때문에 컴포넌트가 마운트될 때만 이 효과가 실행됩니다.
 
-  useEffect(() => {
-    const fetchReviews = () => {
-      if (isDataLoaded) {
-        // console.log(review);
-        // console.log("성공");
+  // useEffect(() => {
+  //   const fetchReviews = () => {
+  //     if (isDataLoaded) {
+  //       // console.log(review);
+  //       // console.log("성공");
 
-        const totalRating = review.reduce(
-          (acc, curr) => acc + curr.starRating,
-          0
-        );
-        const averageRating = (totalRating / review.length).toFixed(1);
+  //       const totalRating = review.reduce(
+  //         (acc, curr) => acc + curr.starRating,
+  //         0
+  //       );
+  //       const averageRating = (totalRating / review.length).toFixed(1);
 
-        setAverageRating(averageRating);
-        setNumberOfReviews(review.length);
-        setIsReview(false);
-      }
-    };
+  //       setAverageRating(averageRating);
+  //       setNumberOfReviews(review.length);
+  //       setIsReview(false);
+  //     }
+  //   };
 
-    // 컴포넌트 마운트 시 리뷰 데이터 가져오기
-    fetchReviews();
-  }, [isDataLoaded, isReview, averageRating, numberOfReviews]);
+  //   // 컴포넌트 마운트 시 리뷰 데이터 가져오기
+  //   fetchReviews();
+  // }, [isDataLoaded, isReview, averageRating, numberOfReviews]);
 
   return (
     <div className="bg-black">
@@ -255,7 +260,6 @@ function Detail() {
               {averageRating}
             </div>
             <div className="flex flex-col">
-
               <p className="text-white">{numberOfReviews} 평점</p>
             </div>
           </div>

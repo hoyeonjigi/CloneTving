@@ -34,7 +34,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 const reviewsStore = (set) => ({
-  review: {},
+  review: [],
   averageRating: "0.0",
   numberOfReviews: 0,
   isReview: false,
