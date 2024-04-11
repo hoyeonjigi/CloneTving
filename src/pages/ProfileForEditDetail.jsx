@@ -69,7 +69,7 @@ function ProfileForEditDetail() {
 	const handleChange = async (e) => {
 		e.preventDefault();
 		try {
-			const url = `http://hoyeonjigi.site:8080/profile`;
+			const url = `https://hoyeonjigi.site/profile`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
 			//기존 이름과 변경한 이름이 동일한 경우
@@ -108,7 +108,7 @@ function ProfileForEditDetail() {
 	const handleDelete = async (e) => {
 		e.preventDefault();
 		try {
-			const testUrl = `http://hoyeonjigi.site:8080/profile/${profileName}`;
+			const testUrl = `https://hoyeonjigi.site/profile/${profileName}`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
 
