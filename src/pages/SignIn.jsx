@@ -29,7 +29,7 @@ function SignIn() {
 
 	const [isChecked, setIsChecked] = useState(false);
 
-	const url = "http://hoyeonjigi.site:8080/user/login"; // 변경해야 함
+	const url = "https://hoyeonjigi.site/user/login"; // 변경해야 함
 	const data = { userId, userPassword };
 	const headers = {
 		"Content-Type": "application/json",

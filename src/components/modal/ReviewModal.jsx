@@ -11,6 +11,7 @@ import { postData } from "@/utils/crud";
 import { toast } from "react-hot-toast";
 
 import useReviews from "@/store/useReviews";
+import useProfile from "@/store/useProfile";
 
 function ReviewModal({ isOpen, closeModal }) {
   const [rating, setRating] = useState(0); // 초기 별점 상태 설정
@@ -22,6 +23,8 @@ function ReviewModal({ isOpen, closeModal }) {
   const { content } = useContents();
 
   const { isReview, setIsReview } = useReviews();
+
+  const {profileName} =useProfile()
 
   // 별점을 설정하는 함수
   const handleSetRating = (newRating) => {
@@ -62,7 +65,7 @@ function ReviewModal({ isOpen, closeModal }) {
         .replace(/\./g, "");
 
       const data = {
-        profileName: "이재호",
+        profileName: profileName,
         contentId: content.contentId,
         starRating: rating,
         review: review,

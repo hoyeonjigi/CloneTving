@@ -168,7 +168,7 @@ function ProfileForCreate() {
 	const handleSubmit = async (e) => {
 		e.preventDefault(); // 폼 제출 시 페이지 리로딩 방지
 
-		const url = "http://hoyeonjigi.site:8080/profile/register"; // 변경해야 함
+		const url = "https://hoyeonjigi.site/profile/register"; // 변경해야 함
 		const type = Cookies.get("grantType");
 		const token = Cookies.get("accessToken");
 		const data = { profileName, imageName, child };
@@ -198,7 +198,7 @@ function ProfileForCreate() {
 
 	//프로필 이미지 정보 가져오기
 	const getProfileInfo = async () => {
-		const profileUrl = "http://hoyeonjigi.site:8080/profileimages";
+		const profileUrl = "https://hoyeonjigi.site/profileimages";
 		const type = Cookies.get("grantType");
 		const token = Cookies.get("accessToken");
 		const headers = {
