@@ -167,34 +167,30 @@ function Detail() {
 
       console.log(page);
       // const url = `http://hoyeonjigi.site:8080/evaluation/${content.contentId}`;
-      const url = `http://hoyeonjigi.site:8080/evaluation/${content.contentId}?page=${page}`;
+      const url = `https://hoyeonjigi.site/evaluation/${content.contentId}?page=${page}`;
 
       const response = await getData(url, headers);
-
-      // console.log(response.evaluationCount)
-      // console.log(response.evaluationList)
 
       if (response.evaluationList.length === 0) {
         return;
       } else {
         if (page === 0) {
-          console.log("처음");
+          // console.log("페이지0");
           setReview(response.evaluationList);
           setAverageRating(response.avg);
           setNumberOfReviews(response.evaluationCount);
           // 페이지 번호를 업데이트하여 다음 요청에 올바른 skip 값을 사용합니다.
-          // setPage(page + 1);
+          setPage(page + 1);
         } else {
           // 불러온 데이터를 현재 상품 목록에 추가합니다.
           // 이전 상품 목록(prevProducts)에 새로운 데이터(data.products)를 연결합니다.
           setReview([...review, ...response.evaluationList]);
 
-          console.log(review);
+          // console.log(review);
           setAverageRating(response.avg);
           setNumberOfReviews(response.evaluationCount);
           // 페이지 번호를 업데이트하여 다음 요청에 올바른 skip 값을 사용합니다.
           setPage(page + 1);
-          console.log("완료");
         }
       }
     } catch (error) {
@@ -205,8 +201,12 @@ function Detail() {
   };
 
   useEffect(() => {
+    if (page === 0) {
+      window.scrollTo(0, 0);
+    }
+
     reviewData(); // 컴포넌트가 마운트될 때 첫 번째 페이지 데이터 로드
-  }, [page]); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
+  }, []); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
 
   // 컴포넌트 내부에서
   const observer = useRef();
@@ -236,7 +236,7 @@ function Detail() {
       // 컴포넌트가 언마운트될 때 observer를 정리
       if (observer.current) observer.current.disconnect();
     };
-  }, []); // 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행됩니다.
+  }, [page]); // 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행됩니다.
 
   return (
     <div className="bg-black">

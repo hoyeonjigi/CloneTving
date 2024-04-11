@@ -30,7 +30,7 @@ function ProfilesForEdit() {
 
 	const getUserData = async () => {
 		try {
-			const testUrl = `http://hoyeonjigi.site:8080/profile/${userId}`;
+			const testUrl = `https://hoyeonjigi.site/profile/${userId}`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
 
