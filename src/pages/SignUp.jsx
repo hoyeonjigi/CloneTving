@@ -45,7 +45,7 @@ function SignUp() {
 	//회원가입 성공 여부
 	const [isSignUpSuccess, setIsSignUpSuccess] = useState(false);
 
-	const url = "http://hoyeonjigi.site:8080/user/register";
+	const url = "https://hoyeonjigi.site/user/register";
 	const data = {
 		userId,
 		userPassword,
@@ -171,7 +171,7 @@ function SignUp() {
 
 			try {
 				setUserId(query);
-				const url = `http://hoyeonjigi.site:8080/user/exist/${query}`;
+				const url = `https://hoyeonjigi.site/user/exist/${query}`;
 				const headers = {
 					"Content-Type": "application/json",
 					"Access-Control-Allow-Origin": "*",

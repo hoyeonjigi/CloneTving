@@ -15,9 +15,11 @@ import useLogin from "@/store/login";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
-import useContent from "@/store/useContent";
+// import useContent from "@/store/useContent";
 
 import { useLocation } from "react-router-dom";
+import useContents from "@/store/useContent";
+import useReviews from "@/store/useReviews";
 
 function Main() {
 	const location = useLocation();
@@ -33,13 +35,15 @@ function Main() {
 	const [isEnd, setIsEnd] = useState(false);
 	const [isHovered, setIsHovered] = useState(false);
 
-	const { setContent } = useContent();
+	// const { setContent } = useContent();
+	const { setContent } = useContents();
+	const { reset, isReview, setIsReview } = useReviews();
 
 	const { accessToken, reToken, grantType, setAccessToken, setReToken } =
 		useLogin();
 
 	const refresh = async () => {
-		const reUrl = `http://hoyeonjigi.site:8080/user/refresh`;
+		const reUrl = `https://hoyeonjigi.site/user/refresh`;
 
 		const headers = {
 			"Content-Type": "application/json",
@@ -77,7 +81,7 @@ function Main() {
 		// }
 	};
 	const testMe = async () => {
-		const url = `http://hoyeonjigi.site:8080/content/1001835/view/count`;
+		const url = `https://hoyeonjigi.site/content/1001835/view/count`;
 		const type = Cookies.get("grantType");
 		const token = Cookies.get("accessToken");
 
@@ -95,11 +99,10 @@ function Main() {
 			try {
 				const isDataLoaded = localStorage.getItem("isDataLoaded");
 
-				localStorage.removeItem("genres");
 				localStorage.removeItem("contents");
 				localStorage.removeItem("reviews");
-				localStorage.removeItem("averageRating");
-				localStorage.removeItem("numberOfReviews");
+				// setIsReview(false);
+				// reset();
 
 				// 데이터가 이미 로드되었다면, 함수를 종료하여 추가 로드를 방지
 				if (isDataLoaded) return;
@@ -116,7 +119,7 @@ function Main() {
 				//최신 영화
 				const movieQuery = "영화";
 				const encodedQueryMovie = encodeURIComponent(movieQuery);
-				const movieUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryMovie}/lastest20`;
+				const movieUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/lastest20`;
 
 				const resultMovie = await getData(movieUrl, headers);
 				// console.log(resultMovie);
@@ -138,7 +141,7 @@ function Main() {
 				//최신 드라마
 				const dramaQuery = "드라마";
 				const encodedQueryDrama = encodeURIComponent(dramaQuery);
-				const dramaUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryDrama}/lastest20`;
+				const dramaUrl = `https://hoyeonjigi.site/content/${encodedQueryDrama}/lastest20`;
 
 				const resultDrama = await getData(dramaUrl, headers);
 
@@ -158,7 +161,7 @@ function Main() {
 
 				const comedyQuery = "코미디";
 				const encodedQueryComedy = encodeURIComponent(comedyQuery);
-				const comedyUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryDrama}/${encodedQueryComedy}`;
+				const comedyUrl = `https://hoyeonjigi.site/content/${encodedQueryDrama}/${encodedQueryComedy}`;
 
 				const resultComedy = await getData(comedyUrl, headers);
 
@@ -177,7 +180,7 @@ function Main() {
 
 				const romanceQuery = "로맨스";
 				const encodedQueryRomance = encodeURIComponent(romanceQuery);
-				const romanceUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryMovie}/${encodedQueryRomance}`;
+				const romanceUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/${encodedQueryRomance}`;
 
 				const resultRomance = await getData(romanceUrl, headers);
 
@@ -195,7 +198,7 @@ function Main() {
 
 				//인기 컨텐츠
 
-				const popularUrl = `http://hoyeonjigi.site:8080/content/${encodedQueryMovie}/popular`;
+				const popularUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/popular`;
 
 				const resultPopular = await getData(popularUrl, headers);
 
@@ -282,7 +285,11 @@ function Main() {
 							slidesPerView={1.1}
 							navigation
 							pagination={{ clickable: true }}
-							autoplay={{ delay: 5000 }}
+							autoplay={{
+								delay: 5000,
+								disableOnInteraction: false, // 사용자 상호작용 후에도 자동 재생이 계속되도록 합니다.
+								pauseOnMouseEnter: true, // 마우스 오버 시 자동 재생을 멈춥니다.
+							}}
 							loop={false}
 							centeredSlides={true}
 							onMouseEnter={() => setIsHovered(true)}
@@ -310,7 +317,6 @@ function Main() {
 										src="https://image.tving.com/ntgs/operation/banner/2024/02/22/1708530936_1.jpg/dims/resize/F_webp,1920"
 										alt="아이 러브 유 바로가기 이미지"
 										className="rounded-lg"
-										onClick={testMe}
 									/>
 								</div>
 							</SwiperSlide>
@@ -439,6 +445,7 @@ function Main() {
 										}}
 										onClick={() => {
 											setContent(film);
+											testMe();
 										}}
 									>
 										<motion.img
