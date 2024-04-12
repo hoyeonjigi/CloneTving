@@ -12,7 +12,7 @@ function SearchModal({ visible, onClose }) {
   // const [shouldSearch, setShouldSearch] = useState(false); // 검색이 필요한지 여부를 상태로 관리
 
   const refresh = async () => {
-    const reUrl = `http://hoyeonjigi.site:8080/user/refresh`;
+    const reUrl = `https://hoyeonjigi.site/user/refresh`;
 
     const headers = {
       "Content-Type": "application/json",
@@ -52,7 +52,7 @@ function SearchModal({ visible, onClose }) {
     debounce(async (query) => {
       // handleSearch 함수 구현
       try {
-        const baseUrl = "http://hoyeonjigi.site:8080/content/";
+        const baseUrl = "https://hoyeonjigi.site/content/";
         const encodedQuery = encodeURIComponent(query);
         const url = `${baseUrl}${encodedQuery}`;
 
