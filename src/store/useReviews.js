@@ -22,7 +22,7 @@ const reviewsStore = (set) => ({
       averageRating: "0.0",
       numberOfReviews: 0,
       page: 0,
-      isReview: false,
+      // isReview: false,
     }),
 });
 

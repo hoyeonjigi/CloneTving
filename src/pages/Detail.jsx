@@ -25,16 +25,8 @@ function Detail() {
 
     isReview,
     setIsReview,
+    reset,
   } = useReviews();
-
-  // const { page, setPage, review, setReview,numberOfReviews,setNumberOfReviews } = useReviews((state) => ({
-  //   page: state.page,
-  //   setPage: state.setPage,
-  //   review: state.review,
-  //   setReview: state.setReview,
-  // }));
-
-  // 이제 page, setPage, review, setReview를 컴포넌트 내에서 사용할 수 있습니다.
 
   // 모달 창 상태를 관리하는 state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,7 +42,7 @@ function Detail() {
   };
 
   const refresh = async () => {
-    const reUrl = `http://hoyeonjigi.site:8080/user/refresh`;
+    const reUrl = `https://hoyeonjigi.site/user/refresh`;
 
     const headers = {
       "Content-Type": "application/json",
@@ -94,7 +86,7 @@ function Detail() {
 
         // 각 genreId에 대한 URL을 생성하고, 각 URL에 대해 getData 함수를 호출하는 프로미스 배열을 생성합니다.
         const promises = genreIds.map((genreId) => {
-          const url = `http://hoyeonjigi.site:8080/genre/${genreId}`;
+          const url = `https://hoyeonjigi.site/genre/${genreId}`;
           return getData(url, headers); // getData 함수가 각 URL에 대해 요청을 수행하고, 프로미스를 반환한다고 가정합니다.
         });
 
@@ -111,49 +103,6 @@ function Detail() {
     contentData();
   }, []); // 이 효과는 컴포넌트가 마운트될 때만 실행됩니다.
 
-  // useEffect(() => {
-  //   const reviewData = async () => {
-  //     try {
-  //       // 로컬 스토리지에 리뷰 데이터가 없는 경우, API 호출을 통해 데이터를 가져옵니다.
-  //       const type = Cookies.get("grantType");
-  //       const token = Cookies.get("accessToken");
-
-  //       const headers = {
-  //         "Content-Type": "application/json",
-  //         Authorization: `${type} ${token}`,
-  //       };
-
-  //       console.log(page);
-  //       // const url = `http://hoyeonjigi.site:8080/evaluation/${content.contentId}`;
-  //       const url = `http://hoyeonjigi.site:8080/evaluation/${content.contentId}?page=${page}`;
-
-  //       const response = await getData(url, headers);
-
-  //       // console.log(response.evaluationCount)
-  //       // console.log(response.evaluationList)
-
-  //       setAverageRating(response.avg);
-  //       setNumberOfReviews(response.evaluationCount);
-  //       setReview(response.evaluationList);
-
-  //       // setIsReview(false);
-
-  //       // setIsDataLoaded(true); // 데이터 저장 후 로딩 상태를 true로 설정
-  //     } catch (error) {
-  //       console.log(error);
-  //       console.log("리뷰에러");
-  //       // refresh();
-  //     }
-  //   };
-
-  //   // 페이지가 초기값(0) 이상일 때만 데이터 요청
-  //   reviewData();
-  // }, [page]); // 의존성 배열이 비어있기 때문에 컴포넌트가 마운트될 때만 이 효과가 실행됩니다.
-
-  // const [page, setPage] = useState(0);
-
-  // const [test, setTest] = useState([]);
-
   const reviewData = async () => {
     try {
       // 로컬 스토리지에 리뷰 데이터가 없는 경우, API 호출을 통해 데이터를 가져옵니다.
@@ -165,7 +114,6 @@ function Detail() {
         Authorization: `${type} ${token}`,
       };
 
-      console.log(page);
       // const url = `http://hoyeonjigi.site:8080/evaluation/${content.contentId}`;
       const url = `https://hoyeonjigi.site/evaluation/${content.contentId}?page=${page}`;
 
@@ -184,6 +132,7 @@ function Detail() {
         } else {
           // 불러온 데이터를 현재 상품 목록에 추가합니다.
           // 이전 상품 목록(prevProducts)에 새로운 데이터(data.products)를 연결합니다.
+
           setReview([...review, ...response.evaluationList]);
 
           // console.log(review);
@@ -205,8 +154,13 @@ function Detail() {
       window.scrollTo(0, 0);
     }
 
+    if (isReview) {
+      window.scrollTo(0, 0);
+      reviewData();
+    }
+
     reviewData(); // 컴포넌트가 마운트될 때 첫 번째 페이지 데이터 로드
-  }, []); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
+  }, [page, isReview, setReview]); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
 
   // 컴포넌트 내부에서
   const observer = useRef();
@@ -236,7 +190,14 @@ function Detail() {
       // 컴포넌트가 언마운트될 때 observer를 정리
       if (observer.current) observer.current.disconnect();
     };
-  }, [page]); // 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행됩니다.
+  }, [page, isReview, setReview]); // 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행됩니다.
+
+  useEffect(() => {
+    // 컴포넌트가 언마운트될 때 reset 함수가 호출되도록 합니다.
+    return () => {
+      reset();
+    };
+  }, [reset]); // reset 함수가 변경되지 않는 이상, 이 효과는 마운트와 언마운트 시에만 실행됩니다.
 
   return (
     <div className="bg-black">
@@ -343,7 +304,10 @@ function Detail() {
               <p className="text-white">{numberOfReviews} 평점</p>
             </div>
           </div>
-          <button onClick={openModal}>리뷰달기</button>
+          <div>
+            <button onClick={openModal}>리뷰달기</button>
+            <button>리뷰삭제</button>
+          </div>
           <ReviewModal
             isOpen={isModalOpen}
             closeModal={closeModal}
