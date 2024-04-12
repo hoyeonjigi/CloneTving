@@ -37,7 +37,7 @@ function Main() {
 
   // const { setContent } = useContent();
   const { setContent } = useContents();
-  const { reset } = useReviews();
+  const { reset, isReview, setIsReview } = useReviews();
 
   const { accessToken, reToken, grantType, setAccessToken, setReToken } =
     useLogin();
@@ -101,7 +101,8 @@ function Main() {
 
         localStorage.removeItem("contents");
         localStorage.removeItem("reviews");
-        reset();
+        // setIsReview(false);
+        // reset();
 
         // 데이터가 이미 로드되었다면, 함수를 종료하여 추가 로드를 방지
         if (isDataLoaded) return;
