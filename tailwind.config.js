@@ -16,6 +16,7 @@ export default {
       brightness: ["hover", "focus"],
 
       colors: {
+        rgba: "rgba(0, 0, 0, 0.5)",
         brand: "#FF153C",
         onboard: "#DEDEDE",
         btnText: "#A3A3A3",

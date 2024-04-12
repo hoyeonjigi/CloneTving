@@ -2,8 +2,12 @@ import profile from "@/assets/profiles/profile_s1.webp";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import LogoutButton from "./LogoutModal";
+import useProfile from "@/store/useProfile";
 
 function MainProfileModal() {
+
+
+  const {profileName,userProfileUrl} = useProfile()
   return (
     <motion.div
       className="absolute w-72 bg-[#212121] border border-[#4d4d4d] rounded-sm right-0 top-10 z-50"
@@ -13,10 +17,10 @@ function MainProfileModal() {
     >
       <div className="flex flex-row p-5">
         <div>
-          <img src={profile} alt="유저 프로필 이미지" className="w-12" />
+          <img src={userProfileUrl} alt="유저 프로필 이미지" className="w-12" />
         </div>
         <div className="text-[#a3a3a3] ml-4 font-medium">
-          <p className="text-white text-lg">이재호</p>
+          <p className="text-white text-lg">{profileName}</p>
           <button>
             <Link to="/user/profiles">
               <span className="hover:text-[#d9d9d9] text-sm">프로필 전환</span>
@@ -26,31 +30,23 @@ function MainProfileModal() {
       </div>
       <hr className="border border-gray_03 mb-4" />
       <ul className="text-[#a3a3a3] font-medium text-lg mb-4">
-        <Link to="/main">
-          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">MY</li>
-        </Link>
+        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">MY</li>
 
-        <Link to="/main">
-          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
-            <a href="/main">이용권</a>
-          </li>
-        </Link>
-        <Link to="/main">
-          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
-            <a href="/main">쿠폰등록</a>
-          </li>
-        </Link>
-        <Link to="/main">
-          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
-            <a href="/main">고객센터</a>
-          </li>
-        </Link>
-        <Link to="/main">
-          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
-            {/* <a href="/main">로그아웃</a> */}
-            <LogoutButton/>
-          </li>
-        </Link>
+        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
+          <a href="/main">이용권</a>
+        </li>
+
+        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
+          <a href="/main">쿠폰등록</a>
+        </li>
+
+        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
+          <a href="/main">고객센터</a>
+        </li>
+
+        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
+          <LogoutButton />
+        </li>
       </ul>
     </motion.div>
   );

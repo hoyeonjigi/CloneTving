@@ -41,32 +41,14 @@ function UserProfileModal({ isOpen, closeModal }) {
 	const [imgTest, setImgTest] = useState([]);
 
 	const getProfileImage = async () => {
-		// const storedImages = localStorage.getItem("imageInfo");
-		// const parseStoredImages = JSON.parse(storedImages);
-
-		// if (storedImages) {
-		// 	return;
-		// }
-
 		try {
-			// const url = "http://hoyeonjigi.site:8080/profileimages";
-			// const type = Cookies.get("grantType");
-			// const token = Cookies.get("accessToken");
-			// const headers = {
-			// 	"Content-Type": "application/json",
-			// 	"Access-Control-Allow-Origin": "*",
-			// 	Authorization: `${type} ${token}`,
-			// };
-
-			// const result = await getData(url, headers);
-
 			setProfileImages(
 				profileData.map((item) => ({
 					profileImageId: item.profileImageId,
 					profileImageName: item.profileImageName,
 					image_url: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.image_url}`,
 					category: item.category,
-					alt: `테스트 이미지`,
+					alt: `프로필 이미지`,
 				}))
 			);
 

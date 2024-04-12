@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { motion } from "framer-motion";
 
 import close from "@/assets/profiles/icon_x.svg";
-import useContent from "@/store/useContent";
+// import useContent from "@/store/useContent";
+import useContents from "@/store/useContent";
 
 import Cookies from "js-cookie";
 import { postData } from "@/utils/crud";
 import { toast } from "react-hot-toast";
+
+import useReviews from "@/store/useReviews";
+import useProfile from "@/store/useProfile";
 
 function ReviewModal({ isOpen, closeModal }) {
   const [rating, setRating] = useState(0); // 초기 별점 상태 설정
@@ -16,7 +20,11 @@ function ReviewModal({ isOpen, closeModal }) {
 
   const [review, setReview] = useState(""); // 리뷰 텍스트 상태 설정
 
-  const { content } = useContent();
+  const { content } = useContents();
+
+  const { isReview, setIsReview } = useReviews();
+
+  const { profileName } = useProfile();
 
   // 별점을 설정하는 함수
   const handleSetRating = (newRating) => {
@@ -57,23 +65,33 @@ function ReviewModal({ isOpen, closeModal }) {
         .replace(/\./g, "");
 
       const data = {
-        profileName: "이재호",
+        profileName: profileName,
         contentId: content.contentId,
         starRating: rating,
         review: review,
         ratingDate: currentDate,
       };
 
-      const url = `http://hoyeonjigi.site:8080/evaluation`;
+      const url = `https://hoyeonjigi.site/evaluation`;
 
       const response = await postData(url, data, headers);
       // return postData(url, data, headers); // getData 함수가 각 URL에 대해 요청을 수행하고, 프로미스를 반환한다고 가정합니다.
 
+      console.log(isReview);
+
+      if (isReview === true) {
+        setIsReview(false);
+      } else {
+        setIsReview(true);
+      }
+
       toast.success(`리뷰가 성공적으로 등록되었습니다`, {
         // icon: "🎉",
         duration: 2000,
+
       });
     } catch (error) {
+    
       console.log(error);
       console.log("에러출력");
       toast.error(`이미 리뷰를 등록했습니다.`, {
@@ -81,6 +99,14 @@ function ReviewModal({ isOpen, closeModal }) {
       });
     }
   };
+
+  useEffect(() => {
+    console.log(isReview)
+    // 컴포넌트가 언마운트될 때 reset 함수가 호출되도록 합니다.
+    return () => {
+      setIsReview(false);
+    };
+  }, [setIsReview]); // reset 함수가 변경되지 않는 이상, 이 효과는 마운트와 언마운트 시에만 실행됩니다.
 
   if (!isOpen) {
     return null;

@@ -9,7 +9,14 @@ import SlideBottom from "@/components/onboarding/SlideBottom";
 import TvingOriginal from "@/components/onboarding/TvingOriginal";
 import { Link } from "react-router-dom";
 
+import { useEffect } from "react";
+
 function OnBoading() {
+  useEffect(() => {
+    localStorage.removeItem("reviews");
+    localStorage.removeItem("profile");
+    localStorage.removeItem("profileList");
+  }, []);
   return (
     <>
       <Helmet>
