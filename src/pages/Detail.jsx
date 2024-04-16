@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import useContents from "@/store/useContent";
 import useReviews from "@/store/useReviews";
 import Star from "@/components/Star";
+import ChangeReview from "@/components/modal/ChangeReview";
 
 function Detail() {
   const { content, genre, setGenre } = useContents();
@@ -23,6 +24,8 @@ function Detail() {
     setAverageRating,
     setPage,
 
+    endPage,
+    setEndPage,
     isReview,
     setIsReview,
     reset,
@@ -31,6 +34,17 @@ function Detail() {
   // 모달 창 상태를 관리하는 state
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
+
+  const handleDotClick = (e) => {
+    e.stopPropagation();
+
+    if (isChangeModalOpen) {
+      setIsChangeModalOpen(false);
+    } else {
+      setIsChangeModalOpen(true); // 모달이 닫혀 있을 경우, 열기 실행
+    }
+  };
   // 모달 창을 여는 함수
   const openModal = () => {
     -setIsModalOpen(true);
@@ -39,6 +53,11 @@ function Detail() {
   // 모달 창을 닫는 함수
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  // 모달 창을 닫는 함수
+  const closeChangeModal = () => {
+    setIsChangeModalOpen(false);
   };
 
   const refresh = async () => {
@@ -104,6 +123,10 @@ function Detail() {
   }, []); // 이 효과는 컴포넌트가 마운트될 때만 실행됩니다.
 
   const reviewData = async () => {
+    // console.log(endPage);
+    // if (endPage === true) {
+    //   return;
+    // }
     try {
       // 로컬 스토리지에 리뷰 데이터가 없는 경우, API 호출을 통해 데이터를 가져옵니다.
       const type = Cookies.get("grantType");
@@ -119,6 +142,8 @@ function Detail() {
 
       const response = await getData(url, headers);
 
+      console.log(response);
+
       if (response.evaluationList.length === 0) {
         return;
       } else {
@@ -128,23 +153,35 @@ function Detail() {
           setAverageRating(response.avg);
           setNumberOfReviews(response.evaluationCount);
           // 페이지 번호를 업데이트하여 다음 요청에 올바른 skip 값을 사용합니다.
-          setPage(page + 1);
+
+          console.log(page);
+          // setPage(page + 1);
         } else {
           // 불러온 데이터를 현재 상품 목록에 추가합니다.
           // 이전 상품 목록(prevProducts)에 새로운 데이터(data.products)를 연결합니다.
 
           setReview([...review, ...response.evaluationList]);
 
+          console.log(page);
+
           // console.log(review);
           setAverageRating(response.avg);
           setNumberOfReviews(response.evaluationCount);
           // 페이지 번호를 업데이트하여 다음 요청에 올바른 skip 값을 사용합니다.
-          setPage(page + 1);
+          // setPage(page + 1);
         }
+        setPage(page + 1);
       }
     } catch (error) {
       console.log(error);
       console.log("리뷰에러");
+
+      // reset();
+      setEndPage(true);
+      // setEndPage(true);
+
+      console.log(endPage);
+
       // refresh();
     }
   };
@@ -152,15 +189,21 @@ function Detail() {
   useEffect(() => {
     if (page === 0) {
       window.scrollTo(0, 0);
-    }
-
-    if (isReview) {
-      window.scrollTo(0, 0);
       reviewData();
     }
+    if (endPage === true) {
+      reset();
+      window.scrollTo(0, 0);
+      reviewData();
+      setEndPage(false);
+    }
+    // else {
+    //   reset();
+    //   reviewData();
+    // }
 
-    reviewData(); // 컴포넌트가 마운트될 때 첫 번째 페이지 데이터 로드
-  }, [page, isReview, setReview]); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
+    // 컴포넌트가 마운트될 때 첫 번째 페이지 데이터 로드
+  }, []); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
 
   // 컴포넌트 내부에서
   const observer = useRef();
@@ -190,14 +233,17 @@ function Detail() {
       // 컴포넌트가 언마운트될 때 observer를 정리
       if (observer.current) observer.current.disconnect();
     };
-  }, [page, isReview, setReview]); // 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행됩니다.
+  }, [page]); // 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행됩니다.
 
   useEffect(() => {
     // 컴포넌트가 언마운트될 때 reset 함수가 호출되도록 합니다.
     return () => {
-      reset();
+      useReviews.persist.clearStorage();
+
+      setPage(0);
+      // window.scrollTo(0, 0);
     };
-  }, [reset]); // reset 함수가 변경되지 않는 이상, 이 효과는 마운트와 언마운트 시에만 실행됩니다.
+  }, []); // reset 함수가 변경되지 않는 이상, 이 효과는 마운트와 언마운트 시에만 실행됩니다.
 
   return (
     <div className="bg-black">
@@ -294,8 +340,8 @@ function Detail() {
       <hr className="border-0 h-[1px] bg-gray_04 mx-12" />
 
       {/* 평점 영역 */}
-      <div className="bg-black flex gap-4">
-        <div className="flex-grow-[0.2] ml-16 mt-10">
+      <div className="bg-black flex gap-4 mb-10">
+        <div className="flex-grow-[0.2] ml-16 mt-10 relative">
           <div className="flex items-center">
             <div className="text-5xl text-white font-extrabold mr-4">
               {averageRating}
@@ -304,32 +350,32 @@ function Detail() {
               <p className="text-white">{numberOfReviews} 평점</p>
             </div>
           </div>
-          <div>
-            <button onClick={openModal}>리뷰달기</button>
-            <button>리뷰삭제</button>
+          <div className="flex items-start justify-between mt-8">
+            <button
+              onClick={openModal}
+              className="border border-gray_05 hover:border-white text-white px-10 py-2 font-bold rounded-full"
+            >
+              리뷰 작성
+            </button>
+            {/* <button>리뷰삭제</button> */}
+            <button
+              className="text-white text-3xl font-bold modal-trigger mr-10"
+              onClick={handleDotClick}
+            >
+              ⋮
+            </button>
           </div>
+          <ChangeReview
+            isOpen={isChangeModalOpen}
+            onClose={closeChangeModal}
+          ></ChangeReview>
           <ReviewModal
             isOpen={isModalOpen}
             closeModal={closeModal}
           ></ReviewModal>
         </div>
-        {/* <div className="flex flex-col mb-24">
-          <ul>
-            <h3 className="text-white font-semibold mt-11">최신순</h3>
 
-            {review.length > 0 &&
-              review.map((item, index) => (
-                <li className="mt-11" key={index}>
-                  <Star starRating={item.starRating}></Star>
-                  <p className="text-white mt-2 font-medium">{item.review}</p>
-                  <span className="mt-2 text-gray_07 text-sm">
-                    {item.profileName} • {item.ratingDate}{" "}
-                  </span>
-                </li>
-              ))}
-          </ul>
-        </div> */}
-        <div className="flex flex-col mb-24">
+        <div className="flex flex-grow-[0.8] flex-col mb-24">
           <ul>
             <h3 className="text-white font-semibold mt-11">최신순</h3>
             {review.length > 0 &&

@@ -100,6 +100,7 @@ function Main() {
         const isDataLoaded = localStorage.getItem("isDataLoaded");
 
         localStorage.removeItem("contents");
+        useReviews.persist.clearStorage();
         localStorage.removeItem("reviews");
         // setIsReview(false);
         // reset();
@@ -445,7 +446,7 @@ function Main() {
                     }}
                     onClick={() => {
                       setContent(film);
-                      testMe();
+                      // testMe();/
                     }}
                   >
                     <motion.img
