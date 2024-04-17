@@ -29,6 +29,7 @@ function Detail() {
     isReview,
     setIsReview,
     reset,
+    addReview,
   } = useReviews();
 
   // 모달 창 상태를 관리하는 state
@@ -74,7 +75,6 @@ function Detail() {
 
     const response = await postData(reUrl, body, headers);
 
-    // console.log(response);
     Cookies.set("accessToken", response.accessToken, {
       secure: true,
       sameSite: "strict",
@@ -123,10 +123,9 @@ function Detail() {
   }, []); // 이 효과는 컴포넌트가 마운트될 때만 실행됩니다.
 
   const reviewData = async () => {
-    // console.log(endPage);
-    // if (endPage === true) {
-    //   return;
-    // }
+    if (endPage === true) {
+      return;
+    }
     try {
       // 로컬 스토리지에 리뷰 데이터가 없는 경우, API 호출을 통해 데이터를 가져옵니다.
       const type = Cookies.get("grantType");
@@ -142,29 +141,16 @@ function Detail() {
 
       const response = await getData(url, headers);
 
-      console.log(response);
-
       if (response.evaluationList.length === 0) {
         return;
       } else {
         if (page === 0) {
-          // console.log("페이지0");
           setReview(response.evaluationList);
           setAverageRating(response.avg);
           setNumberOfReviews(response.evaluationCount);
-          // 페이지 번호를 업데이트하여 다음 요청에 올바른 skip 값을 사용합니다.
-
-          console.log(page);
-          // setPage(page + 1);
         } else {
-          // 불러온 데이터를 현재 상품 목록에 추가합니다.
-          // 이전 상품 목록(prevProducts)에 새로운 데이터(data.products)를 연결합니다.
-
           setReview([...review, ...response.evaluationList]);
 
-          console.log(page);
-
-          // console.log(review);
           setAverageRating(response.avg);
           setNumberOfReviews(response.evaluationCount);
           // 페이지 번호를 업데이트하여 다음 요청에 올바른 skip 값을 사용합니다.
@@ -173,42 +159,36 @@ function Detail() {
         setPage(page + 1);
       }
     } catch (error) {
-      console.log(error);
-      console.log("리뷰에러");
-
-      // reset();
       setEndPage(true);
-      // setEndPage(true);
 
-      console.log(endPage);
-
-      // refresh();
+      console.log("리뷰 데이터가 없습니다");
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    if (page === 0) {
-      window.scrollTo(0, 0);
-      reviewData();
+    setEndPage(false);
+    setReview([]);
+    setPage(0);
+    setEndPage(false);
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
     }
-    if (endPage === true) {
-      reset();
-      window.scrollTo(0, 0);
-      reviewData();
-      setEndPage(false);
-    }
-    // else {
-    //   reset();
-    //   reviewData();
-    // }
+    window.scrollTo(0, 0);
 
-    // 컴포넌트가 마운트될 때 첫 번째 페이지 데이터 로드
-  }, []); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
+    if (page === 0) {
+      reviewData();
+    }
+  }, [addReview]); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
 
   // 컴포넌트 내부에서
   const observer = useRef();
 
   useEffect(() => {
+    if (endPage === true) {
+      return;
+    }
+
     const observerElement = document.getElementById("observer");
 
     const options = {
@@ -221,6 +201,7 @@ function Detail() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           // 타겟 요소가 뷰포트에 들어왔을 때
+
           reviewData(); // 추가 데이터를 로드하는 함수 호출
         }
       });
@@ -233,15 +214,12 @@ function Detail() {
       // 컴포넌트가 언마운트될 때 observer를 정리
       if (observer.current) observer.current.disconnect();
     };
-  }, [page]); // 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행됩니다.
+  }, [page, endPage]); // 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행됩니다.
 
   useEffect(() => {
     // 컴포넌트가 언마운트될 때 reset 함수가 호출되도록 합니다.
     return () => {
       useReviews.persist.clearStorage();
-
-      setPage(0);
-      // window.scrollTo(0, 0);
     };
   }, []); // reset 함수가 변경되지 않는 이상, 이 효과는 마운트와 언마운트 시에만 실행됩니다.
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import DeleteReview from "./DeleteReview";
+
 
 function ChangeReview({ isOpen, onClose }) {
   const modalRef = useRef();
@@ -28,7 +28,7 @@ function ChangeReview({ isOpen, onClose }) {
     <div className="flex flex-col mt-3 bg-gray_03 text-white w-[60%] items-center rounded absolute right-10">
       <button className="py-3 text-gray_08 hover:text-white">리뷰 수정</button>
       {/* <button className="py-3 text-gray_08 hover:text-white">리뷰 삭제</button> */}
-      <DeleteReview />
+     
     </div>
   );
 }

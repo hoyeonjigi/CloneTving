@@ -27,6 +27,9 @@ const reviewsStore = (set) => ({
       page: 0,
       // isReview: false,
     }),
+
+  addReview: (newReview) =>
+    set((state) => ({ review: [newReview, ...state.review] })),
 });
 
 // create 함수를 호출할 때 persist 함수로 contentStore를 감싸줍니다.

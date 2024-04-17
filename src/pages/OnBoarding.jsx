@@ -137,14 +137,7 @@ function OnBoading() {
               className="w-[13%]"
             />
             <h2 className="text-4.5xl font-bold mb-5">지금 시작해보세요</h2>
-            {/* <Link to="/SignIn">
-              <button
-                type="button"
-                className="bg-brand w-[435px] py-5 font-bold text-2xl rounded"
-              >
-                티빙 로그인
-              </button>
-            </Link> */}
+            
             <LoginButtonRed />
           </section>
         </div>
