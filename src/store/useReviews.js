@@ -9,6 +9,9 @@ const reviewsStore = (set) => ({
   page: 0, // 현재 페이지 번호
 
   isReview: false,
+  endPage: false,
+
+  setEndPage: (endPage) => set({ endPage }),
 
   setPage: (page) => set({ page }),
   setReview: (review) => set({ review }),
@@ -24,6 +27,9 @@ const reviewsStore = (set) => ({
       page: 0,
       // isReview: false,
     }),
+
+  addReview: (newReview) =>
+    set((state) => ({ review: [newReview, ...state.review] })),
 });
 
 // create 함수를 호출할 때 persist 함수로 contentStore를 감싸줍니다.
@@ -37,5 +43,7 @@ const useReviews = create(
     // getStorage: () => sessionStorage,
   })
 );
+
+// 상태를 초기화하고 로컬 스토리지에서 해당 항목을 삭제하는 함수
 
 export default useReviews;
