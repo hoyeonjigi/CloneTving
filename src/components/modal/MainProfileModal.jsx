@@ -8,6 +8,7 @@ function MainProfileModal() {
 
 
   const {profileName,userProfileUrl} = useProfile()
+  
   return (
     <motion.div
       className="absolute w-72 bg-[#212121] border border-[#4d4d4d] rounded-sm right-0 top-10 z-50"

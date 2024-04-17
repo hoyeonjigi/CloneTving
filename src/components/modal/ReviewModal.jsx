@@ -22,7 +22,7 @@ function ReviewModal({ isOpen, closeModal }) {
 
   const { content } = useContents();
 
-  const { isReview, setIsReview } = useReviews();
+  const { isReview, setIsReview, addReview } = useReviews();
 
   const { profileName } = useProfile();
 
@@ -75,23 +75,25 @@ function ReviewModal({ isOpen, closeModal }) {
       const url = `https://hoyeonjigi.site/evaluation`;
 
       const response = await postData(url, data, headers);
-      // return postData(url, data, headers); // getData 함수가 각 URL에 대해 요청을 수행하고, 프로미스를 반환한다고 가정합니다.
 
-      console.log(isReview);
+      addReview(response);
 
-      if (isReview === true) {
-        setIsReview(false);
-      } else {
-        setIsReview(true);
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
       }
+      window.scrollTo(0, 0);
 
       toast.success(`리뷰가 성공적으로 등록되었습니다`, {
-        // icon: "🎉",
         duration: 2000,
-
       });
+
+      //   console.log(response);
+
+      //   toast.success(`리뷰가 성공적으로 등록되었습니다`, {
+      //     // icon: "🎉",
+      //     duration: 2000,
+      //   });
     } catch (error) {
-    
       console.log(error);
       console.log("에러출력");
       toast.error(`이미 리뷰를 등록했습니다.`, {
@@ -99,14 +101,6 @@ function ReviewModal({ isOpen, closeModal }) {
       });
     }
   };
-
-  useEffect(() => {
-    console.log(isReview)
-    // 컴포넌트가 언마운트될 때 reset 함수가 호출되도록 합니다.
-    return () => {
-      setIsReview(false);
-    };
-  }, [setIsReview]); // reset 함수가 변경되지 않는 이상, 이 효과는 마운트와 언마운트 시에만 실행됩니다.
 
   if (!isOpen) {
     return null;
