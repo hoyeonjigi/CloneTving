@@ -11,7 +11,7 @@ function FindID() {
 				<title>TvingFront - FindID</title>
 			</Helmet>
 			<Header />
-			<div className="bg-black font-noto">
+			<div className="bg-black font-noto md-h lg-h">
 				<div className="flex flex-col items-center pt-[60px] pb-[100px]">
 					<h3 className="text-white text-center font-extrabold text-4xl pb-[60px]">
 						아이디 찾기

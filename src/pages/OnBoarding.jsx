@@ -12,18 +12,18 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 
 function OnBoading() {
-	useEffect(() => {
-		localStorage.removeItem("reviews");
-		localStorage.removeItem("profile");
-		localStorage.removeItem("profileList");
-	}, []);
-	return (
-		<>
-			<Helmet>
-				<title>TvingFront - OnBoading</title>
-			</Helmet>
-			<div className="bg-black">
-				<Header />
+  useEffect(() => {
+    localStorage.removeItem("reviews");
+    localStorage.removeItem("profile");
+    localStorage.removeItem("profileList");
+  }, []);
+  return (
+    <>
+      <Helmet>
+        <title>TvingFront - OnBoading</title>
+      </Helmet>
+      <div className="bg-black w-screen">
+        <Header />
 
 				<div>
 					<section className="mb-80 relative" style={{ height: "80vh" }}>
