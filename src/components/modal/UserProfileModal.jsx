@@ -38,30 +38,25 @@ function UserProfileModal({ isOpen, closeModal }) {
 	const [baseSlideIndex, setBaseSlideIndex] = useState(0);
 	const [yumiSlideIndex, setYumiSlideIndex] = useState(0);
 
-	const [imgTest, setImgTest] = useState([]);
+	// // 프로필 이미지 카테고리별 정렬
+	// const getProfileImage = () => {
+	// 	setProfileImages(
+	// 		profileData.map((item) => ({
+	// 			profileImageId: item.profileImageId,
+	// 			profileImageName: item.profileImageName,
+	// 			image_url: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.image_url}`,
+	// 			category: item.category,
+	// 			alt: `프로필 이미지`,
+	// 		}))
+	// 	);
 
-	const getProfileImage = async () => {
-		try {
-			setProfileImages(
-				profileData.map((item) => ({
-					profileImageId: item.profileImageId,
-					profileImageName: item.profileImageName,
-					image_url: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.image_url}`,
-					category: item.category,
-					alt: `프로필 이미지`,
-				}))
-			);
-
-			setBaseProfileImages(
-				profileImages.filter((item) => item.profileImageId <= 10)
-			);
-			setYumiProfileImages(
-				profileImages.filter((item) => item.profileImageId > 10)
-			);
-		} catch (error) {
-			console.log(error);
-		}
-	};
+	// 	setBaseProfileImages(
+	// 		profileImages.filter((item) => item.profileImageId <= 10)
+	// 	);
+	// 	setYumiProfileImages(
+	// 		profileImages.filter((item) => item.profileImageId > 10)
+	// 	);
+	// };
 
 	// 이미지 클릭 시
 	const handleImageClick = (clickedImageName, clickedImageUrl) => {
@@ -71,9 +66,9 @@ function UserProfileModal({ isOpen, closeModal }) {
 		closeModal();
 	};
 
-	useEffect(() => {
-		getProfileImage();
-	}, []);
+	// useEffect(() => {
+	// 	getProfileImage();
+	// }, []);
 
 	if (!isOpen) {
 		return null;

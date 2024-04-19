@@ -14,7 +14,18 @@ import useProfileList from "@/store/useProfileList";
 
 function Profile() {
 	const { userProfiles, setUserProfiles } = useProfileList();
-	const { isImageSelected, setIsImageSelected } = useCreate();
+	const {
+		profileData,
+		profileImages,
+		baseProfileImages,
+		yumiProfileImages,
+		isImageSelected,
+		setProfileData,
+		setProfileImages,
+		setBaseProfileImages,
+		setYumiProfileImages,
+		setIsImageSelected,
+	} = useCreate();
 	const { userId } = useLogin();
 	const {
 		profileName,
@@ -25,6 +36,7 @@ function Profile() {
 		setChild,
 	} = useProfile();
 
+	// 사용자 정보 가져오기
 	const getUserData = async () => {
 		try {
 			const testUrl = `https://hoyeonjigi.site/profile/${userId}`;
@@ -53,6 +65,57 @@ function Profile() {
 		}
 	};
 
+	//프로필 이미지 정보 가져오기
+	const getProfileInfo = async () => {
+		try {
+			const profileUrl = "https://hoyeonjigi.site/profileimages";
+			const type = Cookies.get("grantType");
+			const token = Cookies.get("accessToken");
+			const headers = {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
+				Authorization: `${type} ${token}`,
+			};
+
+			const result = await getData(profileUrl, headers);
+			// localStorage.setItem("imageInfo", JSON.stringify(result));
+			// // 서버에 저장된 프로필 이미지 정보 가져옴
+			// setProfileData(result);
+
+			// // 프로필 이미지 카테고리별 정렬
+			// setProfileImages(
+			// 	profileData.map((item) => ({
+			// 		profileImageId: item.profileImageId,
+			// 		profileImageName: item.profileImageName,
+			// 		image_url: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.image_url}`,
+			// 		category: item.category,
+			// 		alt: `프로필 이미지`,
+			// 	}))
+			// );
+
+			const updateProfileImages = result.map((item) => ({
+				profileImageId: item.profileImageId,
+				profileImageName: item.profileImageName,
+				image_url: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.image_url}`,
+				category: item.category,
+				alt: `프로필 이미지`,
+			}));
+
+			setBaseProfileImages(
+				updateProfileImages.filter((item) => item.profileImageId <= 10)
+			);
+			setYumiProfileImages(
+				updateProfileImages.filter((item) => item.profileImageId > 10)
+			);
+
+			// console.log(result);
+		} catch (error) {
+			console.error(`Error in sending POST request: ${error}`);
+		}
+	};
+
+	// 프로필 이미지 카테고리별 정렬
+
 	const navigate = useNavigate(); // useNavigate hook을 통해 navigate 함수를 가져옴
 
 	const handleProfileAdd = () => {
@@ -68,8 +131,10 @@ function Profile() {
 	useEffect(() => {
 		localStorage.removeItem("myProfile");
 		localStorage.removeItem("editProfile");
+		getProfileInfo();
 		setIsImageSelected(false);
 		getUserData();
+		console.log("test");
 	}, []);
 
 	return (

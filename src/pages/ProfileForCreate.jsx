@@ -196,32 +196,33 @@ function ProfileForCreate() {
 		}
 	};
 
-	//프로필 이미지 정보 가져오기
-	const getProfileInfo = async () => {
-		const profileUrl = "https://hoyeonjigi.site/profileimages";
-		const type = Cookies.get("grantType");
-		const token = Cookies.get("accessToken");
-		const headers = {
-			"Content-Type": "application/json",
-			"Access-Control-Allow-Origin": "*",
-			Authorization: `${type} ${token}`,
-		};
+	// //프로필 이미지 정보 가져오기
+	// const getProfileInfo = async () => {
+	// 	const profileUrl = "https://hoyeonjigi.site/profileimages";
+	// 	const type = Cookies.get("grantType");
+	// 	const token = Cookies.get("accessToken");
+	// 	const headers = {
+	// 		"Content-Type": "application/json",
+	// 		"Access-Control-Allow-Origin": "*",
+	// 		Authorization: `${type} ${token}`,
+	// 	};
 
-		try {
-			const result = await getData(profileUrl, headers);
-			// localStorage.setItem("imageInfo", JSON.stringify(result));
-			setProfileData(result);
+	// 	try {
+	// 		const result = await getData(profileUrl, headers);
+	// 		// localStorage.setItem("imageInfo", JSON.stringify(result));
+	// 		// 서버에 저장된 프로필 이미지 정보 가져옴
+	// 		setProfileData(result);
 
-			// console.log(result);
-		} catch (error) {
-			console.error(`Error in sending POST request: ${error}`);
-		}
-	};
+	// 		// console.log(result);
+	// 	} catch (error) {
+	// 		console.error(`Error in sending POST request: ${error}`);
+	// 	}
+	// };
 
 	useEffect(() => {
 		// console.log(`currentProfile : ${currentProfile.selectedImageName}`);
 		// console.log(`imageName : ${imageName}`);
-		getProfileInfo();
+		// getProfileInfo();
 
 		//만약 프로필을 선택했다면 setCurrentProfile
 		if (isImageSelected) {
