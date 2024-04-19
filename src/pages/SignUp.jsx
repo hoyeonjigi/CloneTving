@@ -258,7 +258,7 @@ function SignUp() {
 			</Helmet>
 			<Header />
 			{/* main */}
-			<div className="bg-black font-noto">
+			<div className="bg-black font-noto md-h lg-h">
 				<div className="flex flex-col items-center pt-[60px] pb-[100px]">
 					<h3 className="text-white font-bold text-4xl">티빙 회원가입</h3>
 					<p className="  pt-5 text-xl text-[#ABABAB]">

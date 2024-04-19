@@ -246,7 +246,7 @@ function ProfileForCreate() {
 
 			<Header />
 
-			<div className="flex flex-col items-center justify-center">
+			<div className="flex flex-col items-center justify-center md-h lg-h">
 				<h3 className="text-white text-4xl font-bold mt-24 mb-12">
 					프로필 만들기
 				</h3>

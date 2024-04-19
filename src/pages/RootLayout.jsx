@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 
 function RootLayout() {
   return (
-    <div className="font-noto max-w-[1920px]">
+    <div className="font-noto">
       <Outlet />
     </div>
   );
