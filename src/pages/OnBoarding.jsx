@@ -22,7 +22,7 @@ function OnBoading() {
       <Helmet>
         <title>TvingFront - OnBoading</title>
       </Helmet>
-      <div className="bg-black">
+      <div className="bg-black w-screen">
         <Header />
 
         <div>

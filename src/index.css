@@ -137,3 +137,16 @@
   opacity: 1;
 }
 
+
+
+@media (min-height: 1420px) {
+  .md-h {
+    height: 70vh;
+  }
+
+}
+@media (min-height: 1920px) {
+  .lg-h {
+    height: 75vh;
+  }
+}

@@ -92,6 +92,8 @@ function Main() {
 
     const body = {};
     const response = await patchData(url, body, headers);
+
+    // console.log(Cookies.get())
   };
 
   useEffect(() => {
@@ -446,7 +448,7 @@ function Main() {
                     }}
                     onClick={() => {
                       setContent(film);
-                      // testMe();/
+                      testMe();
                     }}
                   >
                     <motion.img
