@@ -50,7 +50,7 @@ function ProfilesForEdit() {
 					child: item.child,
 				}))
 			);
-			console.log(result);
+			// console.log(result);
 		} catch (error) {
 			console.log(error);
 			console.log("에러출력");

@@ -54,11 +54,11 @@ function Profile() {
 				result.map((item) => ({
 					userProfileName: item.profileName,
 					userProfileImageUrl: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.profileImageUrl}`,
-					alt: `테스트 이미지`,
+					alt: `프로필 이미지`,
 					child: item.child,
 				}))
 			);
-			console.log(result);
+			
 		} catch (error) {
 			console.log(error);
 			console.log("에러출력");
@@ -134,7 +134,7 @@ function Profile() {
 		getProfileInfo();
 		setIsImageSelected(false);
 		getUserData();
-		console.log("test");
+		// console.log("test");
 	}, []);
 
 	return (

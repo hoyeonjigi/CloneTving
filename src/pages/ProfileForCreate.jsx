@@ -93,13 +93,13 @@ function ProfileForCreate() {
 			setProfileName(inputName.substring(0, inputName.length - 1));
 		}
 		// console.log(`${regex.test(profileName)}`);
-		console.log("substring 테스트");
-		console.log(inputName.substring(0, inputName.length - 1));
+		// console.log("substring 테스트");
+		// console.log(inputName.substring(0, inputName.length - 1));
 		//프로필 목록 이름 중 하나라도 일치하면 true
 		setIsNameExist(
 			userProfiles.some((user) => user.userProfileName == profileName)
 		);
-		console.log(`isNameExist : ${isNameExist}`);
+		// console.log(`isNameExist : ${isNameExist}`);
 	};
 
 	const navigate = useNavigate();
@@ -183,7 +183,7 @@ function ProfileForCreate() {
 				const regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
 				if (regex.test(profileName)) {
 					const createResult = await postData(url, data, headers);
-					console.log(`프로필 추가 완료`);
+					// console.log(`프로필 추가 완료`);
 					navigate("/user/profiles");
 				} else {
 					alert("2자 이상 10자 이내의 한글, 영문, 숫자 입력 가능합니다.");
@@ -234,8 +234,8 @@ function ProfileForCreate() {
 			setImageName(selectedImageName);
 		}
 
-		console.log(`selectedImageUrl : ${selectedImageUrl}`);
-		console.log(`selectedImageName : ${selectedImageName}`);
+		// console.log(`selectedImageUrl : ${selectedImageUrl}`);
+		// console.log(`selectedImageName : ${selectedImageName}`);
 	}, [selectedImageName, selectedImageUrl]);
 
 	return (

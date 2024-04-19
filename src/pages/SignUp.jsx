@@ -68,7 +68,7 @@ function SignUp() {
 		try {
 			const response = await postData(url, data, headers);
 			setIsSignUpSuccess(true); // 로그인 성공 상태를 true로 변경
-			console.log("회원가입 성공");
+			// console.log("회원가입 성공");
 			navigate("/");
 		} catch (error) {
 			console.error(`Error in sending POST request: ${error}`);

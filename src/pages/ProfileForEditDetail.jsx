@@ -97,7 +97,7 @@ function ProfileForEditDetail() {
 			};
 
 			const result = await patchData(url, data, headers);
-			console.log(`프로필 수정 완료`);
+			// console.log(`프로필 수정 완료`);
 			navigate("/user/profiles");
 		} catch (error) {
 			console.log(error);
@@ -119,7 +119,7 @@ function ProfileForEditDetail() {
 			};
 
 			const result = await deleteData(testUrl, headers);
-			console.log(result);
+			// console.log(result);
 			navigate("/user/profiles");
 		} catch (error) {
 			console.log(error);
