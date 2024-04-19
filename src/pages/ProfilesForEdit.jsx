@@ -50,7 +50,7 @@ function ProfilesForEdit() {
 					child: item.child,
 				}))
 			);
-			console.log(result);
+			// console.log(result);
 		} catch (error) {
 			console.log(error);
 			console.log("에러출력");
@@ -81,7 +81,7 @@ function ProfilesForEdit() {
 	return (
 		<div className="bg-black font-noto">
 			<Header />
-			<div className="flex flex-col items-center my-32">
+			<div className="flex flex-col items-center my-32 md-h lg-h">
 				{/* 프로필 텍스트 */}
 				<div className="flex flex-col gap-6 text-center ">
 					<h3 className="text-white text-4xl font-bold">프로필 편집</h3>

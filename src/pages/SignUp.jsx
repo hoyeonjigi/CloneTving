@@ -68,7 +68,7 @@ function SignUp() {
 		try {
 			const response = await postData(url, data, headers);
 			setIsSignUpSuccess(true); // 로그인 성공 상태를 true로 변경
-			console.log("회원가입 성공");
+			// console.log("회원가입 성공");
 			navigate("/");
 		} catch (error) {
 			console.error(`Error in sending POST request: ${error}`);
@@ -258,7 +258,7 @@ function SignUp() {
 			</Helmet>
 			<Header />
 			{/* main */}
-			<div className="bg-black font-noto">
+			<div className="bg-black font-noto md-h lg-h">
 				<div className="flex flex-col items-center pt-[60px] pb-[100px]">
 					<h3 className="text-white font-bold text-4xl">티빙 회원가입</h3>
 					<p className="  pt-5 text-xl text-[#ABABAB]">

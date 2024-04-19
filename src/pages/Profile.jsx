@@ -54,11 +54,11 @@ function Profile() {
 				result.map((item) => ({
 					userProfileName: item.profileName,
 					userProfileImageUrl: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.profileImageUrl}`,
-					alt: `테스트 이미지`,
+					alt: `프로필 이미지`,
 					child: item.child,
 				}))
 			);
-			console.log(result);
+			
 		} catch (error) {
 			console.log(error);
 			console.log("에러출력");
@@ -134,13 +134,13 @@ function Profile() {
 		getProfileInfo();
 		setIsImageSelected(false);
 		getUserData();
-		console.log("test");
+		// console.log("test");
 	}, []);
 
 	return (
 		<div className="bg-black">
 			<Header />
-			<div className="flex flex-col items-center my-32">
+			<div className="flex flex-col items-center my-32 md-h lg-h">
 				{/* 프로필 텍스트 */}
 				<div className="flex flex-col gap-6 text-center ">
 					<h3 className="text-white text-4xl font-bold">프로필 선택</h3>

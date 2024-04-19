@@ -90,7 +90,7 @@ function SignIn() {
 			</Helmet>
 			<Header />
 			{/* main */}
-			<div className="bg-black font-noto">
+			<div className="bg-black font-noto md-h lg-h">
 				<div className="flex flex-col items-center pt-[60px] pb-[100px]">
 					<h3 className="text-white text-center font-extrabold text-3.5xl mb-12">
 						TVING ID 로그인
