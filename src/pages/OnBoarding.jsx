@@ -12,16 +12,6 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 
 function OnBoading() {
-	//refresh
-	const refresh = async () => {
-		//입력
-		try {
-			//입력
-		} catch {
-			//입력
-		}
-	};
-
 	useEffect(() => {
 		localStorage.removeItem("reviews");
 		localStorage.removeItem("profile");
@@ -32,7 +22,7 @@ function OnBoading() {
 			<Helmet>
 				<title>TvingFront - OnBoading</title>
 			</Helmet>
-			<div className="bg-black">
+			<div className="bg-black w-screen">
 				<Header />
 
 				<div>

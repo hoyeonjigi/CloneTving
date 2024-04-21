@@ -335,7 +335,7 @@ function Detail() {
             >
               리뷰 작성
             </button>
-            {/* <button>리뷰삭제</button> */}
+
             <button
               className="text-white text-3xl font-bold modal-trigger mr-10"
               onClick={handleDotClick}

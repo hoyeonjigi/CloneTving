@@ -6,7 +6,7 @@ function Header() {
   return (
     <>
       <Helmet>
-        <title>TvingFront - Header</title>
+        <title>hoyeonjigi</title>
       </Helmet>
 
       {/* onboarding과 main의 header를 구별해줘야함 */}

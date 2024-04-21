@@ -97,7 +97,7 @@ function ProfileForEditDetail() {
 			};
 
 			const result = await patchData(url, data, headers);
-			console.log(`프로필 수정 완료`);
+			// console.log(`프로필 수정 완료`);
 			navigate("/user/profiles");
 		} catch (error) {
 			console.log(error);
@@ -119,7 +119,7 @@ function ProfileForEditDetail() {
 			};
 
 			const result = await deleteData(testUrl, headers);
-			console.log(result);
+			// console.log(result);
 			navigate("/user/profiles");
 		} catch (error) {
 			console.log(error);
@@ -150,7 +150,7 @@ function ProfileForEditDetail() {
 
 			<Header />
 
-			<div className="flex flex-col items-center justify-center">
+			<div className="flex flex-col items-center justify-center md-h lg-h">
 				<h3 className="text-white text-4xl font-bold mt-24 mb-12">
 					프로필 편집
 				</h3>
