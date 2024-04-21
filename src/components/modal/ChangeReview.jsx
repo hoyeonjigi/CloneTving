@@ -1,8 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
-
+import DeleteReview from "./DeleteReview";
 
 function ChangeReview({ isOpen, onClose }) {
   const modalRef = useRef();
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  // 삭제 확인 모달을 닫는 함수
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
 
   useEffect(() => {
     // 모달 외부 클릭 시 모달을 닫는 함수
@@ -25,10 +36,23 @@ function ChangeReview({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="flex flex-col mt-3 bg-gray_03 text-white w-[60%] items-center rounded absolute right-10">
-      <button className="py-3 w-full text-gray_08 hover:text-white">리뷰 수정</button>
-      <button className="py-3 w-full text-gray_08 hover:text-white">리뷰 삭제</button>
-     
+    <div
+      ref={modalRef}
+      className="flex flex-col mt-3 bg-gray_03 text-white w-[60%] items-center rounded absolute right-10"
+    >
+      <button className="py-3 w-full text-gray_08 hover:text-white">
+        리뷰 수정
+      </button>
+      <button
+        onClick={handleDeleteClick}
+        className="py-3 w-full text-gray_08 hover:text-white"
+      >
+        리뷰 삭제
+      </button>
+
+      {isDeleteModalOpen && (
+        <DeleteReview isOpen={isDeleteModalOpen} onClose={closeDeleteModal} />
+      )}
     </div>
   );
 }

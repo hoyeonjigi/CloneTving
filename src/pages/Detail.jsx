@@ -11,6 +11,7 @@ import useContents from "@/store/useContent";
 import useReviews from "@/store/useReviews";
 import Star from "@/components/Star";
 import ChangeReview from "@/components/modal/ChangeReview";
+import Spinner from "@/components/Spinner";
 
 function Detail() {
   const { content, genre, setGenre } = useContents();
@@ -36,6 +37,8 @@ function Detail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleDotClick = (e) => {
     e.stopPropagation();
@@ -124,6 +127,7 @@ function Detail() {
 
   const reviewData = async () => {
     if (endPage === true) {
+      setIsLoading(false);
       return;
     }
     try {
@@ -141,6 +145,8 @@ function Detail() {
 
       const response = await getData(url, headers);
 
+      setIsLoading(false);
+
       if (response.evaluationList.length === 0) {
         return;
       } else {
@@ -150,7 +156,6 @@ function Detail() {
           setNumberOfReviews(response.evaluationCount);
         } else {
           setReview([...review, ...response.evaluationList]);
-
           setAverageRating(response.avg);
           setNumberOfReviews(response.evaluationCount);
           // 페이지 번호를 업데이트하여 다음 요청에 올바른 skip 값을 사용합니다.
@@ -160,6 +165,7 @@ function Detail() {
       }
     } catch (error) {
       setEndPage(true);
+      setIsLoading(false);
 
       console.log("리뷰 데이터가 없습니다");
       console.log(error);
@@ -171,6 +177,8 @@ function Detail() {
     setReview([]);
     setPage(0);
     setEndPage(false);
+    setAverageRating("0.0");
+    setNumberOfReviews(0);
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
     }
@@ -229,7 +237,7 @@ function Detail() {
 
       {/* 컨텐츠영역 */}
       {/* flex justify-between font-noto px-16 pb-12 pt-10 */}
-      <div className="flex justify-between font-noto px-16 pb-12 pt-10">
+      <div className="flex justify-between font-noto px-16 pb-12 pt-10 h-1420:h-[55vh] h-1920:h-[60vh]">
         <div className="flex-[0.55] ml-3">
           <h2 className="text-white font-medium text-5xl mb-6">
             {content.contentTitle}
@@ -306,11 +314,11 @@ function Detail() {
             {content.contentOverview}
           </p>
         </div>
-        <div className="flex-[0.3] relative">
+        <div className="flex-[0.3] flex justify-center">
           <img
             src={content.src}
             alt={content.alt}
-            className=" h-full absolute right-[4rem]"
+            className="h-[60vh] h-1420:h-[45vh] h-1920:h-[45vh] "
           />
         </div>
       </div>
@@ -320,14 +328,19 @@ function Detail() {
       {/* 평점 영역 */}
       <div className="bg-black flex gap-4 mb-10">
         <div className="flex-grow-[0.2] ml-16 mt-10 relative">
-          <div className="flex items-center">
-            <div className="text-5xl text-white font-extrabold mr-4">
-              {averageRating}
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <div className="flex items-center">
+              <div className="text-5xl text-white font-extrabold mr-4">
+                {averageRating}
+              </div>
+              <div className="flex flex-col">
+                <p className="text-white">{numberOfReviews} 평점</p>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <p className="text-white">{numberOfReviews} 평점</p>
-            </div>
-          </div>
+          )}
+
           <div className="flex items-start justify-between mt-8">
             <button
               onClick={openModal}
@@ -356,7 +369,10 @@ function Detail() {
         <div className="flex flex-grow-[0.8] flex-col mb-24">
           <ul>
             <h3 className="text-white font-semibold mt-11">최신순</h3>
-            {review.length > 0 &&
+
+            {isLoading ? (
+              <Spinner />
+            ) : review.length > 0 ? (
               review.map((item, index) => (
                 <li className="mt-11" key={index}>
                   <Star starRating={item.starRating}></Star>
@@ -365,8 +381,12 @@ function Detail() {
                     {item.profileName} • {item.ratingDate}{" "}
                   </span>
                 </li>
-              ))}
-            <div />
+              ))
+            ) : (
+              <p className="text-gray_08 text-3xl mt-6 font-medium">
+                등록된 리뷰가 없습니다.
+              </p>
+            )}
           </ul>
           {/* IntersectionObserver에 의해 관찰될 요소 */}
           <div id="observer"></div>
