@@ -7,7 +7,7 @@ import close from "@/assets/profiles/icon_x.svg";
 import useContents from "@/store/useContent";
 
 import Cookies from "js-cookie";
-import { postData } from "@/utils/crud";
+import { postData, getData } from "@/utils/crud";
 import { toast } from "react-hot-toast";
 
 import useReviews from "@/store/useReviews";
@@ -22,7 +22,13 @@ function ReviewModal({ isOpen, closeModal }) {
 
   const { content } = useContents();
 
-  const { isReview, setIsReview, addReview } = useReviews();
+  const {
+    isReview,
+    setIsReview,
+    addReview,
+    setAverageRating,
+    setNumberOfReviews,
+  } = useReviews();
 
   const { profileName } = useProfile();
 
@@ -78,6 +84,16 @@ function ReviewModal({ isOpen, closeModal }) {
 
       addReview(response);
 
+      const reviewUrl = `https://hoyeonjigi.site/evaluation/${content.contentId}`;
+
+      const re = await getData(url, headers);
+
+      console.log(re);
+
+      // // setReview(re.evaluationList);
+      // setAverageRating(re.avg);
+      // setNumberOfReviews(re.evaluationCount);
+
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
       }
@@ -116,7 +132,7 @@ function ReviewModal({ isOpen, closeModal }) {
       }}
     >
       <motion.div
-        className="bg-gray_03 rounded flex flex-col w-[680px] h-[85%] items-center relative p-7"
+        className="bg-gray_03 rounded flex flex-col w-[680px] h-1024:h-[60vh] h-1920:h-[32vh] h-1420:h-[43vh] items-center relative p-7"
         initial={{ y: "20vh" }} // 초기 위치는 화면 아래쪽
         animate={{ y: 0 }} // 애니메이션을 통해 y축 위치를 0으로 변경
         exit={{ y: "100vh" }} // 컴포넌트가 제거될 때 화면 아래로 슬라이드

@@ -293,7 +293,7 @@ function SignUp() {
 			<div className="bg-black font-noto md-h lg-h">
 				<div className="flex flex-col items-center pt-[60px] pb-[100px]">
 					<h3 className="text-white font-bold text-4xl">티빙 회원가입</h3>
-					<p className="  pt-5 text-xl text-[#ABABAB]">
+					<p className="  pt-5 text-2xl text-[#ABABAB]">
 						아이디와 이메일로 간편하게 티빙을 시작하세요!
 					</p>
 					<form onSubmit={handleSubmit}>
@@ -306,7 +306,7 @@ function SignUp() {
 								id="signUpId"
 								placeholder="아이디"
 								value={query}
-								className="bg-[#212121] p-7 text-xl rounded text-white font-extralight w-[732px] focus:border-slate-100"
+								className="bg-[#212121] p-7 text-xl rounded text-white font-extralight w-[732px] focus:border-slate-100 placeholder:text-gray_04 placeholder:font-medium"
 								onChange={handleChange}
 							/>
 							<p
@@ -326,7 +326,7 @@ function SignUp() {
 								id="signUpPwd"
 								placeholder="비밀번호"
 								value={userPassword}
-								className="bg-[#212121] p-7 mb-3 text-xl rounded text-white font-extralight w-[732px] focus:border-slate-100"
+								className="bg-[#212121] p-7 mb-3 text-xl rounded text-white font-extralight w-[732px] focus:border-slate-100 placeholder:text-gray_04 placeholder:font-medium"
 								onChange={(e) => setuserPassword(e.target.value)}
 								onKeyUp={onChangePassword}
 							/>
@@ -347,7 +347,7 @@ function SignUp() {
 								id="signUpPwdCheck"
 								placeholder="비밀번호 확인"
 								value={userPasswordVerify}
-								className="bg-[#212121] p-7 text-xl rounded text-white font-extralight w-[732px] focus:border-slate-100"
+								className="bg-[#212121] p-7 text-xl rounded text-white font-extralight w-[732px] focus:border-slate-100 placeholder:text-gray_04 placeholder:font-medium"
 								onChange={(e) => setUserPasswordVerify(e.target.value)}
 								onKeyUp={onChangePasswordVerify}
 							/>
@@ -369,7 +369,7 @@ function SignUp() {
 								id="signUpEmail"
 								placeholder="이메일"
 								value={userEmail}
-								className="bg-[#212121] p-7 text-xl rounded text-white font-extralight w-[732px] focus:border-slate-100"
+								className="bg-[#212121] p-7 text-xl rounded text-white font-extralight w-[732px] focus:border-slate-100 placeholder:text-gray_04 placeholder:font-medium"
 								onChange={(e) => setUserEmail(e.target.value)}
 								onKeyUp={onChangeEmail}
 							/>
