@@ -150,3 +150,17 @@
     height: 75vh;
   }
 }
+
+
+@media (min-height: 1420px) {
+  .md-img {
+    height: 45vh;
+  }
+}
+
+@media (min-height: 1920px) {
+  .lg-img {
+    height: 35vh;
+  }
+}
+

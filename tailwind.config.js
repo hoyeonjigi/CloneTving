@@ -3,6 +3,23 @@ export default {
   content: ["./index.html", "./src/**/*.js", "./src/**/*.jsx", "./src/*.jsx"],
   theme: {
     extend: {
+      screens: {
+        tablet: "640px",
+        // => @media (min-width: 640px) { ... }
+
+        laptop: "1024px",
+        // => @media (min-width: 1024px) { ... }
+
+        desktop: "1280px",
+        // => @media (min-width: 1280px) { ... }
+        ld: "2880px",
+
+
+        "h-1024": { raw: "(min-height: 1024px)" },
+        "h-1420": { raw: "(min-height: 1420px)" },
+        "h-1920": { raw: "(min-height: 1920px)" },
+      },
+
       // fontFamily: {
       // 	pre: ["Pretendard", "sans-serif"],
       // 	welcome: ["Baloo Bhai 2", "sans-serif"],
