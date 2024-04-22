@@ -8,14 +8,68 @@ import SlideTop from "@/components/onboarding/SlideTop";
 import SlideBottom from "@/components/onboarding/SlideBottom";
 import TvingOriginal from "@/components/onboarding/TvingOriginal";
 import { Link } from "react-router-dom";
-
+import Cookies from "js-cookie";
+import { postData } from "@/utils/crud";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 function OnBoading() {
+	const navigate = useNavigate();
+
+	const autoLogin = async () => {
+		try {
+			const url = "";
+		} catch (error) {}
+
+		//쿠키에서 토큰값을 가져온다
+		const accessToken = Cookies.get("refreshToken");
+		const refreshToken = Cookies.get("refreshToken");
+
+		// if (refreshToken === null || refreshToken === "");
+		// else if (accessToken !== null && accessToken !== "") {
+		// 	navigate("/user/profiles");
+		// }
+	};
+
+	const refresh = async () => {
+		const url = "https://hoyeonjigi.site/user/refresh";
+		const headers = {
+			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
+			"Access-Token": `${Cookies.get("accessToken")}`,
+			"Refresh-Token": `${Cookies.get("refreshToken")}`,
+		};
+		const body = {};
+
+		const response = await postData(url, headers, body);
+		//토큰 재설정
+		Cookies.set("accessToken", response.accessToken, {
+			secure: true,
+			sameSite: "strict",
+		});
+		Cookies.set("refreshToken", response.refreshToken, {
+			secure: true,
+			sameSite: "strict",
+		});
+		Cookies.set("grantType", response.grantType, {
+			secure: true,
+			sameSite: "strict",
+		});
+	};
+
 	useEffect(() => {
+		localStorage.removeItem("isDataLoaded");
+		localStorage.removeItem("contents");
+		localStorage.removeItem("popularContent");
+		localStorage.removeItem("latestDrama");
+		localStorage.removeItem("romanceFilm");
+		localStorage.removeItem("latestFilm");
+		localStorage.removeItem("comedyDrama");
 		localStorage.removeItem("reviews");
 		localStorage.removeItem("profile");
 		localStorage.removeItem("profileList");
+		localStorage.removeItem("editProfile");
+		autoLogin();
 	}, []);
 	return (
 		<>

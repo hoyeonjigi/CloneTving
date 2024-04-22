@@ -90,11 +90,11 @@ function Main() {
 			Authorization: `${type} ${token}`,
 		};
 
-    const body = {};
-    const response = await patchData(url, body, headers);
+		const body = {};
+		const response = await patchData(url, body, headers);
 
-    // console.log(Cookies.get())
-  };
+		// console.log(Cookies.get())
+	};
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -423,50 +423,50 @@ function Main() {
 					</div>
 				</section>
 
-        <section className="pt-5 mt-10">
-          <h3 className="text-white text-2.5xl font-bold ml-16">최신 영화</h3>
-          <div className="relative">
-            <Swiper
-              modules={[Navigation]}
-              spaceBetween={10}
-              slidesPerView={7.1}
-              slidesPerGroup={7}
-              navigation
-              pagination={{
-                clickable: true,
-              }}
-              className="px-16 content-custom-swiper z-10"
-            >
-              {latestFilm.map((film, index) => (
-                <SwiperSlide
-                  key={index}
-                  className="inline-flex z-50 flex-col items-start cursor-pointer"
-                >
-                  <Link
-                    to={{
-                      pathname: `/main/detail/${film.contentId}`, // 절대 경로를 사용합니다.
-                    }}
-                    onClick={() => {
-                      setContent(film);
-                      testMe();
-                    }}
-                  >
-                    <motion.img
-                      src={film.src}
-                      alt={film.alt}
-                      whileHover={{ y: -10 }} // 마우스 호버 시 y축으로 -10 이동
-                      transition={{
-                        type: "tween",
-                        // stiffness: 300,
-                        duration: 0.3,
-                      }}
-                      className="mt-4 rounded-md"
-                    />
-                  </Link>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-            {/* <button
+				<section className="pt-5 mt-10">
+					<h3 className="text-white text-2.5xl font-bold ml-16">최신 영화</h3>
+					<div className="relative">
+						<Swiper
+							modules={[Navigation]}
+							spaceBetween={10}
+							slidesPerView={7.1}
+							slidesPerGroup={7}
+							navigation
+							pagination={{
+								clickable: true,
+							}}
+							className="px-16 content-custom-swiper z-10"
+						>
+							{latestFilm.map((film, index) => (
+								<SwiperSlide
+									key={index}
+									className="inline-flex z-50 flex-col items-start cursor-pointer"
+								>
+									<Link
+										to={{
+											pathname: `/main/detail/${film.contentId}`, // 절대 경로를 사용합니다.
+										}}
+										onClick={() => {
+											setContent(film);
+											testMe();
+										}}
+									>
+										<motion.img
+											src={film.src}
+											alt={film.alt}
+											whileHover={{ y: -10 }} // 마우스 호버 시 y축으로 -10 이동
+											transition={{
+												type: "tween",
+												// stiffness: 300,
+												duration: 0.3,
+											}}
+											className="mt-4 rounded-md"
+										/>
+									</Link>
+								</SwiperSlide>
+							))}
+						</Swiper>
+						{/* <button
               className={`custom-prev-button absolute left-0 top-0 h-full ${
                 isBeginning ? "hidden" : ""
               }`}

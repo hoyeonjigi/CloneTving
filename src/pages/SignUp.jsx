@@ -5,6 +5,10 @@ import Footer from "@/components/Footer";
 import { getData, postData } from "@/utils/crud";
 import debounce from "lodash/debounce";
 import { useNavigate } from "react-router-dom";
+import checkAll from "@/assets/signUp/circle-check.svg";
+import uncheckAll from "@/assets/signUp/circle-uncheck.svg";
+import check from "@/assets/signUp/check.svg";
+import uncheck from "@/assets/signUp/uncheck.svg";
 
 function SignUp() {
 	//초기값 세팅
@@ -127,6 +131,34 @@ function SignUp() {
 		setMarketingAgreement(newValue2);
 		setSmsAgreement(newValue2);
 		setEmailAgreement(newValue2);
+	};
+
+	const handleAdult = () => {
+		setAdultStatus(!adultStatus);
+	};
+
+	const handleAgree01 = () => {
+		setAgree01(!agree01);
+	};
+
+	const handleAgree02 = () => {
+		setAgree02(!agree02);
+	};
+
+	const handleAgree03 = () => {
+		setAgree03(!agree03);
+	};
+
+	const handlePrivacy = () => {
+		setPrivacyAgreement(!privacyAgreement);
+	};
+
+	const handleSms = () => {
+		setSmsAgreement(!smsAgreement);
+	};
+
+	const handleEmail = () => {
+		setEmailAgreement(!emailAgreement);
 	};
 
 	// const onChangeId = (e) => {
@@ -343,110 +375,183 @@ function SignUp() {
 							/>
 						</div>
 						<div className="pt-5">
-							<input
+							{/* <input
 								type="checkbox"
 								id="agreeAll"
 								checked={isCheckedAll}
 								onChange={() => handleCheckboxAll()}
-							/>
+							/> */}
+
+							<button
+								type="button"
+								id="agreeAll"
+								className="translate-y-1"
+								onClick={handleCheckboxAll}
+							>
+								<img src={isCheckedAll ? checkAll : uncheckAll} />
+							</button>
+
 							<label
 								htmlFor="agreeAll"
-								className="text-[#A6A6A6] text-xl font-semibold pl-3 cursor-pointer"
+								className={`${
+									isCheckedAll ? "text-[#DEDEDE]" : "text-[#A6A6A6]"
+								} text-xl font-semibold pl-3 cursor-pointer`}
 							>
 								모두 동의합니다.
 							</label>
 						</div>
 						<div className="pt-5">
 							<div className="pb-3">
-								<input
+								{/* <input
 									type="checkbox"
 									id="isAdult"
 									checked={adultStatus}
 									onChange={() => {
 										setAdultStatus(!adultStatus);
 									}}
-								/>
+								/> */}
+								<button
+									type="button"
+									id="isAdult"
+									className="translate-y-1"
+									onClick={handleAdult}
+								>
+									<img src={adultStatus ? check : uncheck} />
+								</button>
 								<label
 									htmlFor="isAdult"
-									className="text-[#6B6B6B] text-xl font-semibold pl-3 cursor-pointer"
+									className={`${
+										adultStatus ? "text-[#A3A3A3]" : "text-[#6B6B6B]"
+									} text-xl font-semibold pl-3 cursor-pointer`}
 								>
 									만 14세 이상입니다.
 								</label>
 							</div>
 							<div className="pb-3">
-								<input
+								{/* <input
 									type="checkbox"
 									id="agree01"
 									checked={agree01}
 									onChange={() => {
 										setAgree01(!agree01);
 									}}
-								/>
+								/> */}
+								<button
+									type="button"
+									id="agree01"
+									className="translate-y-1"
+									onClick={handleAgree01}
+								>
+									<img src={agree01 ? check : uncheck} />
+								</button>
 								<label
 									htmlFor="agree01"
-									className="text-[#6B6B6B] text-xl font-semibold pl-3 cursor-pointer"
+									className={`${
+										agree01 ? "text-[#A3A3A3]" : "text-[#6B6B6B]"
+									} text-xl font-semibold pl-3 cursor-pointer`}
 								>
 									[필수] 서비스 이용약관 동의
 								</label>
 							</div>
 							<div className="pb-3">
-								<input
+								{/* <input
 									type="checkbox"
 									id="agree02"
 									checked={agree02}
 									onChange={() => {
 										setAgree02(!agree02);
 									}}
-								/>
+								/> */}
+								<button
+									type="button"
+									id="agree02"
+									className="translate-y-1"
+									onClick={handleAgree02}
+								>
+									<img src={agree02 ? check : uncheck} />
+								</button>
 								<label
 									htmlFor="agree02"
-									className="text-[#6B6B6B] text-xl font-semibold pl-3 cursor-pointer"
+									className={`${
+										agree02 ? "text-[#A3A3A3]" : "text-[#6B6B6B]"
+									} text-xl font-semibold pl-3 cursor-pointer`}
 								>
 									[필수] 개인정보 수집 및 서비스 활용 동의
 								</label>
 							</div>
 							<div className="pb-3">
-								<input
+								{/* <input
 									type="checkbox"
 									id="agree03"
 									checked={agree03}
 									onChange={() => {
 										setAgree03(!agree03);
 									}}
-								/>
+								/> */}
+								<button
+									type="button"
+									id="agree03"
+									className="translate-y-1"
+									onClick={handleAgree03}
+								>
+									<img src={agree03 ? check : uncheck} />
+								</button>
 								<label
 									htmlFor="agree03"
-									className="text-[#6B6B6B] text-xl font-semibold pl-3 cursor-pointer"
+									className={`${
+										agree03 ? "text-[#A3A3A3]" : "text-[#6B6B6B]"
+									} text-xl font-semibold pl-3 cursor-pointer`}
 								>
 									[필수] 채널 홈페이지 개인정보 제 3자 제공동의
 								</label>
 							</div>
 							<div className="pb-3">
-								<input
+								{/* <input
 									type="checkbox"
 									id="agreePrivacy"
 									checked={privacyAgreement}
 									onChange={() => {
 										setPrivacyAgreement(!privacyAgreement);
 									}}
-								/>
+								/> */}
+								<button
+									type="button"
+									id="agreePrivacy"
+									className="translate-y-1"
+									onClick={handlePrivacy}
+								>
+									<img src={privacyAgreement ? check : uncheck} />
+								</button>
 								<label
 									htmlFor="agreePrivacy"
-									className="text-[#6B6B6B] text-xl font-semibold pl-3 cursor-pointer"
+									className={`${
+										privacyAgreement ? "text-[#A3A3A3]" : "text-[#6B6B6B]"
+									} text-xl font-semibold pl-3 cursor-pointer`}
 								>
 									[선택] 개인정보 제 3자 제공동의
 								</label>
 							</div>
 							<div className="pb-3">
-								<input
+								{/* <input
 									type="checkbox"
 									id="agreeMarketingAll"
 									checked={marketingAgreement}
 									onChange={() => handleCheckboxMarketing()}
-								/>
+								/> */}
+								<button
+									type="button"
+									id="agreeMarketingAll"
+									className="translate-y-1"
+									onClick={handleCheckboxMarketing}
+								>
+									<img src={marketingAgreement ? check : uncheck} />
+								</button>
+
 								<label
 									htmlFor="agreeMarketingAll"
-									className="text-[#6B6B6B] text-xl font-semibold pl-3 cursor-pointer"
+									className={`${
+										marketingAgreement ? "text-[#A3A3A3]" : "text-[#6B6B6B]"
+									} text-xl font-semibold pl-3 cursor-pointer`}
 								>
 									[선택] 개인정보 수집 및 서비스 활용 동의
 								</label>
@@ -454,33 +559,53 @@ function SignUp() {
 						</div>
 						<div className="pl-9 pb-6">
 							<div className="pb-3">
-								<input
+								{/* <input
 									type="checkbox"
 									id="agreeSms"
 									checked={smsAgreement}
 									onChange={() => {
 										setSmsAgreement(!smsAgreement);
 									}}
-								/>
+								/> */}
+								<button
+									type="button"
+									id="agreeSms"
+									className="translate-y-1"
+									onClick={handleSms}
+								>
+									<img src={smsAgreement ? check : uncheck} />
+								</button>
 								<label
 									htmlFor="agreeSms"
-									className="text-[#6B6B6B] text-xl font-semibold pl-3 cursor-pointer"
+									className={`${
+										smsAgreement ? "text-[#A3A3A3]" : "text-[#6B6B6B]"
+									} text-xl font-semibold pl-3 cursor-pointer`}
 								>
 									[선택] 마케팅 정보 SMS 수신동의
 								</label>
 							</div>
 							<div className="pb-3">
-								<input
+								{/* <input
 									type="checkbox"
 									id="agreeEmail"
 									checked={emailAgreement}
 									onChange={() => {
 										setEmailAgreement(!emailAgreement);
 									}}
-								/>
+								/> */}
+								<button
+									type="button"
+									id="agreeEmail"
+									className="translate-y-1"
+									onClick={handleEmail}
+								>
+									<img src={emailAgreement ? check : uncheck} />
+								</button>
 								<label
 									htmlFor="agreeEmail"
-									className="text-[#6B6B6B] text-xl font-semibold pl-3 cursor-pointer"
+									className={`${
+										emailAgreement ? "text-[#A3A3A3]" : "text-[#6B6B6B]"
+									} text-xl font-semibold pl-3 cursor-pointer`}
 								>
 									[선택] 마케팅 정보 이메일 수신동의
 								</label>
