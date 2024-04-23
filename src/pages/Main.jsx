@@ -80,20 +80,30 @@ function Main() {
 		//   console.log(response.message);
 		// }
 	};
-	const testMe = async () => {
-		const url = `https://hoyeonjigi.site/content/1001835/view/count`;
-		const type = Cookies.get("grantType");
-		const token = Cookies.get("accessToken");
+	const handleViewCount = async (contentId) => {
+		const already = Cookies.get(`alreadyViewCookie${contentId}`);
+		if (already) {
+			console.log("이미있음");
+			return;
+		} else {
+			const url = `https://hoyeonjigi.site/content/${contentId}/view/count`;
+			const type = Cookies.get("grantType");
+			const token = Cookies.get("accessToken");
 
-		const headers = {
-			"Content-Type": "application/json",
-			Authorization: `${type} ${token}`,
-		};
+			const headers = {
+				"Content-Type": "application/json",
+				Authorization: `${type} ${token}`,
+			};
 
-		const body = {};
-		const response = await patchData(url, body, headers);
+			const body = {};
+			const response = await patchData(url, body, headers);
 
-		// console.log(Cookies.get())
+			Cookies.set(`alreadyViewCookie${contentId}`, `${contentId}`, {
+				expires: 1,
+				secure: true,
+				sameSite: "strict",
+			}); // 1일 후에 만료되는 쿠키
+		}
 	};
 
 	useEffect(() => {
@@ -448,7 +458,7 @@ function Main() {
 										}}
 										onClick={() => {
 											setContent(film);
-											testMe();
+											handleViewCount(film.contentId);
 										}}
 									>
 										<motion.img
@@ -466,37 +476,6 @@ function Main() {
 								</SwiperSlide>
 							))}
 						</Swiper>
-						{/* <button
-              className={`custom-prev-button absolute left-0 top-0 h-full ${
-                isBeginning ? "hidden" : ""
-              }`}
-              style={{
-                backgroundImage: `radial-gradient(106.88% 50.3% at -6.88% 50%, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 53.21%, rgba(0, 0, 0, 0) 100%)`,
-                cursor: "pointer",
-              }}
-            >
-              <img
-                src={left}
-                alt="메인 컨텐츠 왼쪽으로 넘기기"
-                className="w-16"
-              />
-            </button>
-            <button
-              className={`custom-next-button absolute right-0 top-0 h-full ${
-                isEnd ? "hidden" : ""
-              }`}
-              style={{
-                backgroundImage: `radial-gradient(106.25% 50% at 106.25% 50%, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 52.6%, rgba(0, 0, 0, 0) 100%)`,
-
-                cursor: "pointer",
-              }}
-            >
-              <img
-                src={right}
-                alt="메인 컨텐츠 오른쪽으로 넘기기"
-                className="w-16"
-              />
-            </button> */}
 					</div>
 				</section>
 
@@ -528,6 +507,7 @@ function Main() {
 											}}
 											onClick={() => {
 												setContent(drama);
+												handleViewCount(drama.contentId);
 											}}
 										>
 											<motion.img
@@ -576,6 +556,7 @@ function Main() {
 											}}
 											onClick={() => {
 												setContent(drama);
+												handleViewCount(drama.contentId);
 											}}
 										>
 											<motion.img
@@ -624,6 +605,7 @@ function Main() {
 											}}
 											onClick={() => {
 												setContent(film);
+												handleViewCount(film.contentId);
 											}}
 										>
 											<motion.img
@@ -672,6 +654,7 @@ function Main() {
 											}}
 											onClick={() => {
 												setContent(film);
+												handleViewCount(film.contentId);
 											}}
 										>
 											<motion.img

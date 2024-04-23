@@ -13,6 +13,7 @@ function ChangeReview({ isOpen, onClose }) {
   // 삭제 확인 모달을 닫는 함수
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
+    onClose(); // ChangeReview 모달도 닫기
   };
 
   useEffect(() => {

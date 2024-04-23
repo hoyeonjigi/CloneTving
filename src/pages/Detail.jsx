@@ -12,6 +12,7 @@ import useReviews from "@/store/useReviews";
 import Star from "@/components/Star";
 import ChangeReview from "@/components/modal/ChangeReview";
 import Spinner from "@/components/Spinner";
+import StarRating from "@/components/StarRating";
 
 function Detail() {
   const { content, genre, setGenre } = useContents();
@@ -29,11 +30,11 @@ function Detail() {
     setEndPage,
     isReview,
     setIsReview,
-    reset,
-    addReview,
+
+    deleteReview,
+    setDeleteReview,
   } = useReviews();
 
-  // 모달 창 상태를 관리하는 state
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
@@ -166,9 +167,10 @@ function Detail() {
     } catch (error) {
       setEndPage(true);
       setIsLoading(false);
+      console.log("더이상 리뷰가 없습니다");
 
-      console.log("리뷰 데이터가 없습니다");
-      console.log(error);
+      // console.log("리뷰 데이터가 없습니다");
+      // console.log(error);
     }
   };
 
@@ -179,6 +181,9 @@ function Detail() {
     setEndPage(false);
     setAverageRating("0.0");
     setNumberOfReviews(0);
+    setDeleteReview(false);
+    setIsReview(false);
+
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
     }
@@ -187,7 +192,7 @@ function Detail() {
     if (page === 0) {
       reviewData();
     }
-  }, [addReview]); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
+  }, [isReview, deleteReview]); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
 
   // 컴포넌트 내부에서
   const observer = useRef();
@@ -332,11 +337,12 @@ function Detail() {
             <Spinner />
           ) : (
             <div className="flex items-center">
-              <div className="text-5xl text-white font-extrabold mr-4">
+              <div className="text-6xl text-white font-extrabold mr-4 flex items-center">
                 {averageRating}
               </div>
-              <div className="flex flex-col">
-                <p className="text-white">{numberOfReviews} 평점</p>
+              <div className="flex flex-col gap-2">
+                <StarRating rating={averageRating} />
+                <p className="text-white">{numberOfReviews}개 평점</p>
               </div>
             </div>
           )}
