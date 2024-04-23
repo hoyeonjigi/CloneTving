@@ -11,9 +11,12 @@ const reviewsStore = (set) => ({
   isReview: false,
   endPage: false,
 
+  deleteReview: false,
+
   setEndPage: (endPage) => set({ endPage }),
 
   setPage: (page) => set({ page }),
+  setDeleteReview: (deleteReview) => set({ deleteReview }),
   setReview: (review) => set({ review }),
   setAverageRating: (averageRating) => set({ averageRating }),
   setNumberOfReviews: (numberOfReviews) => set({ numberOfReviews }),
@@ -28,8 +31,8 @@ const reviewsStore = (set) => ({
       // isReview: false,
     }),
 
-  addReview: (newReview) =>
-    set((state) => ({ review: [newReview, ...state.review] })),
+  // addReview: (newReview) =>
+  //   set((state) => ({ review: [newReview, ...state.review] })),
 });
 
 // create 함수를 호출할 때 persist 함수로 contentStore를 감싸줍니다.

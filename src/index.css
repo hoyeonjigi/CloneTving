@@ -137,20 +137,16 @@
   opacity: 1;
 }
 
-
-
 @media (min-height: 1420px) {
   .md-h {
     height: 70vh;
   }
-
 }
 @media (min-height: 1920px) {
   .lg-h {
     height: 75vh;
   }
 }
-
 
 @media (min-height: 1420px) {
   .md-img {
@@ -164,3 +160,6 @@
   }
 }
 
+.star-background {
+  background: linear-gradient(90deg, #00a7f6, #00a7f6 50%, #555 0, #555);
+}
