@@ -14,7 +14,7 @@ import useCreate from "@/store/useCreate";
 
 function ProfilesForEdit() {
 	const [userProfiles, setUserProfiles] = useState([]);
-	const { userId } = useLogin();
+	// const { userId } = useLogin();
 	const {
 		profileName,
 		imageName,
@@ -30,6 +30,7 @@ function ProfilesForEdit() {
 
 	const getUserData = async () => {
 		try {
+			const userId = Cookies.get("userId");
 			const testUrl = `https://hoyeonjigi.site/profile/${userId}`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");

@@ -26,7 +26,7 @@ function Profile() {
 		setYumiProfileImages,
 		setIsImageSelected,
 	} = useCreate();
-	const { userId } = useLogin();
+	// const { userId } = useLogin();
 	const {
 		profileName,
 		userProfileUrl,
@@ -39,6 +39,7 @@ function Profile() {
 	// 사용자 정보 가져오기
 	const getUserData = async () => {
 		try {
+			const userId = Cookies.get("userId");
 			const testUrl = `https://hoyeonjigi.site/profile/${userId}`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
@@ -58,7 +59,6 @@ function Profile() {
 					child: item.child,
 				}))
 			);
-			
 		} catch (error) {
 			console.log(error);
 			console.log("에러출력");

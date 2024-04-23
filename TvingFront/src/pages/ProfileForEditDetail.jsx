@@ -62,13 +62,13 @@ function ProfileForEditDetail() {
 			setUpdateProfileName(inputName.substring(0, inputName.length - 1));
 		}
 		// console.log(`${regex.test(profileName)}`);
-		console.log("substring 테스트");
-		console.log(inputName.substring(0, inputName.length - 1));
+		// console.log("substring 테스트");
+		// console.log(inputName.substring(0, inputName.length - 1));
 		//프로필 목록 이름 중 하나라도 일치하면 true
 		setIsNameExist(
 			userProfiles.some((user) => user.userProfileName == e.target.value)
 		);
-		console.log(`isNameExist : ${isNameExist}`);
+		// console.log(`isNameExist : ${isNameExist}`);
 	};
 
 	//어린이 여부 확인
@@ -109,7 +109,7 @@ function ProfileForEditDetail() {
 				};
 
 				const result = await patchData(url, data, headers);
-				console.log(`프로필 수정 완료`);
+				// console.log(`프로필 수정 완료`);
 				navigate("/user/profiles");
 			} catch (error) {
 				console.log(error);
@@ -134,7 +134,7 @@ function ProfileForEditDetail() {
 			};
 
 			const result = await deleteData(testUrl, headers);
-			console.log(result);
+			// console.log(result);
 			navigate("/user/profiles");
 		} catch (error) {
 			console.log(error);

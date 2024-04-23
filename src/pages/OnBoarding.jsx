@@ -16,14 +16,24 @@ import { useEffect } from "react";
 function OnBoading() {
 	const navigate = useNavigate();
 
-	const autoLogin = async () => {
-		try {
-			const url = "";
-		} catch (error) {}
+	//쿠키에서 토큰값을 가져온다
+	const accessToken = Cookies.get("accessToken");
+	const refreshToken = Cookies.get("refreshToken");
+	const isAutoLogin = Cookies.get("autoLogin");
+	const userId = Cookies.get("userId");
 
-		//쿠키에서 토큰값을 가져온다
-		const accessToken = Cookies.get("refreshToken");
-		const refreshToken = Cookies.get("refreshToken");
+	const autoLogin = () => {
+		//accessToken이 존재하면 이동, refreshToken 존재 시 refresh 후 이동
+		if (accessToken) {
+			navigate("/user/profiles");
+		} else if (refreshToken) {
+			refresh();
+			navigate("/user/profiles");
+		} else;
+
+		// try {
+		// 	const url = "";
+		// } catch (error) {}
 
 		// if (refreshToken === null || refreshToken === "");
 		// else if (accessToken !== null && accessToken !== "") {
@@ -55,6 +65,35 @@ function OnBoading() {
 			secure: true,
 			sameSite: "strict",
 		});
+
+		//자동 로그인 시 만료 시간 재설정
+		if (isAutoLogin) {
+			Cookies.set("autoLogin", true, {
+				secure: true,
+				sameSite: "strict",
+				expires: 1,
+			});
+			Cookies.set("accessToken", response.accessToken, {
+				secure: true,
+				sameSite: "strict",
+				expires: new Date(new Date().getTime() + 30 * 60 * 1000),
+			});
+			Cookies.set("refreshToken", response.refreshToken, {
+				secure: true,
+				sameSite: "strict",
+				expires: 1,
+			});
+			Cookies.set("grantType", response.grantType, {
+				secure: true,
+				sameSite: "strict",
+				expires: 1,
+			});
+			Cookies.set("userId", userId, {
+				secure: true,
+				sameSite: "strict",
+				expires: 1,
+			});
+		}
 	};
 
 	useEffect(() => {
