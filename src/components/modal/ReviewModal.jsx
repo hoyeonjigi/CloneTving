@@ -82,13 +82,14 @@ function ReviewModal({ isOpen, closeModal }) {
 
       const response = await postData(url, data, headers);
 
-      addReview(response);
+      setIsReview(true);
+      // addReview(response);
 
-      const reviewUrl = `https://hoyeonjigi.site/evaluation/${content.contentId}`;
+      // const reviewUrl = `https://hoyeonjigi.site/evaluation/${content.contentId}`;
 
-      const re = await getData(url, headers);
+      // const re = await getData(url, headers);
 
-      console.log(re);
+      // console.log(re);
 
       // // setReview(re.evaluationList);
       // setAverageRating(re.avg);
