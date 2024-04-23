@@ -1,7 +1,32 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { deleteData } from "@/utils/crud";
+import Cookies from "js-cookie";
+import useContents from "@/store/useContent";
+import useProfile from "@/store/useProfile";
 
 function DeleteReview({ isOpen, onClose }) {
+  const { content } = useContents();
+  const { profileName } = useProfile();
+
+  const handleDeleteData = async () => {
+    try {
+      const type = Cookies.get("grantType");
+      const token = Cookies.get("accessToken");
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `${type} ${token}`,
+      };
+
+      const url = `https://hoyeonjigi.site/evaluation/${profileName}/${content.contentId}`;
+
+      const result = await deleteData(url, headers);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-90 ">
       <motion.div
