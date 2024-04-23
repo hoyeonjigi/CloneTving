@@ -12,10 +12,7 @@ import useReviews from "@/store/useReviews";
 import Star from "@/components/Star";
 import ChangeReview from "@/components/modal/ChangeReview";
 import Spinner from "@/components/Spinner";
-
-import star from "@/assets/main/star.svg";
-import halfStar from "@/assets/main/halfStar.svg";
-import fillStar from "@/assets/main/fillStar.svg";
+import StarRating from "@/components/StarRating";
 
 function Detail() {
   const { content, genre, setGenre } = useContents();
@@ -340,16 +337,12 @@ function Detail() {
             <Spinner />
           ) : (
             <div className="flex items-center">
-              <div className="text-5xl text-white font-extrabold mr-4">
+              <div className="text-6xl text-white font-extrabold mr-4 flex items-center">
                 {averageRating}
               </div>
-              <div className="flex flex-col">
-                <p className="text-white">{numberOfReviews} 평점</p>
-              </div>
-              <div>
-                <img src={star} alt="" />
-                <img src={fillStar} alt="" />
-                <img src={halfStar} alt="" />
+              <div className="flex flex-col gap-2">
+                <StarRating rating={averageRating} />
+                <p className="text-white">{numberOfReviews}개 평점</p>
               </div>
             </div>
           )}
