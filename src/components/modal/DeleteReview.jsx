@@ -1,7 +1,50 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { deleteData } from "@/utils/crud";
+import Cookies from "js-cookie";
+import { toast } from "react-hot-toast";
+import useContents from "@/store/useContent";
+import useProfile from "@/store/useProfile";
+import useReviews from "@/store/useReviews";
 
 function DeleteReview({ isOpen, onClose }) {
+  const { content } = useContents();
+  const { profileName } = useProfile();
+  const { deleteReview, setDeleteReview } = useReviews();
+
+  const handleDelete = async () => {
+    try {
+      const type = Cookies.get("grantType");
+      const token = Cookies.get("accessToken");
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `${type} ${token}`,
+      };
+
+      const url = `https://hoyeonjigi.site/evaluation/${profileName}/${content.contentId}`;
+
+      const response = await deleteData(url, headers);
+
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+      window.scrollTo(0, 0);
+
+      toast.success(`리뷰가 삭제되었습니다`, {
+        duration: 2000,
+      });
+
+      setDeleteReview(true);
+    } catch (error) {
+      console.log(error);
+      console.log("에러출력");
+      toast.error(`작성한 리뷰가 없습니다.`, {
+        duration: 2000,
+      });
+    }
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-90 ">
       <motion.div
@@ -20,7 +63,10 @@ function DeleteReview({ isOpen, onClose }) {
         </div>
         <div className="w-full flex gap-3 items-center justify-center mt-6">
           <button
-            onClick={onClose}
+            onClick={() => {
+              onClose(); // 모달 닫기 함수 호출
+              handleDelete(); // 삭제 처리 함수 호출
+            }}
             className="w-[50%] py-2 bg-[#e02020] text-white font-semibold rounded-sm hover:bg-opacity-70"
           >
             삭제하기
