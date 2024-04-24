@@ -68,6 +68,9 @@ function ProfileForCreate() {
 	// 모달 창 상태를 관리하는 state
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
+	const isAutoLogin = Cookies.get("autoLogin");
+	const userId = Cookies.get("userId");
+
 	// 모달 창을 여는 함수
 	const openModal = () => {
 		setIsModalOpen(true);
@@ -167,32 +170,35 @@ function ProfileForCreate() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault(); // 폼 제출 시 페이지 리로딩 방지
+		try {
+			const url = "https://hoyeonjigi.site/profile/register"; // 변경해야 함
+			const type = Cookies.get("grantType");
+			const token = Cookies.get("accessToken");
+			const data = { profileName, imageName, child };
+			const headers = {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
+				Authorization: `${type} ${token}`,
+			};
 
-		const url = "https://hoyeonjigi.site/profile/register"; // 변경해야 함
-		const type = Cookies.get("grantType");
-		const token = Cookies.get("accessToken");
-		const data = { profileName, imageName, child };
-		const headers = {
-			"Content-Type": "application/json",
-			"Access-Control-Allow-Origin": "*",
-			Authorization: `${type} ${token}`,
-		};
-
-		if (!isNameExist) {
-			try {
-				const regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
-				if (regex.test(profileName)) {
-					const createResult = await postData(url, data, headers);
-					// console.log(`프로필 추가 완료`);
-					navigate("/user/profiles");
-				} else {
-					alert("2자 이상 10자 이내의 한글, 영문, 숫자 입력 가능합니다.");
+			if (!isNameExist) {
+				try {
+					const regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
+					if (regex.test(profileName)) {
+						const createResult = await postData(url, data, headers);
+						// console.log(`프로필 추가 완료`);
+						navigate("/user/profiles");
+					} else {
+						alert("2자 이상 10자 이내의 한글, 영문, 숫자 입력 가능합니다.");
+					}
+				} catch (error) {
+					console.error(`Error in sending POST request: ${error}`);
 				}
-			} catch (error) {
-				console.error(`Error in sending POST request: ${error}`);
+			} else {
+				alert("동일한 이름의 프로필이 존재합니다.");
 			}
-		} else {
-			alert("동일한 이름의 프로필이 존재합니다.");
+		} catch (error) {
+			refresh();
 		}
 	};
 
@@ -218,6 +224,66 @@ function ProfileForCreate() {
 	// 		console.error(`Error in sending POST request: ${error}`);
 	// 	}
 	// };
+
+	// 토큰 재발급
+	const refresh = async () => {
+		try {
+			const url = "https://hoyeonjigi.site/user/refresh";
+			const headers = {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Token": `${Cookies.get("accessToken")}`,
+				"Refresh-Token": `${Cookies.get("refreshToken")}`,
+			};
+			const body = {};
+
+			const response = await postData(url, body, headers);
+			//토큰 재설정
+			Cookies.set("accessToken", response.accessToken, {
+				secure: true,
+				sameSite: "strict",
+			});
+			Cookies.set("refreshToken", response.refreshToken, {
+				secure: true,
+				sameSite: "strict",
+			});
+			Cookies.set("grantType", response.grantType, {
+				secure: true,
+				sameSite: "strict",
+			});
+			//자동 로그인 시 만료 시간 재설정
+			if (isAutoLogin) {
+				Cookies.set("autoLogin", true, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("accessToken", response.accessToken, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("refreshToken", response.refreshToken, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("grantType", response.grantType, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("userId", userId, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+			}
+		} catch (error) {
+			//refreshToken 만료 시 onBoarding으로 이동
+			navigate("/");
+		}
+	};
 
 	useEffect(() => {
 		// console.log(`currentProfile : ${currentProfile.selectedImageName}`);

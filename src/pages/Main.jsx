@@ -42,6 +42,9 @@ function Main() {
 	const { accessToken, reToken, grantType, setAccessToken, setReToken } =
 		useLogin();
 
+	const isAutoLogin = Cookies.get("autoLogin");
+	const userId = Cookies.get("userId");
+
 	const refresh = async () => {
 		const reUrl = `https://hoyeonjigi.site/user/refresh`;
 
@@ -69,6 +72,35 @@ function Main() {
 			secure: true,
 			sameSite: "strict",
 		});
+
+		//자동 로그인 시 만료 시간 재설정
+		if (isAutoLogin) {
+			Cookies.set("autoLogin", true, {
+				secure: true,
+				sameSite: "strict",
+				expires: 7,
+			});
+			Cookies.set("accessToken", response.accessToken, {
+				secure: true,
+				sameSite: "strict",
+				expires: 7,
+			});
+			Cookies.set("refreshToken", response.refreshToken, {
+				secure: true,
+				sameSite: "strict",
+				expires: 7,
+			});
+			Cookies.set("grantType", response.grantType, {
+				secure: true,
+				sameSite: "strict",
+				expires: 7,
+			});
+			Cookies.set("userId", userId, {
+				secure: true,
+				sameSite: "strict",
+				expires: 7,
+			});
+		}
 
 		localStorage.removeItem("isDataLoaded");
 		// 페이지 새로고침이나 필요한 추가 로직을 여기에 구현할 수 있습니다.

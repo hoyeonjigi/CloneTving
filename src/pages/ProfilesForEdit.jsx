@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getData } from "@/utils/crud";
+import { getData, postData } from "@/utils/crud";
 import useLogin from "@/store/login";
 import useEdit from "@/store/useEdit";
 import useCreate from "@/store/useCreate";
@@ -27,10 +27,11 @@ function ProfilesForEdit() {
 	} = useEdit();
 
 	const { isImageSelected, setIsImageSelected } = useCreate();
+	const userId = Cookies.get("userId");
+	const isAutoLogin = Cookies.get("autoLogin");
 
 	const getUserData = async () => {
 		try {
-			const userId = Cookies.get("userId");
 			const testUrl = `https://hoyeonjigi.site/profile/${userId}`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
@@ -55,6 +56,7 @@ function ProfilesForEdit() {
 		} catch (error) {
 			console.log(error);
 			console.log("에러출력");
+			refresh();
 		}
 	};
 
@@ -71,6 +73,66 @@ function ProfilesForEdit() {
 		setUserProfileUrl(userProfileUrl);
 		setChild(isChild);
 		navigate("/user/profileForEdit");
+	};
+
+	// 토큰 재발급
+	const refresh = async () => {
+		try {
+			const url = "https://hoyeonjigi.site/user/refresh";
+			const headers = {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Token": `${Cookies.get("accessToken")}`,
+				"Refresh-Token": `${Cookies.get("refreshToken")}`,
+			};
+			const body = {};
+
+			const response = await postData(url, body, headers);
+			//토큰 재설정
+			Cookies.set("accessToken", response.accessToken, {
+				secure: true,
+				sameSite: "strict",
+			});
+			Cookies.set("refreshToken", response.refreshToken, {
+				secure: true,
+				sameSite: "strict",
+			});
+			Cookies.set("grantType", response.grantType, {
+				secure: true,
+				sameSite: "strict",
+			});
+			//자동 로그인 시 만료 시간 재설정
+			if (isAutoLogin) {
+				Cookies.set("autoLogin", true, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("accessToken", response.accessToken, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("refreshToken", response.refreshToken, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("grantType", response.grantType, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("userId", userId, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+			}
+		} catch (error) {
+			//refreshToken 만료 시 onBoarding으로 이동
+			navigate("/");
+		}
 	};
 
 	useEffect(() => {
@@ -95,7 +157,7 @@ function ProfilesForEdit() {
 					<ul className="flex flex-row justify-center items-center gap-10 w-[70%]">
 						{userProfiles.map((user, index) => (
 							<li
-								key={user.profileName}
+								key={index}
 								className="flex flex-col text-center gap-6 flex-grow relative"
 							>
 								<motion.button

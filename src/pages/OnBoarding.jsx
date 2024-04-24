@@ -25,8 +25,6 @@ function OnBoading() {
 	const autoLogin = () => {
 		//accessToken이 존재하면 이동, refreshToken 존재 시 refresh 후 이동
 		if (accessToken) {
-			navigate("/user/profiles");
-		} else if (refreshToken) {
 			refresh();
 			navigate("/user/profiles");
 		} else;
@@ -42,7 +40,7 @@ function OnBoading() {
 	};
 
 	const refresh = async () => {
-		const url = "https://hoyeonjigi.site/user/refresh";
+		const url = `https://hoyeonjigi.site/user/refresh`;
 		const headers = {
 			"Content-Type": "application/json",
 			"Access-Control-Allow-Origin": "*",
@@ -51,7 +49,7 @@ function OnBoading() {
 		};
 		const body = {};
 
-		const response = await postData(url, headers, body);
+		const response = await postData(url, body, headers);
 		//토큰 재설정
 		Cookies.set("accessToken", response.accessToken, {
 			secure: true,
@@ -71,27 +69,27 @@ function OnBoading() {
 			Cookies.set("autoLogin", true, {
 				secure: true,
 				sameSite: "strict",
-				expires: 1,
+				expires: 7,
 			});
 			Cookies.set("accessToken", response.accessToken, {
 				secure: true,
 				sameSite: "strict",
-				expires: new Date(new Date().getTime() + 30 * 60 * 1000),
+				expires: 7,
 			});
 			Cookies.set("refreshToken", response.refreshToken, {
 				secure: true,
 				sameSite: "strict",
-				expires: 1,
+				expires: 7,
 			});
 			Cookies.set("grantType", response.grantType, {
 				secure: true,
 				sameSite: "strict",
-				expires: 1,
+				expires: 7,
 			});
 			Cookies.set("userId", userId, {
 				secure: true,
 				sameSite: "strict",
-				expires: 1,
+				expires: 7,
 			});
 		}
 	};
@@ -108,6 +106,7 @@ function OnBoading() {
 		localStorage.removeItem("profile");
 		localStorage.removeItem("profileList");
 		localStorage.removeItem("editProfile");
+		localStorage.removeItem("myProfile");
 		autoLogin();
 	}, []);
 	return (

@@ -72,27 +72,27 @@ function SignIn() {
 				Cookies.set("autoLogin", true, {
 					secure: true,
 					sameSite: "strict",
-					expires: 1,
+					expires: 7,
 				});
 				Cookies.set("accessToken", response.accessToken, {
 					secure: true,
 					sameSite: "strict",
-					expires: new Date(new Date().getTime() + 30 * 60 * 1000),
+					expires: 7,
 				});
 				Cookies.set("refreshToken", response.refreshToken, {
 					secure: true,
 					sameSite: "strict",
-					expires: 1,
+					expires: 7,
 				});
 				Cookies.set("grantType", response.grantType, {
 					secure: true,
 					sameSite: "strict",
-					expires: 1,
+					expires: 7,
 				});
 				Cookies.set("userId", userId, {
 					secure: true,
 					sameSite: "strict",
-					expires: 1,
+					expires: 7,
 				});
 			}
 
