@@ -4,13 +4,15 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import { patchData, deleteData, postData } from "@/utils/crud";
+import { patchData, deleteData } from "@/utils/crud";
 import useEdit from "@/store/useEdit";
+import useLogin from "@/store/login";
 import useCreate from "@/store/useCreate";
 import UserProfileModal from "@/components/modal/UserProfileModal";
 import profileEdit from "@/assets/profiles/icon-edit.svg";
 import { useNavigate } from "react-router-dom";
 import checkIcon from "@/assets/profiles/icon-circle.svg";
+import useProfileList from "@/store/useProfileList";
 
 import { motion } from "framer-motion";
 
@@ -25,17 +27,17 @@ function ProfileForEditDetail() {
 		setUserProfileUrl,
 		setChild,
 	} = useEdit();
-
+	const { userProfiles, setUserProfiles } = useProfileList();
 	const { selectedImageName, selectedImageUrl, isImageSelected } = useCreate();
 
+	const { userId } = useLogin();
 	const [updateProfileName, setUpdateProfileName] = useState(profileName);
 	const [currentProfile, setCurrentProfile] = useState({
 		src: userProfileUrl,
 		alt: "사용자 프로필 이미지",
 	});
-	const userId = Cookies.get("userId");
-	const isAutoLogin = Cookies.get("autoLogin");
-
+	// 프로필 이름 중복 여부
+	const [isNameExist, setIsNameExist] = useState(false);
 	//모달 창 관리 state
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	// 모달 창을 여는 함수
@@ -59,6 +61,14 @@ function ProfileForEditDetail() {
 		if (!regex.test(inputName) && inputName.length > 0) {
 			setUpdateProfileName(inputName.substring(0, inputName.length - 1));
 		}
+		// console.log(`${regex.test(profileName)}`);
+		// console.log("substring 테스트");
+		// console.log(inputName.substring(0, inputName.length - 1));
+		//프로필 목록 이름 중 하나라도 일치하면 true
+		setIsNameExist(
+			userProfiles.some((user) => user.userProfileName == e.target.value)
+		);
+		// console.log(`isNameExist : ${isNameExist}`);
 	};
 
 	//어린이 여부 확인
@@ -68,48 +78,52 @@ function ProfileForEditDetail() {
 
 	const handleChange = async (e) => {
 		e.preventDefault();
-		try {
-			const url = `https://hoyeonjigi.site/profile`;
-			const type = Cookies.get("grantType");
-			const token = Cookies.get("accessToken");
-			//기존 이름과 변경한 이름이 동일한 경우
-			let data = {};
-			if (updateProfileName == profileName) {
-				data = {
-					profileName,
-					userId,
-					imageName,
-					child,
-				};
-			} else {
-				data = {
-					profileName,
-					updateProfileName,
-					userId,
-					imageName,
-					child,
-				};
-			}
-			const headers = {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				Authorization: `${type} ${token}`,
-			};
 
-			const result = await patchData(url, data, headers);
-			// console.log(`프로필 수정 완료`);
-			navigate("/user/profiles");
-		} catch (error) {
-			console.log(error);
-			console.log("에러출력");
-			refresh();
+		if (!isNameExist) {
+			try {
+				const url = `http://hoyeonjigi.site:8080/profile`;
+				const type = Cookies.get("grantType");
+				const token = Cookies.get("accessToken");
+				//기존 이름과 변경한 이름이 동일한 경우
+				let data = {};
+				if (updateProfileName == profileName) {
+					data = {
+						profileName,
+						userId,
+						imageName,
+						child,
+					};
+				} else {
+					data = {
+						profileName,
+						updateProfileName,
+						userId,
+						imageName,
+						child,
+					};
+				}
+				const headers = {
+					"Content-Type": "application/json",
+					"Access-Control-Allow-Origin": "*",
+					Authorization: `${type} ${token}`,
+				};
+
+				const result = await patchData(url, data, headers);
+				// console.log(`프로필 수정 완료`);
+				navigate("/user/profiles");
+			} catch (error) {
+				console.log(error);
+				console.log("에러출력");
+			}
+		} else {
+			alert("동일한 이름의 프로필이 존재합니다.");
 		}
 	};
 
 	const handleDelete = async (e) => {
 		e.preventDefault();
 		try {
-			const testUrl = `https://hoyeonjigi.site/profile/${profileName}`;
+			const testUrl = `http://hoyeonjigi.site:8080/profile/${profileName}`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
 
@@ -125,67 +139,6 @@ function ProfileForEditDetail() {
 		} catch (error) {
 			console.log(error);
 			console.log("에러출력");
-			refresh();
-		}
-	};
-
-	// 토큰 재발급
-	const refresh = async () => {
-		try {
-			const url = "https://hoyeonjigi.site/user/refresh";
-			const headers = {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Token": `${Cookies.get("accessToken")}`,
-				"Refresh-Token": `${Cookies.get("refreshToken")}`,
-			};
-			const body = {};
-
-			const response = await postData(url, body, headers);
-			//토큰 재설정
-			Cookies.set("accessToken", response.accessToken, {
-				secure: true,
-				sameSite: "strict",
-			});
-			Cookies.set("refreshToken", response.refreshToken, {
-				secure: true,
-				sameSite: "strict",
-			});
-			Cookies.set("grantType", response.grantType, {
-				secure: true,
-				sameSite: "strict",
-			});
-			//자동 로그인 시 만료 시간 재설정
-			if (isAutoLogin) {
-				Cookies.set("autoLogin", true, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("accessToken", response.accessToken, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("refreshToken", response.refreshToken, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("grantType", response.grantType, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("userId", userId, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-			}
-		} catch (error) {
-			//refreshToken 만료 시 onBoarding으로 이동
-			navigate("/");
 		}
 	};
 
@@ -212,7 +165,7 @@ function ProfileForEditDetail() {
 
 			<Header />
 
-			<div className="flex flex-col items-center justify-center md-h lg-h">
+			<div className="flex flex-col items-center justify-center">
 				<h3 className="text-white text-4xl font-bold mt-24 mb-12">
 					프로필 편집
 				</h3>
@@ -265,19 +218,21 @@ function ProfileForEditDetail() {
 					<hr className="border border-[#191919] mb-5 w-full" />
 
 					<div className="flex flex-row justify-between w-full mb-5 items-center">
-						<div className="text-[#B3B3B3] text-base">어린이인가요?</div>
+						<div className="text-[#B3B3B3] text-lg font-medium">
+							어린이인가요?
+						</div>
 						<button
 							type="button"
 							className={`${
 								child ? "bg-[#008FE7]" : "bg-[#6E6E6E]"
-							} rounded-full w-10 h-6 relative`}
+							} rounded-full w-11 h-6 relative`}
 							onClick={handleChild}
 						>
 							<img
 								src={checkIcon}
 								className={`absolute w-[18px] top-1/2 ${
-									child ? "left-7" : "left-3"
-								} transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out`}
+									child ? "left-8" : "left-3"
+								} transform -translate-x-1/2 -translate-y-1/2`}
 							/>
 						</button>
 					</div>

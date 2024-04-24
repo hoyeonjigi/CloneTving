@@ -8,22 +8,114 @@ import SlideTop from "@/components/onboarding/SlideTop";
 import SlideBottom from "@/components/onboarding/SlideBottom";
 import TvingOriginal from "@/components/onboarding/TvingOriginal";
 import { Link } from "react-router-dom";
-
+import Cookies from "js-cookie";
+import { postData } from "@/utils/crud";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 function OnBoading() {
-  useEffect(() => {
-    localStorage.removeItem("reviews");
-    localStorage.removeItem("profile");
-    localStorage.removeItem("profileList");
-  }, []);
-  return (
-    <>
-      <Helmet>
-        <title>TvingFront - OnBoading</title>
-      </Helmet>
-      <div className="bg-black w-screen">
-        <Header />
+	const navigate = useNavigate();
+
+	//쿠키에서 토큰값을 가져온다
+	const accessToken = Cookies.get("accessToken");
+	const refreshToken = Cookies.get("refreshToken");
+	const isAutoLogin = Cookies.get("autoLogin");
+	const userId = Cookies.get("userId");
+
+	const autoLogin = () => {
+		//accessToken이 존재하면 이동, refreshToken 존재 시 refresh 후 이동
+		if (accessToken) {
+			refresh();
+			navigate("/user/profiles");
+		} else;
+
+		// try {
+		// 	const url = "";
+		// } catch (error) {}
+
+		// if (refreshToken === null || refreshToken === "");
+		// else if (accessToken !== null && accessToken !== "") {
+		// 	navigate("/user/profiles");
+		// }
+	};
+
+	const refresh = async () => {
+		const url = `https://hoyeonjigi.site/user/refresh`;
+		const headers = {
+			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
+			"Access-Token": `${Cookies.get("accessToken")}`,
+			"Refresh-Token": `${Cookies.get("refreshToken")}`,
+		};
+		const body = {};
+
+		const response = await postData(url, body, headers);
+		//토큰 재설정
+		Cookies.set("accessToken", response.accessToken, {
+			secure: true,
+			sameSite: "strict",
+		});
+		Cookies.set("refreshToken", response.refreshToken, {
+			secure: true,
+			sameSite: "strict",
+		});
+		Cookies.set("grantType", response.grantType, {
+			secure: true,
+			sameSite: "strict",
+		});
+
+		//자동 로그인 시 만료 시간 재설정
+		if (isAutoLogin) {
+			Cookies.set("autoLogin", true, {
+				secure: true,
+				sameSite: "strict",
+				expires: 7,
+			});
+			Cookies.set("accessToken", response.accessToken, {
+				secure: true,
+				sameSite: "strict",
+				expires: 7,
+			});
+			Cookies.set("refreshToken", response.refreshToken, {
+				secure: true,
+				sameSite: "strict",
+				expires: 7,
+			});
+			Cookies.set("grantType", response.grantType, {
+				secure: true,
+				sameSite: "strict",
+				expires: 7,
+			});
+			Cookies.set("userId", userId, {
+				secure: true,
+				sameSite: "strict",
+				expires: 7,
+			});
+		}
+	};
+
+	useEffect(() => {
+		localStorage.removeItem("isDataLoaded");
+		localStorage.removeItem("contents");
+		localStorage.removeItem("popularContent");
+		localStorage.removeItem("latestDrama");
+		localStorage.removeItem("romanceFilm");
+		localStorage.removeItem("latestFilm");
+		localStorage.removeItem("comedyDrama");
+		localStorage.removeItem("reviews");
+		localStorage.removeItem("profile");
+		localStorage.removeItem("profileList");
+		localStorage.removeItem("editProfile");
+		localStorage.removeItem("myProfile");
+		autoLogin();
+	}, []);
+	return (
+		<>
+			<Helmet>
+				<title>TvingFront - OnBoading</title>
+			</Helmet>
+			<div className="bg-black w-screen">
+				<Header />
 
 				<div>
 					<section className="mb-80 relative" style={{ height: "80vh" }}>

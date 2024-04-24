@@ -68,9 +68,6 @@ function ProfileForCreate() {
 	// 모달 창 상태를 관리하는 state
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
-	const isAutoLogin = Cookies.get("autoLogin");
-	const userId = Cookies.get("userId");
-
 	// 모달 창을 여는 함수
 	const openModal = () => {
 		setIsModalOpen(true);
@@ -100,7 +97,7 @@ function ProfileForCreate() {
 		// console.log(inputName.substring(0, inputName.length - 1));
 		//프로필 목록 이름 중 하나라도 일치하면 true
 		setIsNameExist(
-			userProfiles.some((user) => user.userProfileName == profileName)
+			userProfiles.some((user) => user.userProfileName == e.target.value)
 		);
 		// console.log(`isNameExist : ${isNameExist}`);
 	};
@@ -112,7 +109,7 @@ function ProfileForCreate() {
 	};
 
 	//문제
-	// //디바운스
+	//디바운스
 	// const debouncedDuplication = useRef(null);
 
 	// const handleDuplication = useCallback(
@@ -120,31 +117,22 @@ function ProfileForCreate() {
 	// 		if (!query.trim()) {
 	// 			return;
 	// 		}
+	// 		setProfileName(query);
 
-	// 		try {
-	// 			setUserId(profileName);
-	// 			const url = `http://hoyeonjigi.site:8080/user/exist/${query}`;
-	// 			const headers = {
-	// 				"Content-Type": "application/json",
-	// 				"Access-Control-Allow-Origin": "*",
-	// 			};
+	// 		const regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
 
-	// 			const result = await getData(url, headers);
-	// 			setIsIdExist(result);
-	// 			if (!idRegExp.test(query)) {
-	// 				setIsId(false);
-	// 			} else {
-	// 				setIsId(true);
-	// 			}
-	// 			if (result) {
-	// 				setIdMessage("이미 사용 중인 아이디입니다.");
-	// 			} else {
-	// 				setIdMessage("영문 또는 영문, 숫자 조합 6-12자리");
-	// 			}
-	// 		} catch (error) {
-	// 			console.error(`Error in sending get request: ${error}`);
-	// 			// refresh();
+	// 		if (!regex.test(query) && query.length > 0) {
+	// 			setProfileName(query.substring(0, query.length - 1));
 	// 		}
+	// 		// console.log(`${regex.test(profileName)}`);
+	// 		console.log("substring 테스트");
+	// 		console.log(query.substring(0, query.length - 1));
+	// 		//프로필 목록 이름 중 하나라도 일치하면 true
+	// 		setIsNameExist(
+	// 			userProfiles.some((user) => user.userProfileName == profileName)
+	// 		);
+
+	// 		console.log(`isNameExist : ${isNameExist}`);
 	// 	}, 500),
 	// 	[]
 	// );
@@ -160,135 +148,68 @@ function ProfileForCreate() {
 	// useEffect(() => {
 	// 	return () => {
 	// 		debouncedDuplication.current.cancel();
-
 	// 		// console.log(`query : ${query}`);
 	// 		// console.log(`isId : ${isId}`);
 	// 		// console.log(`isIdExist : ${isIdExist}`);
 	// 	};
 	// }, []);
-	//
 
 	const handleSubmit = async (e) => {
 		e.preventDefault(); // 폼 제출 시 페이지 리로딩 방지
-		try {
-			const url = "https://hoyeonjigi.site/profile/register"; // 변경해야 함
-			const type = Cookies.get("grantType");
-			const token = Cookies.get("accessToken");
-			const data = { profileName, imageName, child };
-			const headers = {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				Authorization: `${type} ${token}`,
-			};
 
-			if (!isNameExist) {
-				try {
-					const regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
-					if (regex.test(profileName)) {
-						const createResult = await postData(url, data, headers);
-						// console.log(`프로필 추가 완료`);
-						navigate("/user/profiles");
-					} else {
-						alert("2자 이상 10자 이내의 한글, 영문, 숫자 입력 가능합니다.");
-					}
-				} catch (error) {
-					console.error(`Error in sending POST request: ${error}`);
+		const url = "http://hoyeonjigi.site:8080/profile/register"; // 변경해야 함
+		const type = Cookies.get("grantType");
+		const token = Cookies.get("accessToken");
+		const data = { profileName, imageName, child };
+		const headers = {
+			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
+			Authorization: `${type} ${token}`,
+		};
+
+		if (!isNameExist) {
+			try {
+				const regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
+				if (regex.test(profileName)) {
+					const createResult = await postData(url, data, headers);
+					// console.log(`프로필 추가 완료`);
+					navigate("/user/profiles");
+				} else {
+					alert("2자 이상 10자 이내의 한글, 영문, 숫자 입력 가능합니다.");
 				}
-			} else {
-				alert("동일한 이름의 프로필이 존재합니다.");
+			} catch (error) {
+				console.error(`Error in sending POST request: ${error}`);
 			}
-		} catch (error) {
-			refresh();
+		} else {
+			alert("동일한 이름의 프로필이 존재합니다.");
 		}
 	};
 
-	// //프로필 이미지 정보 가져오기
-	// const getProfileInfo = async () => {
-	// 	const profileUrl = "https://hoyeonjigi.site/profileimages";
-	// 	const type = Cookies.get("grantType");
-	// 	const token = Cookies.get("accessToken");
-	// 	const headers = {
-	// 		"Content-Type": "application/json",
-	// 		"Access-Control-Allow-Origin": "*",
-	// 		Authorization: `${type} ${token}`,
-	// 	};
+	//프로필 이미지 정보 가져오기
+	const getProfileInfo = async () => {
+		const profileUrl = "http://hoyeonjigi.site:8080/profileimages";
+		const type = Cookies.get("grantType");
+		const token = Cookies.get("accessToken");
+		const headers = {
+			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
+			Authorization: `${type} ${token}`,
+		};
 
-	// 	try {
-	// 		const result = await getData(profileUrl, headers);
-	// 		// localStorage.setItem("imageInfo", JSON.stringify(result));
-	// 		// 서버에 저장된 프로필 이미지 정보 가져옴
-	// 		setProfileData(result);
-
-	// 		// console.log(result);
-	// 	} catch (error) {
-	// 		console.error(`Error in sending POST request: ${error}`);
-	// 	}
-	// };
-
-	// 토큰 재발급
-	const refresh = async () => {
 		try {
-			const url = "https://hoyeonjigi.site/user/refresh";
-			const headers = {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Token": `${Cookies.get("accessToken")}`,
-				"Refresh-Token": `${Cookies.get("refreshToken")}`,
-			};
-			const body = {};
-
-			const response = await postData(url, body, headers);
-			//토큰 재설정
-			Cookies.set("accessToken", response.accessToken, {
-				secure: true,
-				sameSite: "strict",
-			});
-			Cookies.set("refreshToken", response.refreshToken, {
-				secure: true,
-				sameSite: "strict",
-			});
-			Cookies.set("grantType", response.grantType, {
-				secure: true,
-				sameSite: "strict",
-			});
-			//자동 로그인 시 만료 시간 재설정
-			if (isAutoLogin) {
-				Cookies.set("autoLogin", true, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("accessToken", response.accessToken, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("refreshToken", response.refreshToken, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("grantType", response.grantType, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("userId", userId, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-			}
+			const result = await getData(profileUrl, headers);
+			// localStorage.setItem("imageInfo", JSON.stringify(result));
+			setProfileData(result);
+			// console.log(result);
 		} catch (error) {
-			//refreshToken 만료 시 onBoarding으로 이동
-			navigate("/");
+			console.error(`Error in sending POST request: ${error}`);
 		}
 	};
 
 	useEffect(() => {
 		// console.log(`currentProfile : ${currentProfile.selectedImageName}`);
 		// console.log(`imageName : ${imageName}`);
-		// getProfileInfo();
+		getProfileInfo();
 
 		//만약 프로필을 선택했다면 setCurrentProfile
 		if (isImageSelected) {
@@ -312,7 +233,7 @@ function ProfileForCreate() {
 
 			<Header />
 
-			<div className="flex flex-col items-center justify-center md-h lg-h">
+			<div className="flex flex-col items-center justify-center">
 				<h3 className="text-white text-4xl font-bold mt-24 mb-12">
 					프로필 만들기
 				</h3>
@@ -365,19 +286,21 @@ function ProfileForCreate() {
 					<hr className="border border-[#191919] mb-5 w-full" />
 
 					<div className="flex flex-row justify-between w-full mb-5 items-center">
-						<div className="text-[#B3B3B3] text-base">어린이인가요?</div>
+						<div className="text-[#B3B3B3] text-lg font-medium">
+							어린이인가요?
+						</div>
 						<button
 							type="button"
 							className={`${
 								child ? "bg-[#008FE7]" : "bg-[#6E6E6E]"
-							} rounded-full w-10 h-6 relative`}
+							} rounded-full w-11 h-6 relative`}
 							onClick={handleChild}
 						>
 							<img
 								src={checkIcon}
 								className={`absolute w-[18px] top-1/2 ${
-									child ? "left-7" : "left-3"
-								} transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out`}
+									child ? "left-8" : "left-3"
+								} transform -translate-x-1/2 -translate-y-1/2`}
 							/>
 						</button>
 					</div>
