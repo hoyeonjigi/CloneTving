@@ -58,10 +58,43 @@ function SignIn() {
 				secure: true,
 				sameSite: "strict",
 			});
+			Cookies.set("userId", userId, {
+				secure: true,
+				sameSite: "strict",
+			});
 
 			setAccessToken(response.accessToken);
 			setReToken(response.refreshToken);
 			setGrantType(response.grantType);
+
+			// 자동 로그인 활성화 시 만료기간 설정
+			if (isChecked) {
+				Cookies.set("autoLogin", true, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("accessToken", response.accessToken, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("refreshToken", response.refreshToken, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("grantType", response.grantType, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+				Cookies.set("userId", userId, {
+					secure: true,
+					sameSite: "strict",
+					expires: 7,
+				});
+			}
 
 			// const a = Cookies.get("accessToken");
 			// const r = Cookies.get("refreshToken");
