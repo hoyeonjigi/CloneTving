@@ -25,8 +25,11 @@ function OnBoading() {
 	const autoLogin = () => {
 		//accessToken이 존재하면 이동, refreshToken 존재 시 refresh 후 이동
 		if (accessToken) {
-			refresh();
-			navigate("/user/profiles");
+			try {
+				refresh();
+			} catch (error) {
+				navigate("/user/profiles");
+			}
 		} else;
 
 		// try {
