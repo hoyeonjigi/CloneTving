@@ -27,8 +27,14 @@ function OnBoading() {
 		if (accessToken) {
 			try {
 				refresh();
-			} catch (error) {
 				navigate("/user/profiles");
+			} catch (error) {
+				//accessToken, refreshToken 만료 시 쿠키에서 제거
+				localStorage.removeItem("accessToken");
+				localStorage.removeItem("refreshToken");
+				localStorage.removeItem("grantType");
+				localStorage.removeItem("userId");
+				localStorage.removeItem("autoLogin");
 			}
 		} else;
 
