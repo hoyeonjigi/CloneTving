@@ -18,6 +18,8 @@ import site.hoyeonjigi.clonetving.repository.ContentRepository;
 import site.hoyeonjigi.clonetving.repository.ProfileRepository;
 import site.hoyeonjigi.clonetving.repository.UserRepository;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,19 +34,20 @@ public class EvaluationServiceImpl implements EvaluationService {
     @Transactional
     public EvaluationDto registerEvaluation(String userId, EvaluationDto evaluationDto) throws Exception {
         UserEntity user = userRepository.findById(userId).get();
-        if(profileRepository.findByUserAndProfileName(user,evaluationDto.getProfileName()).isEmpty()){
+        if (profileRepository.findByUserAndProfileName(user, evaluationDto.getProfileName()).isEmpty()) {
             throw new ResourceNotFoundException("프로필이 없습니다");
         }
-        if(contentRepository.findByContentId(evaluationDto.getContentId()).isEmpty()){
+        if (contentRepository.findByContentId(evaluationDto.getContentId()).isEmpty()) {
             throw new ResourceNotFoundException("콘텐츠가 없습니다");
         }
-        EvaluationDto findEvaluation = evaluationMapper.findEvaluation(userId, evaluationDto.getProfileName(),evaluationDto.getContentId());
-        if(findEvaluation!=null){
+        EvaluationDto findEvaluation = evaluationMapper.findEvaluation(userId, evaluationDto.getProfileName(),
+                evaluationDto.getContentId());
+        if (findEvaluation != null) {
             throw new DuplicateEvaluationException("동일한 평가가 있습니다");
         }
-
+        evaluationDto.setRatingDate(LocalDateTime.now());
         int rowsAffected = evaluationMapper.save(userId, evaluationDto);
-        if(rowsAffected > 0){
+        if (rowsAffected > 0) {
             return evaluationDto;
         }
         throw new Exception("서버오류");
@@ -53,11 +56,11 @@ public class EvaluationServiceImpl implements EvaluationService {
     @Override
     public void deleteEvaluation(String userId, String profileName, String contentId) {
         UserEntity user = userRepository.findById(userId).get();
-        if(profileRepository.findByUserAndProfileName(user,profileName).isEmpty()){
+        if (profileRepository.findByUserAndProfileName(user, profileName).isEmpty()) {
             throw new ResourceNotFoundException("프로필이 없습니다");
         }
         EvaluationDto findEvaluation = evaluationMapper.findEvaluation(userId, profileName, contentId);
-        if(findEvaluation==null){
+        if (findEvaluation == null) {
             throw new ResourceNotFoundException("평가가 없습니다");
         }
         evaluationMapper.delete(userId, profileName, contentId);
@@ -66,7 +69,7 @@ public class EvaluationServiceImpl implements EvaluationService {
     @Override
     public List<EvaluationDto> evaluationByContentId(String contentId, int offset) {
 
-        if(contentRepository.findByContentId(contentId).isEmpty()){
+        if (contentRepository.findByContentId(contentId).isEmpty()) {
             throw new ResourceNotFoundException("콘텐츠가 없습니다");
         }
 
