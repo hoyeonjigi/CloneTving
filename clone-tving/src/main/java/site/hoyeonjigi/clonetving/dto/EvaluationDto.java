@@ -13,7 +13,7 @@ import site.hoyeonjigi.clonetving.domain.ProfileEntity;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor 
+@AllArgsConstructor
 @ToString
 public class EvaluationDto {
 
@@ -21,5 +21,10 @@ public class EvaluationDto {
     private String contentId;
     private float starRating;
     private String review;
-    private String ratingDate;
+    private LocalDateTime ratingDate;
+
+    public void setRatingDate(LocalDateTime ratingDate) {
+        this.ratingDate = ratingDate;
+    }
+
 }

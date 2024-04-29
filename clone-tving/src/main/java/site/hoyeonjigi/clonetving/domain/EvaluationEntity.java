@@ -1,9 +1,7 @@
 package site.hoyeonjigi.clonetving.domain;
 
-
-
 import java.sql.Date;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,8 +29,8 @@ public class EvaluationEntity {
     @Id
     @ManyToOne
     @JoinColumns({
-        @JoinColumn(name = "user_id"),
-        @JoinColumn(name = "profile_name")
+            @JoinColumn(name = "user_id"),
+            @JoinColumn(name = "profile_name")
     })
     private ProfileEntity profile;
 
@@ -41,14 +39,13 @@ public class EvaluationEntity {
     @JoinColumn(name = "content_id")
     private ContentEntity content;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private float starRating;
 
-    @Column(length =20 , nullable=false)
+    @Column(length = 20, nullable = false)
     private String review;
 
-    @Column(nullable=false)
-    private LocalDate ratingDate;
+    @Column(nullable = false)
+    private LocalDateTime ratingDate;
 
 }
-
