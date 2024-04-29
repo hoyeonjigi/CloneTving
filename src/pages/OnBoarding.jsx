@@ -25,8 +25,17 @@ function OnBoading() {
 	const autoLogin = () => {
 		//accessToken이 존재하면 이동, refreshToken 존재 시 refresh 후 이동
 		if (accessToken) {
-			refresh();
-			navigate("/user/profiles");
+			try {
+				refresh();
+				navigate("/user/profiles");
+			} catch (error) {
+				//accessToken, refreshToken 만료 시 쿠키에서 제거
+				localStorage.removeItem("accessToken");
+				localStorage.removeItem("refreshToken");
+				localStorage.removeItem("grantType");
+				localStorage.removeItem("userId");
+				localStorage.removeItem("autoLogin");
+			}
 		} else;
 
 		// try {
