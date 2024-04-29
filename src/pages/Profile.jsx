@@ -185,7 +185,12 @@ function Profile() {
 				});
 			}
 		} catch (error) {
-			//refreshToken 만료 시 onBoarding으로 이동
+			//refreshToken 만료 시 onBoarding으로 이동 및 쿠키에서 제거
+			localStorage.removeItem("accessToken");
+			localStorage.removeItem("refreshToken");
+			localStorage.removeItem("grantType");
+			localStorage.removeItem("userId");
+			localStorage.removeItem("autoLogin");
 			navigate("/");
 		}
 	};
