@@ -101,7 +101,9 @@ function OnBoading() {
 			});
 		}
 		//Refresh 후 profiles로 이동
-		navigate("/user/profiles");
+		if (response) {
+			navigate("/user/profiles");
+		}
 	};
 
 	useEffect(() => {

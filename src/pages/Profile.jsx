@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { getData, postData } from "@/utils/crud";
 import { useEffect, useState } from "react";
 import useCreate from "@/store/useCreate";
-import useLogin from "@/store/login";
 import useProfile from "@/store/useProfile";
 import useProfileList from "@/store/useProfileList";
 
