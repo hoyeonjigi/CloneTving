@@ -27,7 +27,6 @@ function OnBoading() {
 		if (accessToken) {
 			try {
 				refresh();
-				navigate("/user/profiles");
 			} catch (error) {
 				//accessToken, refreshToken 만료 시 쿠키에서 제거
 				localStorage.removeItem("accessToken");
@@ -100,6 +99,10 @@ function OnBoading() {
 				sameSite: "strict",
 				expires: 7,
 			});
+		}
+		//Refresh 후 profiles로 이동
+		if (response) {
+			navigate("/user/profiles");
 		}
 	};
 
