@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { getData, postData } from "@/utils/crud";
 import { useEffect, useState } from "react";
 import useCreate from "@/store/useCreate";
-import useLogin from "@/store/login";
 import useProfile from "@/store/useProfile";
 import useProfileList from "@/store/useProfileList";
 
@@ -185,7 +184,12 @@ function Profile() {
 				});
 			}
 		} catch (error) {
-			//refreshToken 만료 시 onBoarding으로 이동
+			//refreshToken 만료 시 onBoarding으로 이동 및 쿠키에서 제거
+			localStorage.removeItem("accessToken");
+			localStorage.removeItem("refreshToken");
+			localStorage.removeItem("grantType");
+			localStorage.removeItem("userId");
+			localStorage.removeItem("autoLogin");
 			navigate("/");
 		}
 	};
