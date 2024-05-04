@@ -7,14 +7,11 @@ const reviewsStore = (set) => ({
   averageRating: "0.0",
   numberOfReviews: 0,
   page: 0, // 현재 페이지 번호
-
   isReview: false,
   endPage: false,
-
   deleteReview: false,
 
   setEndPage: (endPage) => set({ endPage }),
-
   setPage: (page) => set({ page }),
   setDeleteReview: (deleteReview) => set({ deleteReview }),
   setReview: (review) => set({ review }),

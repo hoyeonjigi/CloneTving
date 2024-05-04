@@ -75,7 +75,7 @@ function ReviewModal({ isOpen, closeModal }) {
         contentId: content.contentId,
         starRating: rating,
         review: review,
-        ratingDate: currentDate,
+        // ratingDate: currentDate,
       };
 
       const url = `https://hoyeonjigi.site/evaluation`;
@@ -83,17 +83,7 @@ function ReviewModal({ isOpen, closeModal }) {
       const response = await postData(url, data, headers);
 
       setIsReview(true);
-      // addReview(response);
-
-      // const reviewUrl = `https://hoyeonjigi.site/evaluation/${content.contentId}`;
-
-      // const re = await getData(url, headers);
-
-      // console.log(re);
-
-      // // setReview(re.evaluationList);
-      // setAverageRating(re.avg);
-      // setNumberOfReviews(re.evaluationCount);
+   
 
       if ("scrollRestoration" in history) {
         history.scrollRestoration = "manual";
