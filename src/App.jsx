@@ -5,14 +5,22 @@ import router from "./routes.jsx";
 import "./index.css";
 import { HelmetProvider } from "react-helmet-async";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 function App() {
+  const queryClient = new QueryClient();
+
   return (
     <>
       <HelmetProvider>
-        <AnimatePresence>
-          <Toaster />
-          <RouterProvider router={router} />
-        </AnimatePresence>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <AnimatePresence>
+            <Toaster />
+            <RouterProvider router={router} />
+          </AnimatePresence>
+        </QueryClientProvider>
       </HelmetProvider>
     </>
   );
