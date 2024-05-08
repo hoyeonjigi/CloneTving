@@ -12,6 +12,7 @@ import ProfileForEditDetail from "./pages/ProfileForEditDetail.jsx";
 import FindPassword from "./pages/FindPassword.jsx";
 import Detail from "./pages/Detail.jsx";
 import ProfileForCreate from "./pages/ProfileForCreate.jsx";
+// import DetailCopy from "./pages/DetailCopy.jsx";
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
         path: `/main/detail/:id`,
         element: <Detail />,
       },
+      // {
+      //   path: `/main/detail/:id`,
+      //   element: <DetailCopy />,
+      // },
     ],
   },
 ]);

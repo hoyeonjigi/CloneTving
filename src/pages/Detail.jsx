@@ -18,7 +18,10 @@ import useDetail from "@/store/useDetail";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 function Detail() {
+  const queryClient = useQueryClient();
   const { content, genre, setGenre } = useContents();
   const { isLoading, isSearch, setIsLoading, setIsSearch } = useDetail();
   const {
@@ -38,6 +41,7 @@ function Detail() {
 
     deleteReview,
     setDeleteReview,
+    reset,
   } = useReviews();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -169,139 +173,41 @@ function Detail() {
     contentData();
   }, [isSearch]); // 이 효과는 컴포넌트가 마운트될 때만 실행됩니다.
 
-  // const reviewData = async () => {
-  //   if (endPage === true) {
-  //     setIsLoading(false);
-  //     return;
-  //   }
-  //   try {
-  //     // 로컬 스토리지에 리뷰 데이터가 없는 경우, API 호출을 통해 데이터를 가져옵니다.
-  //     const type = Cookies.get("grantType");
-  //     const token = Cookies.get("accessToken");
-
-  //     const headers = {
-  //       "Content-Type": "application/json",
-  //       Authorization: `${type} ${token}`,
-  //     };
-
-  //     // const url = `http://hoyeonjigi.site:8080/evaluation/${content.contentId}`;
-  //     const url = `https://hoyeonjigi.site/evaluation/${content.contentId}?page=${page}`;
-
-  //     const response = await getData(url, headers);
-
-  //     setIsLoading(false);
-
-  //     if (response.evaluationList.length === 0) {
-  //       return;
-  //     } else {
-  //       if (page === 0) {
-  //         setReview(response.evaluationList);
-  //         setAverageRating(response.avg);
-  //         setNumberOfReviews(response.evaluationCount);
-  //       } else {
-  //         setReview([...review, ...response.evaluationList]);
-  //         setAverageRating(response.avg);
-  //         setNumberOfReviews(response.evaluationCount);
-  //         // 페이지 번호를 업데이트하여 다음 요청에 올바른 skip 값을 사용합니다.
-  //         // setPage(page + 1);
-  //       }
-  //       setPage(page + 1);
-  //     }
-  //   } catch (error) {
-  //     setEndPage(true);
-  //     setIsLoading(false);
-  //     console.log("더이상 리뷰가 없습니다");
-
-  //     // console.log("리뷰 데이터가 없습니다");
-  //     // console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   setEndPage(false);
-  //   setReview([]);
-  //   setPage(0);
-  //   setEndPage(false);
-  //   setAverageRating("0.0");
-  //   setNumberOfReviews(0);
-  //   setDeleteReview(false);
-  //   setIsReview(false);
-  //   setIsSearch(false);
-
-  //   if ("scrollRestoration" in history) {
-  //     history.scrollRestoration = "manual";
-  //   }
-  //   window.scrollTo(0, 0);
-
-  //   if (page === 0) {
-  //     reviewData();
-  //   }
-  // }, [isReview, deleteReview, isSearch]); // 의존성 배열을 비워 컴포넌트가 마운트될 때만 실행
-
-  // // 컴포넌트 내부에서
-  // const observer = useRef();
-
-  // useEffect(() => {
-  //   if (endPage === true) {
-  //     return;
-  //   }
-
-  //   const observerElement = document.getElementById("observer");
-
-  //   const options = {
-  //     root: null, // 뷰포트를 root로 사용
-  //     rootMargin: "0px", // root의 마진
-  //     threshold: 1.0, // 타겟이 100% 보여질 때 콜백 실행
-  //   };
-
-  //   const observerCallback = (entries, observer) => {
-  //     entries.forEach((entry) => {
-  //       if (entry.isIntersecting) {
-  //         // 타겟 요소가 뷰포트에 들어왔을 때
-
-  //         reviewData(); // 추가 데이터를 로드하는 함수 호출
-  //       }
-  //     });
-  //   };
-
-  //   observer.current = new IntersectionObserver(observerCallback, options);
-  //   if (observerElement) observer.current.observe(observerElement);
-
-  //   return () => {
-  //     // 컴포넌트가 언마운트될 때 observer를 정리
-  //     if (observer.current) observer.current.disconnect();
-  //   };
-  // }, [page, endPage]); // 의존성 배열이 비어있으므로 컴포넌트가 마운트될 때 한 번만 실행됩니다.
-
-  // useEffect(() => {
-  //   // 컴포넌트가 언마운트될 때 reset 함수가 호출되도록 합니다.
-  //   return () => {
-  //     useReviews.persist.clearStorage();
-  //   };
-  // }, []); // reset 함수가 변경되지 않는 이상, 이 효과는 마운트와 언마운트 시에만 실행됩니다.
-
-  //-------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------
 
   const fetchReviews = async ({ pageParam }) => {
-    // API로부터 리뷰 데이터를 페이지별로 가져오는 함수
-    // 예시: return fetch(`/api/reviews?page=${pageParam}`).then(res => res.json());
+    if (endPage === true) {
+      return;
+    }
+    try {
+      // API로부터 리뷰 데이터를 페이지별로 가져오는 함수
+      console.log(pageParam);
+      const type = Cookies.get("grantType");
+      const token = Cookies.get("accessToken");
 
-    console.log(pageParam);
-    // console.log(props);
-    const type = Cookies.get("grantType");
-    const token = Cookies.get("accessToken");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `${type} ${token}`,
+      };
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `${type} ${token}`,
-    };
+      // API URL 구성, pageParam을 사용하여 현재 페이지 지정
+      const url = `https://hoyeonjigi.site/evaluation/${content.contentId}?page=${pageParam}`;
 
-    // API URL 구성, pageParam을 사용하여 현재 페이지 지정
-    const url = `https://hoyeonjigi.site/evaluation/${content.contentId}?page=${pageParam}`;
+      const data = await getData(url, headers);
 
-    const data = await getData(url, headers);
+      console.log("통신됨");
 
-    return data.evaluationList; // JSON 형태로 파싱된 응답 데이터 반환
+      return data; // JSON 형태로 파싱된 응답 데이터 반환
+    } catch (error) {
+      // 에러 발생 시 콘솔에 에러 메시지 출력
+      console.error("fetchReviews 에러:", error);
+      setEndPage(true);
+
+      // 에러가 발생했을 때 처리할 로직을 여기에 추가할 수 있습니다.
+      // 예를 들어, 사용자에게 에러 메시지를 표시하거나 다른 조치를 취할 수 있습니다.
+      // 여기서는 단순히 null을 반환하도록 설정하겠습니다.
+      // return null;
+    }
   };
 
   const {
@@ -318,68 +224,66 @@ function Detail() {
     getNextPageParam: (lastPage, allPages) => {
       // const nextPage = lastPage.length ? 1 : undefined;
       // return nextPage;
+      // if (endPage === true) {
+      //   // 예시로, 응답 데이터에 lastPage라는 필드가 마지막 페이지임을 나타낸다고 가정
+      //   return undefined; // 마지막 페이지이므로 다음 페이지는 없음
+      // }
 
       return allPages.length;
     },
   });
 
-  console.log(data?.pages);
-  // console.log(data?.pages[0].avg);
-  // console.log(data?.pages[0].evaluationCount);
-  // console.log(data?.pages[0].evaluationList);
-  const ct = data?.pages.map((todos) =>
-    todos.map((todo, index) => {
-      return status === "pending" ? (
-        <Spinner /> // 여기에 로딩 컴포넌트나 로딩 텍스트 대체 가능
-      ) : (
-        <p className="text-white" key={index}>
-          {todo.profileName}
-        </p>
-      );
-      // console.log(todo);
-    })
-  );
-
-  // const {
-  //   data,
-  //   error,
-  //   fetchNextPage,
-  //   hasNextPage,
-  //   isFetchingNextPage, // 이 줄을 추가하세요.
-  // } = useInfiniteQuery({
-  //   queryKey: ["reviews"],
-  //   queryFn: fetchReviews,
-  //   getNextPageParam: (lastPage, allPages) => lastPage.nextPage,
-  // });
-
   const { ref, inView } = useInView();
 
-  // useEffect(() => {
-  //   console.log("1");
-  //   console.log(data);
-  //   console.log("2");
-  //   console.log(error);
-  //   console.log("3");
-  //   console.log(status);
-  //   console.log("4");
-  //   console.log(fetchNextPage);
-  //   console.log("5");
-  //   console.log(hasNextPage);
-  //   console.log("6");
-  //   console.log(isFetching);
-  //   console.log("7");
-  //   console.log(isFetchingNextPage);
-  // }, [status]);
+  useEffect(() => {
+    // console.log(error);
+    if (endPage === true) {
+      return;
+    } else if (endPage === false && inView) {
+      // setReview([...review, ...data.evaluationList]);
+      // setAverageRating(data.avg);
+      // setNumberOfReviews(data.evaluationCount);
+      console.log("Fire");
+      fetchNextPage();
+      // console.log(hasNextPage);
+    }
+  }, [inView, fetchNextPage, endPage]);
 
-  // useEffect(() => {
-  //   console.log(isFetchingNextPage);
-  //   console.log(data);
-  //   console.log(error);
-  //   console.log(hasNextPage);
-  //   if (inView && hasNextPage) {
-  //     fetchNextPage();
-  //   }
-  // }, [inView, hasNextPage, fetchNextPage]);
+  console.log(status);
+  console.log(error);
+
+  const [isFirst, setIsfirst] = useState(true);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+    queryClient.removeQueries(["test"], { exact: true });
+    setEndPage(false);
+    reset();
+
+    data?.pages.map((reviews) => {
+      setAverageRating(reviews["avg"]);
+      setNumberOfReviews(reviews["evaluationCount"]);
+      setReview(reviews["evaluationList"]);
+    });
+    console.log(data);
+    console.log(review);
+
+    console.log("Tlqjf")
+    setIsfirst(false);
+    // fetchNextPage();
+  }, [isFirst]);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 실행할 로직 (여기서는 비워둠)
+
+    return () => {
+      // 컴포넌트가 언마운트될 때 실행할 로직
+      queryClient.removeQueries(["test"], { exact: true });
+      // 또는
+      // queryClient.invalidateQueries(['test'], { exact: true });
+    };
+  }, [queryClient]);
 
   return (
     <div className="bg-black">
@@ -516,7 +420,8 @@ function Detail() {
             closeModal={closeModal}
           ></ReviewModal>
         </div>
-        {/* <div className="flex flex-grow-[0.8] flex-col mb-24">
+
+        <div className="flex flex-grow-[0.8] flex-col mb-24">
           <ul>
             <h3 className="text-white font-semibold mt-11">최신순</h3>
 
@@ -537,21 +442,12 @@ function Detail() {
                 등록된 리뷰가 없습니다.
               </p>
             )}
-
-            
           </ul>
-      
+          {/* IntersectionObserver에 의해 관찰될 요소 */}
           <div id="observer"></div>
-        </div> */}
-        {ct}
-        <button
-          className="text-white"
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
-        >
-          gogo
-        </button>
+        </div>
       </div>
+      <div ref={ref}>zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz</div>
       <Footer />
     </div>
   );
