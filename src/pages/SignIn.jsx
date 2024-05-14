@@ -96,14 +96,6 @@ function SignIn() {
 				});
 			}
 
-			// const a = Cookies.get("accessToken");
-			// const r = Cookies.get("refreshToken");
-			// const g = Cookies.get("grantType");
-
-			// console.log(a);
-			// console.log(r);
-			// console.log(g);
-
 			navigate("/user/profiles");
 		} catch (error) {
 			console.error(`Error in sending POST request: ${error}`);
@@ -167,6 +159,7 @@ function SignIn() {
 								<img
 									src={isChecked ? check : unCheck}
 									className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+									alt="자동로그인 체크박스"
 								/>
 							</button>
 							<input type="checkbox" id="rememberMe" hidden />

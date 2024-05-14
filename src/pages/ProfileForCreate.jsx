@@ -378,6 +378,7 @@ function ProfileForCreate() {
 								className={`absolute w-[18px] top-1/2 ${
 									child ? "left-7" : "left-3"
 								} transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ease-in-out`}
+								alt="어린이 여부"
 							/>
 						</button>
 					</div>
