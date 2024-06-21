@@ -76,9 +76,6 @@ function SignUp() {
 			navigate("/");
 		} catch (error) {
 			console.error(`Error in sending POST request: ${error}`);
-
-			// setUserId(""); // 아이디 상태 초기화
-			// setuserPassword(""); // 비밀번호 상태 초기화
 		}
 	};
 
@@ -111,7 +108,7 @@ function SignUp() {
 		marketingAgreement,
 		smsAgreement,
 		emailAgreement,
-	]); //
+	]);
 
 	const handleCheckboxAll = () => {
 		let newValue = !isCheckedAll;
@@ -388,7 +385,10 @@ function SignUp() {
 								className="translate-y-1"
 								onClick={handleCheckboxAll}
 							>
-								<img src={isCheckedAll ? checkAll : uncheckAll} />
+								<img
+									src={isCheckedAll ? checkAll : uncheckAll}
+									alt="모두 동의"
+								/>
 							</button>
 
 							<label
@@ -416,7 +416,7 @@ function SignUp() {
 									className="translate-y-1"
 									onClick={handleAdult}
 								>
-									<img src={adultStatus ? check : uncheck} />
+									<img src={adultStatus ? check : uncheck} alt="만 14세 이상" />
 								</button>
 								<label
 									htmlFor="isAdult"
@@ -442,7 +442,10 @@ function SignUp() {
 									className="translate-y-1"
 									onClick={handleAgree01}
 								>
-									<img src={agree01 ? check : uncheck} />
+									<img
+										src={agree01 ? check : uncheck}
+										alt="[필수] 서비스 이용약관 동의"
+									/>
 								</button>
 								<label
 									htmlFor="agree01"
@@ -468,7 +471,10 @@ function SignUp() {
 									className="translate-y-1"
 									onClick={handleAgree02}
 								>
-									<img src={agree02 ? check : uncheck} />
+									<img
+										src={agree02 ? check : uncheck}
+										alt="[필수] 개인정보 수집 및 서비스 활용 동의"
+									/>
 								</button>
 								<label
 									htmlFor="agree02"
@@ -494,7 +500,10 @@ function SignUp() {
 									className="translate-y-1"
 									onClick={handleAgree03}
 								>
-									<img src={agree03 ? check : uncheck} />
+									<img
+										src={agree03 ? check : uncheck}
+										alt="[필수] 채널 홈페이지 개인정보 제 3자 제공동의"
+									/>
 								</button>
 								<label
 									htmlFor="agree03"
@@ -520,7 +529,10 @@ function SignUp() {
 									className="translate-y-1"
 									onClick={handlePrivacy}
 								>
-									<img src={privacyAgreement ? check : uncheck} />
+									<img
+										src={privacyAgreement ? check : uncheck}
+										alt="[선택] 개인정보 제 3자 제공동의"
+									/>
 								</button>
 								<label
 									htmlFor="agreePrivacy"
@@ -544,7 +556,10 @@ function SignUp() {
 									className="translate-y-1"
 									onClick={handleCheckboxMarketing}
 								>
-									<img src={marketingAgreement ? check : uncheck} />
+									<img
+										src={marketingAgreement ? check : uncheck}
+										alt="[선택] 개인정보 수집 및 서비스 활용 동의"
+									/>
 								</button>
 
 								<label
@@ -573,7 +588,10 @@ function SignUp() {
 									className="translate-y-1"
 									onClick={handleSms}
 								>
-									<img src={smsAgreement ? check : uncheck} />
+									<img
+										src={smsAgreement ? check : uncheck}
+										alt="[선택] 마케팅 정보 SMS 수신동의"
+									/>
 								</button>
 								<label
 									htmlFor="agreeSms"
@@ -599,7 +617,10 @@ function SignUp() {
 									className="translate-y-1"
 									onClick={handleEmail}
 								>
-									<img src={emailAgreement ? check : uncheck} />
+									<img
+										src={emailAgreement ? check : uncheck}
+										alt="[선택] 마케팅 정보 이메일 수신동의"
+									/>
 								</button>
 								<label
 									htmlFor="agreeEmail"

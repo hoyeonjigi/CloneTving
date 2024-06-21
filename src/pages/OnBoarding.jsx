@@ -103,6 +103,13 @@ function OnBoading() {
 		//Refresh 후 profiles로 이동
 		if (response) {
 			navigate("/user/profiles");
+		} else {
+			//accessToken, refreshToken 만료 시 쿠키에서 제거
+			localStorage.removeItem("accessToken");
+			localStorage.removeItem("refreshToken");
+			localStorage.removeItem("grantType");
+			localStorage.removeItem("userId");
+			localStorage.removeItem("autoLogin");
 		}
 	};
 
