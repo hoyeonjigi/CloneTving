@@ -20,6 +20,7 @@ import Footer from "@/components/Footer";
 import { useLocation } from "react-router-dom";
 import useContents from "@/store/useContent";
 import useReviews from "@/store/useReviews";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Main() {
   const location = useLocation();
@@ -41,6 +42,9 @@ function Main() {
 
   // const { accessToken, reToken, grantType, setAccessToken, setReToken } =
   //   useLogin();
+
+  const queryClient = useQueryClient();
+  const { reset } = useReviews(); // useReviews 훅에서 reset 함수 가져오기
 
   const isAutoLogin = Cookies.get("autoLogin");
   const userId = Cookies.get("userId");
@@ -300,6 +304,8 @@ function Main() {
 
   useEffect(() => {
     // 페이지 경로가 /home과 일치할 때만 isDataLoaded 삭제
+    reset(); // 리뷰 상태를 초기화하는 함수
+    queryClient.removeQueries(["infinity"], { exact: true });
     if (
       location.pathname === "/" ||
       location.pathname === "/signin" ||

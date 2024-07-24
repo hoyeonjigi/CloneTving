@@ -40,74 +40,67 @@ function Profile() {
 	// 사용자 정보 가져오기
 	const getUserData = async () => {
 		try {
-			const testUrl = `https://hoyeonjigi.site/profile/${userId}`;
+			const testUrl = `${import.meta.env.VITE_API_URL}/profiles`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
 
 			const headers = {
 				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
+				// "Access-Control-Allow-Origin": "*",
 				Authorization: `${type} ${token}`,
 			};
 
 			const result = await getData(testUrl, headers);
-			setUserProfiles(
-				result.map((item) => ({
-					userProfileName: item.profileName,
-					userProfileImageUrl: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.profileImageUrl}`,
-					alt: `프로필 이미지`,
-					child: item.child,
-				}))
-			);
+
+			console.log(result)
+			// setUserProfiles(
+			// 	result.map((item) => ({
+			// 		userProfileName: item.profileName,
+			// 		userProfileImageUrl: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.profileImageUrl}`,
+			// 		alt: `프로필 이미지`,
+			// 		child: item.child,
+			// 	}))
+			// );
 		} catch (error) {
 			console.log(error);
 			console.log("에러출력");
-			refresh();
+			// refresh();
 		}
 	};
 
 	//프로필 이미지 정보 가져오기
 	const getProfileInfo = async () => {
 		try {
-			const profileUrl = "https://hoyeonjigi.site/profileimages";
+			const profileUrl = `${import.meta.env.VITE_API_URL}/profileImages`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
 			const headers = {
 				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
+				// "Access-Control-Allow-Origin": "*",
 				Authorization: `${type} ${token}`,
 			};
 
 			const result = await getData(profileUrl, headers);
-			// localStorage.setItem("imageInfo", JSON.stringify(result));
-			// // 서버에 저장된 프로필 이미지 정보 가져옴
-			// setProfileData(result);
 
-			// // 프로필 이미지 카테고리별 정렬
-			// setProfileImages(
-			// 	profileData.map((item) => ({
-			// 		profileImageId: item.profileImageId,
-			// 		profileImageName: item.profileImageName,
-			// 		image_url: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.image_url}`,
-			// 		category: item.category,
-			// 		alt: `프로필 이미지`,
-			// 	}))
+
+			console.log("이미지")
+			console.log(result)
+
+
+			// const updateProfileImages = result.map((item) => ({
+			// 	profileImageId: item.profileImageId,
+			// 	profileImageName: item.profileImageName,
+			// 	image_url: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.image_url}`,
+			// 	category: item.category,
+			// 	alt: `프로필 이미지`,
+			// }));
+
+			// setBaseProfileImages(
+			// 	updateProfileImages.filter((item) => item.profileImageId <= 10)
 			// );
-
-			const updateProfileImages = result.map((item) => ({
-				profileImageId: item.profileImageId,
-				profileImageName: item.profileImageName,
-				image_url: `https://hoyeonjigi.s3.ap-northeast-2.amazonaws.com${item.image_url}`,
-				category: item.category,
-				alt: `프로필 이미지`,
-			}));
-
-			setBaseProfileImages(
-				updateProfileImages.filter((item) => item.profileImageId <= 10)
-			);
-			setYumiProfileImages(
-				updateProfileImages.filter((item) => item.profileImageId > 10)
-			);
+			// setYumiProfileImages(
+			// 	updateProfileImages.filter((item) => item.profileImageId > 10)
+			// );
 
 			// console.log(result);
 		} catch (error) {
@@ -129,71 +122,7 @@ function Profile() {
 		setChild(isChild);
 	};
 
-	// 토큰 재발급
-	const refresh = async () => {
-		try {
-			const url = "https://hoyeonjigi.site/user/refresh";
-			const headers = {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Token": `${Cookies.get("accessToken")}`,
-				"Refresh-Token": `${Cookies.get("refreshToken")}`,
-			};
-			const body = {};
-
-			const response = await postData(url, body, headers);
-			//토큰 재설정
-			Cookies.set("accessToken", response.accessToken, {
-				secure: true,
-				sameSite: "strict",
-			});
-			Cookies.set("refreshToken", response.refreshToken, {
-				secure: true,
-				sameSite: "strict",
-			});
-			Cookies.set("grantType", response.grantType, {
-				secure: true,
-				sameSite: "strict",
-			});
-			//자동 로그인 시 만료 시간 재설정
-			if (isAutoLogin) {
-				Cookies.set("autoLogin", true, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("accessToken", response.accessToken, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("refreshToken", response.refreshToken, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("grantType", response.grantType, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-				Cookies.set("userId", userId, {
-					secure: true,
-					sameSite: "strict",
-					expires: 7,
-				});
-			}
-		} catch (error) {
-			//refreshToken 만료 시 onBoarding으로 이동 및 쿠키에서 제거
-			localStorage.removeItem("accessToken");
-			localStorage.removeItem("refreshToken");
-			localStorage.removeItem("grantType");
-			localStorage.removeItem("userId");
-			localStorage.removeItem("autoLogin");
-			navigate("/");
-		}
-	};
-
+	
 	useEffect(() => {
 		localStorage.removeItem("myProfile");
 		localStorage.removeItem("editProfile");

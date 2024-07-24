@@ -22,13 +22,7 @@ function ReviewModal({ isOpen, closeModal }) {
 
   const { content } = useContents();
 
-  const {
-    isReview,
-    setIsReview,
-    addReview,
-    setAverageRating,
-    setNumberOfReviews,
-  } = useReviews();
+  const { setReviewState } = useReviews();
 
   const { profileName } = useProfile();
 
@@ -82,12 +76,12 @@ function ReviewModal({ isOpen, closeModal }) {
 
       const response = await postData(url, data, headers);
 
-      setIsReview(true);
-   
+      // setIsReview(true);
+      setReviewState({ isReview: true });
 
-      if ("scrollRestoration" in history) {
-        history.scrollRestoration = "manual";
-      }
+      setReview("");
+
+      setRating(0);
       window.scrollTo(0, 0);
 
       toast.success(`리뷰가 성공적으로 등록되었습니다`, {

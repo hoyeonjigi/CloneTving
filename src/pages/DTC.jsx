@@ -1,6 +1,6 @@
 import Footer from "@/components/Footer";
 import HeaderMain from "@/components/HeaderMain";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import ReviewModal from "@/components/modal/ReviewModal";
 // import useContent from "@/store/useContent";
 import { useEffect, useLayoutEffect, useRef, React } from "react";
@@ -24,7 +24,7 @@ import dibs from "@/assets/dibs.svg";
 import share from "@/assets/share.svg";
 import play from "@/assets/play.svg";
 
-function Detail() {
+function DTC() {
   const queryClient = useQueryClient();
   const { content, genre, setGenre } = useContents();
   const { isLoading, isSearch, setIsLoading, setIsSearch } = useDetail();
@@ -184,8 +184,6 @@ function Detail() {
     } catch (error) {
       // 에러 발생 시 콘솔에 에러 메시지 출력
       console.error("fetchReviews 에러:", error);
-
-      console.log(data);
       setReviewState({ endPage: true });
     }
   };
@@ -199,134 +197,177 @@ function Detail() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    refetch,
   } = useInfiniteQuery({
     queryKey: ["infinity"],
     queryFn: fetchReviews,
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
-      // return allPages.length;
-      // if (!lastPage) {
-      //   return undefined; // 빈 페이지를 명시적으로 처리
+      // const nextPage = lastPage.length ? 1 : undefined;
+      // return nextPage;
+      // if (endPage === true) {
+      //   // 예시로, 응답 데이터에 lastPage라는 필드가 마지막 페이지임을 나타낸다고 가정
+      //   return undefined; // 마지막 페이지이므로 다음 페이지는 없음
       // }
-      console.log(lastPage)
 
       return allPages.length;
     },
   });
 
-  // // 등록, 삭제 됐을 시 로직
-  // useEffect(() => {
-  //   if (reviewState.isReview || reviewState.deleteReview) {
-  //     queryClient.invalidateQueries(["infinity"]);
-  //     refetch();
+  // useLayoutEffect(() => {
+  //   // console.log(error);
+  //   if (reviewState.endPage === true) {
+  //     return;
+  //   } else if (reviewState.endPage === false && inView) {
   //     console.log(data);
-
-  //     if (data) {
-  //       const updateReviewState = () => {
-  //         // reset();
-  //         console.log("변경 데이터");
-  //         // 초기화 후 새로운 상태를 병합하여 업데이트
-
-  //         console.log(data);
-  //         // console.log(data.pages[0].evaluationCount);
-  //         // console.log(data.pages[0].evaluationList);
-  //         // console.log(reviewState.numberOfReviews);
-
-  //         // if (data.pages[0].evaluationCount !== reviewState.numberOfReviews) {
-  //         //   console.log("등록 또는 취소");
-  //         //   setReviewState({
-  //         //     averageRating: data.pages[0].avg,
-  //         //     numberOfReviews: data.pages[0].evaluationCount,
-  //         //     review: data.pages[0].evaluationList,
-  //         //     isReview: false,
-  //         //     deleteReview: false,
-  //         //     len: 0,
-  //         //   });
-  //         // }
-  //       };
-
-  //       updateReviewState(); // 리뷰 상태 업데이트 함수 호출
-  //       window.scrollTo(0, 0);
-  //     }
+  //     // setReviewState({
+  //     //   averageRating: data["avg"],
+  //     //   numberOfReviews: data["evaluationCount"],
+  //     //   review: [...reviewState.review, ...data.evaluationList],
+  //     // });
+  //     // // console.log("Fire");
+  //     // setIsLoading(false);
+  //     fetchNextPage();
   //   }
-  // }, [data, reviewState.isReview, reviewState.deleteReview]);
-
-  
-
-  
+  // }, [inView, fetchNextPage, reviewState.endPage]);
 
   //스크롤을 내리면 기존 있었던 리뷰에 추가된 리뷰를 업데이트
-  useEffect(() => {
-    if (reviewState.endPage === true || !inView) {
-      return;
-    }
+  // useLayoutEffect(() => {
+  //   // console.log(error);
+  //   if (reviewState.endPage === true || !inView) {
+  //     return; // 다음 페이지 데이터가 없거나, inView가 false일 경우 실행하지 않습니다.
+  //   }
 
-    if (data) {
-      if (data.pages.length !== reviewState.len) {
-        setReviewState({
-          averageRating: data.pages[data.pages.length - 1].avg,
-          numberOfReviews: data.pages[data.pages.length - 1].evaluationCount,
-          review: [
-            ...reviewState.review,
-            ...data.pages[data.pages.length - 1].evaluationList,
-          ],
-        });
-      }
+  //   if (data) {
+  //     console.log("밑으로 내리는 데이터");
+  //     console.log(data);
+  //     // 예를 들어, data.pages를 순회하면서 원하는 작업을 수행할 수 있습니다.
+  //     data.pages.forEach((reviews) => {
+  //       // console.log(reviews);
+  //       setReviewState((prevState) => ({
+  //         ...prevState,
+  //         averageRating: reviews.avg,
+  //         numberOfReviews: reviews.evaluationCount,
+  //         review: [...prevState.review, ...reviews.evaluationList],
+  //       }));
+  //     });
+  //     setReviewState((prevState) => ({
+  //       ...prevState,
+  //       isFirst: false,
+  //     }));
+  //     fetchNextPage();
+  //   }
+  // }, [data, inView, reviewState.endPage, reviewState.isReview]);
 
-      console.log(hasNextPage)
-      fetchNextPage();
-    }
+  useLayoutEffect(() => {
+    if (reviewState.endPage || !inView || !data) return;
+
+    const lastPage = data.pages[data.pages.length - 1];
+    const newReviews = lastPage.evaluationList;
+
+    setReviewState((prevState) => ({
+      ...prevState,
+      averageRating: lastPage.avg,
+      numberOfReviews: lastPage.evaluationCount,
+      review: [...prevState.review, ...newReviews],
+    }));
+
+    fetchNextPage();
   }, [data, inView, reviewState.endPage]);
 
   // 맨 처음 랜더링 됐을때 초기 데이터 입력
-  useEffect(() => {
-    if (reviewState.isFirst === false) {
-      return;
-    }
+  // useEffect(() => {
+  //   // window.scrollTo(0, 0);
 
-    if (data) {
-      data.pages.map((reviews) => {
-        setReviewState({
-          averageRating: reviews.avg,
-          numberOfReviews: reviews.evaluationCount,
-          review: reviews.evaluationList,
-          len: data.pages.length,
-          isFirst: false,
-        });
-      });
+  //   console.log(reviewState);
+  //   if (reviewState.isFirst === false) {
+  //     return;
+  //   }
+
+  //   if (data) {
+  //     // 예를 들어, data.pages를 순회하면서 원하는 작업을 수행할 수 있습니다.
+  //     data.pages.map((reviews) => {
+  //       setReviewState({
+  //         averageRating: reviews.avg,
+  //         numberOfReviews: reviews.evaluationCount,
+  //         review: [...reviewState.review, ...reviews.evaluationList],
+  //       });
+
+  //       console.log("초기데이터");
+  //     });
+  //     setReviewState({ isFirst: false });
+
+  //   }
+  // }, [data, reviewState.isFirst]);
+
+  useEffect(() => {
+    if (reviewState.isFirst && data) {
+      const initialReviews = data.pages[0].evaluationList;
+      setReviewState((prevState) => ({
+        ...prevState,
+        averageRating: data.pages[0].avg,
+        numberOfReviews: data.pages[0].evaluationCount,
+        review: initialReviews,
+        isFirst: false,
+      }));
     }
   }, [data, reviewState.isFirst]);
 
-  useEffect(() => {
-    if ("scrollRestoration" in history) {
-      history.scrollRestoration = "manual";
-    }
+  //등록, 삭제 됐을 시 로직
+  // useLayoutEffect(() => {
+  //   queryClient.invalidateQueries(["infinity"]);
 
-    // 스크롤을 맨 위로 올립니다
-    window.scrollTo(0, 0);
+  //   if (data) {
+  //     // data가 존재하고, isReview 또는 deleteReview 상태가 변경될 때 실행됩니다.
 
-    // React Query 캐시를 초기화합니다
-    queryClient.removeQueries(["infinity"]);
+  //     // 리뷰 상태를 업데이트하는 함수
 
-    // 컴포넌트의 상태를 초기화합니다
-    reset();
+  //     console.log("변경 데이터");
+  //     const updateReviewState = () => {
+  //       // 이전 상태를 기반으로 새로운 상태를 업데이트하는 함수형 업데이트 사용
+  //       setReviewState({
+  //         averageRating: "0.0",
+  //         numberOfReviews: 0,
+  //         review: [],
+  //       });
 
-    // isLoading 상태를 true로 설정하여 로딩 스피너를 표시합니다
-    setIsLoading(true);
+  //       // data의 각 페이지를 순회하면서 리뷰 상태를 업데이트
+  //       data.pages.forEach((reviews) => {
+  //         // console.log("리뷰 확인");
+  //         // console.log(reviews);
+  //         setReviewState({
+  //           averageRating: reviews.avg,
+  //           numberOfReviews: reviews.evaluationCount,
+  //           review: reviews.evaluationList,
+  //           isReview: false,
+  //           deleteReview: false,
+  //           isFirst: true,
+  //         });
+  //       });
+  //     };
 
-    // 필요한 경우 다른 상태들도 초기화합니다
-    setIsModalOpen(false);
-    setIsChangeModalOpen(false);
+  //     updateReviewState(); // 리뷰 상태 업데이트 함수 호출
+  //     window.scrollTo(0, 0);
+  //   }
+  // }, [data, reviewState.isReview, reviewState.deleteReview]);
 
-    // 컴포넌트가 언마운트될 때 실행될 클린업 함수
-    return () => {
-      // 필요한 경우 여기에 추가적인 클린업 로직을 작성할 수 있습니다
-      if ("scrollRestoration" in history) {
-        history.scrollRestoration = "auto";
+  useLayoutEffect(() => {
+    if (reviewState.isReview || reviewState.deleteReview) {
+      queryClient.invalidateQueries(["infinity"]);
+
+      if (data) {
+        const firstPage = data.pages[0];
+        setReviewState({
+          averageRating: firstPage.avg,
+          numberOfReviews: firstPage.evaluationCount,
+          review: firstPage.evaluationList,
+          isReview: false,
+          deleteReview: false,
+          isFirst: false,
+        });
       }
-    };
-  }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때만 실행되도록 합니다
+      window.scrollTo(0, 0);
+    }
+  }, [data, reviewState.isReview, reviewState.deleteReview]);
 
   return (
     <div className="bg-black">
@@ -433,7 +474,9 @@ function Detail() {
           <ul>
             <h3 className="text-white font-semibold mt-11">최신순</h3>
 
-            {reviewState.review.length > 0 ? (
+            {isLoading ? (
+              <Spinner />
+            ) : reviewState.review.length > 0 ? (
               reviewState.review.map((item, index) => (
                 <li className="mt-11" key={index}>
                   <Star starRating={item.starRating}></Star>
@@ -459,4 +502,4 @@ function Detail() {
   );
 }
 
-export default Detail;
+export default DTC;

@@ -10,7 +10,7 @@ import useReviews from "@/store/useReviews";
 function DeleteReview({ isOpen, onClose }) {
   const { content } = useContents();
   const { profileName } = useProfile();
-  const { deleteReview, setDeleteReview } = useReviews();
+  const { reviewState, setReviewState } = useReviews();
 
   const handleDelete = async () => {
     try {
@@ -26,16 +26,13 @@ function DeleteReview({ isOpen, onClose }) {
 
       const response = await deleteData(url, headers);
 
-      if ("scrollRestoration" in history) {
-        history.scrollRestoration = "manual";
-      }
       window.scrollTo(0, 0);
 
       toast.success(`리뷰가 삭제되었습니다`, {
         duration: 2000,
       });
 
-      setDeleteReview(true);
+      setReviewState({ deleteReview: true, isReview: false });
     } catch (error) {
       console.log(error);
       console.log("에러출력");

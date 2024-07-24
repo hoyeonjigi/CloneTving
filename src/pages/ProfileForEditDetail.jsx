@@ -69,7 +69,7 @@ function ProfileForEditDetail() {
 	const handleChange = async (e) => {
 		e.preventDefault();
 		try {
-			const url = `https://hoyeonjigi.site/profile`;
+			const url = `${import.meta.env.VITE_API_URL}/profiles`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
 			//기존 이름과 변경한 이름이 동일한 경우
@@ -92,7 +92,7 @@ function ProfileForEditDetail() {
 			}
 			const headers = {
 				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
+				// "Access-Control-Allow-Origin": "*",
 				Authorization: `${type} ${token}`,
 			};
 
@@ -109,7 +109,7 @@ function ProfileForEditDetail() {
 	const handleDelete = async (e) => {
 		e.preventDefault();
 		try {
-			const testUrl = `https://hoyeonjigi.site/profile/${profileName}`;
+			const testUrl = `${import.meta.env.VITE_API_URL}/profiles/${profileName}`;
 			const type = Cookies.get("grantType");
 			const token = Cookies.get("accessToken");
 
