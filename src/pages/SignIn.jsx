@@ -48,7 +48,6 @@ function SignIn() {
     try {
       const response = await postData(url, data, headers);
 
-      console.log(response);
 
       Cookies.set("accessToken", response.accessToken, {
         secure: true,

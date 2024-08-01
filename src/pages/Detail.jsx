@@ -60,70 +60,6 @@ function Detail() {
     setIsChangeModalOpen(false);
   };
 
-  const refresh = async () => {
-    try {
-      const reUrl = `https://hoyeonjigi.site/user/refresh`;
-
-      const userId = Cookies.get("userId");
-      const isAutoLogin = Cookies.get("autoLogin");
-
-      const headers = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Token": `${Cookies.get("accessToken")}`,
-        "Refresh-Token": `${Cookies.get("refreshToken")}`,
-      };
-
-      const body = {};
-
-      const response = await postData(reUrl, body, headers);
-
-      Cookies.set("accessToken", response.accessToken, {
-        secure: true,
-        sameSite: "strict",
-      });
-      Cookies.set("refreshToken", response.refreshToken, {
-        secure: true,
-        sameSite: "strict",
-      });
-      Cookies.set("grantType", response.grantType, {
-        secure: true,
-        sameSite: "strict",
-      });
-      //자동 로그인 시 만료 시간 재설정
-      if (isAutoLogin) {
-        Cookies.set("autoLogin", true, {
-          secure: true,
-          sameSite: "strict",
-          expires: 7,
-        });
-        Cookies.set("accessToken", response.accessToken, {
-          secure: true,
-          sameSite: "strict",
-          expires: 7,
-        });
-        Cookies.set("refreshToken", response.refreshToken, {
-          secure: true,
-          sameSite: "strict",
-          expires: 7,
-        });
-        Cookies.set("grantType", response.grantType, {
-          secure: true,
-          sameSite: "strict",
-          expires: 7,
-        });
-        Cookies.set("userId", userId, {
-          secure: true,
-          sameSite: "strict",
-          expires: 7,
-        });
-      }
-    } catch (error) {
-      //refreshToken 만료 시 onBoarding으로 이동
-      navigate("/");
-    }
-  };
-
   useLayoutEffect(() => {
     const contentData = async () => {
       try {
@@ -136,21 +72,22 @@ function Detail() {
         };
 
         const str = content.genreIds;
-        const genreIds = str.split(",");
 
         // 각 genreId에 대한 URL을 생성하고, 각 URL에 대해 getData 함수를 호출하는 프로미스 배열을 생성합니다.
-        const promises = genreIds.map((genreId) => {
-          const url = `https://hoyeonjigi.site/genre/${genreId}`;
+        const promises = str.map((genreId) => {
+          const url = `${import.meta.env.VITE_API_URL}/genre/${genreId}`;
+
           return getData(url, headers); // getData 함수가 각 URL에 대해 요청을 수행하고, 프로미스를 반환한다고 가정합니다.
         });
 
-        // Promise.all을 사용하여 모든 프로미스가 완료되길 기다립니다.
+        // // Promise.all을 사용하여 모든 프로미스가 완료되길 기다립니다.
         const results = await Promise.all(promises);
+
         setGenre(results);
       } catch (error) {
         console.log(error);
         console.log("장르에러");
-        refresh();
+        // refresh();
       }
     };
 
@@ -173,10 +110,24 @@ function Detail() {
         Authorization: `${type} ${token}`,
       };
 
-      // API URL 구성, pageParam을 사용하여 현재 페이지 지정
-      const url = `https://hoyeonjigi.site/evaluation/${content.contentId}?page=${pageParam}`;
 
-      const response = await getData(url, headers);
+      
+      const data = {
+        contentId: content.contentId,
+        sortType: "LATEST",
+      };
+      // API URL 구성, pageParam을 사용하여 현재 페이지 지정
+
+      console.log(pageParam)
+      const url = `${
+        import.meta.env.VITE_API_URL
+      }/evaluation/retrieve?page=0&size=5&sort=string&contentId=${
+        content.contentId
+      }&sortType=LATEST`;
+
+      const response = await postData(url, data, headers);
+
+      console.log(response);
 
       setIsLoading(false);
 
@@ -209,7 +160,6 @@ function Detail() {
       // if (!lastPage) {
       //   return undefined; // 빈 페이지를 명시적으로 처리
       // }
-      console.log(lastPage)
 
       return allPages.length;
     },
@@ -252,32 +202,28 @@ function Detail() {
   //   }
   // }, [data, reviewState.isReview, reviewState.deleteReview]);
 
-  
-
-  
-
   //스크롤을 내리면 기존 있었던 리뷰에 추가된 리뷰를 업데이트
-  useEffect(() => {
-    if (reviewState.endPage === true || !inView) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (reviewState.endPage === true || !inView) {
+  //     return;
+  //   }
 
-    if (data) {
-      if (data.pages.length !== reviewState.len) {
-        setReviewState({
-          averageRating: data.pages[data.pages.length - 1].avg,
-          numberOfReviews: data.pages[data.pages.length - 1].evaluationCount,
-          review: [
-            ...reviewState.review,
-            ...data.pages[data.pages.length - 1].evaluationList,
-          ],
-        });
-      }
+  //   if (data) {
+  //     if (data.pages.length !== reviewState.len) {
+  //       setReviewState({
+  //         averageRating: data.pages[data.pages.length - 1].avg,
+  //         numberOfReviews: data.pages[data.pages.length - 1].evaluationCount,
+  //         review: [
+  //           ...reviewState.review,
+  //           ...data.pages[data.pages.length - 1].evaluationList,
+  //         ],
+  //       });
+  //     }
 
-      console.log(hasNextPage)
-      fetchNextPage();
-    }
-  }, [data, inView, reviewState.endPage]);
+  //     console.log(hasNextPage);
+  //     fetchNextPage();
+  //   }
+  // }, [data, inView, reviewState.endPage]);
 
   // 맨 처음 랜더링 됐을때 초기 데이터 입력
   useEffect(() => {
@@ -285,48 +231,50 @@ function Detail() {
       return;
     }
 
-    if (data) {
-      data.pages.map((reviews) => {
-        setReviewState({
-          averageRating: reviews.avg,
-          numberOfReviews: reviews.evaluationCount,
-          review: reviews.evaluationList,
-          len: data.pages.length,
-          isFirst: false,
-        });
-      });
-    }
+    // console.log(data)
+
+    // if (data) {
+    //   data.pages.map((reviews) => {
+    //     setReviewState({
+    //       averageRating: reviews.avg,
+    //       numberOfReviews: reviews.evaluationCount,
+    //       review: reviews.evaluationList,
+    //       len: data.pages.length,
+    //       isFirst: false,
+    //     });
+    //   });
+    // }
   }, [data, reviewState.isFirst]);
 
-  useEffect(() => {
-    if ("scrollRestoration" in history) {
-      history.scrollRestoration = "manual";
-    }
+  // useEffect(() => {
+  //   if ("scrollRestoration" in history) {
+  //     history.scrollRestoration = "manual";
+  //   }
 
-    // 스크롤을 맨 위로 올립니다
-    window.scrollTo(0, 0);
+  //   // 스크롤을 맨 위로 올립니다
+  //   window.scrollTo(0, 0);
 
-    // React Query 캐시를 초기화합니다
-    queryClient.removeQueries(["infinity"]);
+  //   // React Query 캐시를 초기화합니다
+  //   queryClient.removeQueries(["infinity"]);
 
-    // 컴포넌트의 상태를 초기화합니다
-    reset();
+  //   // 컴포넌트의 상태를 초기화합니다
+  //   reset();
 
-    // isLoading 상태를 true로 설정하여 로딩 스피너를 표시합니다
-    setIsLoading(true);
+  //   // isLoading 상태를 true로 설정하여 로딩 스피너를 표시합니다
+  //   setIsLoading(true);
 
-    // 필요한 경우 다른 상태들도 초기화합니다
-    setIsModalOpen(false);
-    setIsChangeModalOpen(false);
+  //   // 필요한 경우 다른 상태들도 초기화합니다
+  //   setIsModalOpen(false);
+  //   setIsChangeModalOpen(false);
 
-    // 컴포넌트가 언마운트될 때 실행될 클린업 함수
-    return () => {
-      // 필요한 경우 여기에 추가적인 클린업 로직을 작성할 수 있습니다
-      if ("scrollRestoration" in history) {
-        history.scrollRestoration = "auto";
-      }
-    };
-  }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때만 실행되도록 합니다
+  //   // 컴포넌트가 언마운트될 때 실행될 클린업 함수
+  //   return () => {
+  //     // 필요한 경우 여기에 추가적인 클린업 로직을 작성할 수 있습니다
+  //     if ("scrollRestoration" in history) {
+  //       history.scrollRestoration = "auto";
+  //     }
+  //   };
+  // }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때만 실행되도록 합니다
 
   return (
     <div className="bg-black">
@@ -346,7 +294,7 @@ function Detail() {
                   key={index}
                   className="text-gray_06 inline-block border border-gray_05 rounded font-semibold px-2"
                 >
-                  {item}
+                  {item.genreName}
                 </li>
               ))}
             </ul>

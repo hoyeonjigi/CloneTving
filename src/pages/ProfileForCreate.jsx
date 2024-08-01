@@ -59,6 +59,7 @@ function ProfileForCreate() {
     profileData,
     selectedImageName,
     selectedImageUrl,
+    selectedImageId,
     isImageSelected,
     setProfileData,
     setSelectedImageName,
@@ -174,8 +175,13 @@ function ProfileForCreate() {
       const url = `${import.meta.env.VITE_API_URL}/profiles/register`; // 변경해야 함
       const type = Cookies.get("grantType");
       const token = Cookies.get("accessToken");
-      const idTest = 30;
-      const data = { profileName, idTest, child };
+
+
+      const data = {
+        profileName: profileName,
+        profileImgId: selectedImageId,
+        child: child,
+      };
 
       const headers = {
         "Content-Type": "application/json",
@@ -187,7 +193,7 @@ function ProfileForCreate() {
         try {
           const regex = /^[가-힣a-zA-Z0-9]{2,10}$/;
           if (regex.test(profileName)) {
-            console.log(data);
+          
             const createResult = await postData(url, data, headers);
 
             // console.log(`프로필 추가 완료`);

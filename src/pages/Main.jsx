@@ -31,6 +31,8 @@ function Main() {
   const [romanceFilm, setRomanceFilm] = useState([]);
   const [popularContent, setPopularContent] = useState([]);
 
+  const baseURL = `${import.meta.env.VITE_API_URL}`;
+
   //swiper navigation 버튼 제어 상태
   // const [isBeginning, setIsBeginning] = useState(true);
   // const [isEnd, setIsEnd] = useState(false);
@@ -38,10 +40,6 @@ function Main() {
 
   // const { setContent } = useContent();
   const { setContent, isRefresh, setIsRefresh } = useContents();
-  // const { reset, isReview, setIsReview } = useReviews();
-
-  // const { accessToken, reToken, grantType, setAccessToken, setReToken } =
-  //   useLogin();
 
   const queryClient = useQueryClient();
   const { reset } = useReviews(); // useReviews 훅에서 reset 함수 가져오기
@@ -49,92 +47,33 @@ function Main() {
   const isAutoLogin = Cookies.get("autoLogin");
   const userId = Cookies.get("userId");
 
-  const refresh = async () => {
-    const reUrl = `https://hoyeonjigi.site/user/refresh`;
+  // 조회수 로직
 
-    const headers = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Token": `${Cookies.get("accessToken")}`,
-      "Refresh-Token": `${Cookies.get("refreshToken")}`,
-    };
+  // const handleViewCount = async (contentId) => {
+  //   const already = Cookies.get(`alreadyViewCookie${contentId}`);
+  //   if (already) {
+  //     console.log("이미있음");
+  //     return;
+  //   } else {
+  //     const url = `https://hoyeonjigi.site/content/${contentId}/view/count`;
+  //     const type = Cookies.get("grantType");
+  //     const token = Cookies.get("accessToken");
 
-    const body = {};
+  //     const headers = {
+  //       "Content-Type": "application/json",
+  //       Authorization: `${type} ${token}`,
+  //     };
 
-    const response = await postData(reUrl, body, headers);
+  //     const body = {};
+  //     const response = await patchData(url, body, headers);
 
-    // console.log(response);
-    Cookies.set("accessToken", response.accessToken, {
-      secure: true,
-      sameSite: "strict",
-    });
-    Cookies.set("refreshToken", response.refreshToken, {
-      secure: true,
-      sameSite: "strict",
-    });
-    Cookies.set("grantType", response.grantType, {
-      secure: true,
-      sameSite: "strict",
-    });
-
-    //자동 로그인 시 만료 시간 재설정
-    if (isAutoLogin) {
-      Cookies.set("autoLogin", true, {
-        secure: true,
-        sameSite: "strict",
-        expires: 7,
-      });
-      Cookies.set("accessToken", response.accessToken, {
-        secure: true,
-        sameSite: "strict",
-        expires: 7,
-      });
-      Cookies.set("refreshToken", response.refreshToken, {
-        secure: true,
-        sameSite: "strict",
-        expires: 7,
-      });
-      Cookies.set("grantType", response.grantType, {
-        secure: true,
-        sameSite: "strict",
-        expires: 7,
-      });
-      Cookies.set("userId", userId, {
-        secure: true,
-        sameSite: "strict",
-        expires: 7,
-      });
-    }
-
-    setIsRefresh(true);
-
-    localStorage.removeItem("isDataLoaded");
-  };
-  const handleViewCount = async (contentId) => {
-    const already = Cookies.get(`alreadyViewCookie${contentId}`);
-    if (already) {
-      console.log("이미있음");
-      return;
-    } else {
-      const url = `https://hoyeonjigi.site/content/${contentId}/view/count`;
-      const type = Cookies.get("grantType");
-      const token = Cookies.get("accessToken");
-
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `${type} ${token}`,
-      };
-
-      const body = {};
-      const response = await patchData(url, body, headers);
-
-      Cookies.set(`alreadyViewCookie${contentId}`, `${contentId}`, {
-        expires: 1,
-        secure: true,
-        sameSite: "strict",
-      }); // 1일 후에 만료되는 쿠키
-    }
-  };
+  //     Cookies.set(`alreadyViewCookie${contentId}`, `${contentId}`, {
+  //       expires: 1,
+  //       secure: true,
+  //       sameSite: "strict",
+  //     }); // 1일 후에 만료되는 쿠키
+  //   }
+  // };
 
   useEffect(() => {
     setIsRefresh(false);
@@ -142,9 +81,9 @@ function Main() {
       try {
         const isDataLoaded = localStorage.getItem("isDataLoaded");
 
-        localStorage.removeItem("contents");
-        useReviews.persist.clearStorage();
-        localStorage.removeItem("reviews");
+        // localStorage.removeItem("contents");
+        // useReviews.persist.clearStorage();
+        // localStorage.removeItem("reviews");
         // setIsReview(false);
         // reset();
 
@@ -156,25 +95,27 @@ function Main() {
 
         const headers = {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          // "Access-Control-Allow-Origin": "*",
           Authorization: `${type} ${token}`,
         };
 
         //최신 영화
-        const movieQuery = "영화";
-        const encodedQueryMovie = encodeURIComponent(movieQuery);
-        const movieUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/lastest20`;
+        // const movieQuery = "영화";
+        // const encodedQueryMovie = encodeURIComponent(movieQuery);
+        const movieUrl = `${baseURL}/contents?type=movie&sort=latest&page=0`;
 
         const resultMovie = await getData(movieUrl, headers);
-        // console.log(resultMovie);
 
-        const latestFilmData = resultMovie.map((item) => ({
+        const latestFilmData = resultMovie.content.map((item) => ({
           contentId: item.contentId,
-          contentTitle: item.contentTitle,
-          contentOverview: item.contentOverview,
+          contentTitle: item.title.replace(/"/g, ""),
+          contentOverview: item.overview.replace(/"/g, ""),
           genreIds: item.genreIds,
-          src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
-          alt: item.contentTitle,
+          src: `https://image.tmdb.org/t/p/original/${item.poster.replace(
+            /"/g,
+            ""
+          )}`,
+          alt: item.title.replace(/"/g, ""),
         }));
 
         localStorage.setItem("latestFilm", JSON.stringify(latestFilmData));
@@ -182,81 +123,89 @@ function Main() {
 
         // console.log(latestFilmData);
 
-        //최신 드라마
-        const dramaQuery = "드라마";
-        const encodedQueryDrama = encodeURIComponent(dramaQuery);
-        const dramaUrl = `https://hoyeonjigi.site/content/${encodedQueryDrama}/lastest20`;
+        // //최신 드라마
+        // const dramaQuery = "드라마";
+        // const encodedQueryDrama = encodeURIComponent(dramaQuery);
+        const dramaUrl = `${baseURL}/contents?type=drama&sort=latest&page=0`;
 
         const resultDrama = await getData(dramaUrl, headers);
 
-        const latestDramaData = resultDrama.map((item) => ({
+        const latestDramaData = resultDrama.content.map((item) => ({
           contentId: item.contentId,
-          contentTitle: item.contentTitle,
-          contentOverview: item.contentOverview,
+          contentTitle: item.title.replace(/"/g, ""),
+          contentOverview: item.overview.replace(/"/g, ""),
           genreIds: item.genreIds,
-
-          src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
-          alt: item.contentTitle,
+          src: `https://image.tmdb.org/t/p/original/${item.poster.replace(
+            /"/g,
+            ""
+          )}`,
+          alt: item.title.replace(/"/g, ""),
         }));
         localStorage.setItem("latestDrama", JSON.stringify(latestDramaData));
         setLatestDrama(latestDramaData);
 
-        //코미디 드라마
+        // //코미디 드라마
 
         const comedyQuery = "코미디";
         const encodedQueryComedy = encodeURIComponent(comedyQuery);
-        const comedyUrl = `https://hoyeonjigi.site/content/${encodedQueryDrama}/${encodedQueryComedy}`;
+        const comedyUrl = `${baseURL}/contents?type=drama&page=0&genreName=${encodedQueryComedy}`;
 
         const resultComedy = await getData(comedyUrl, headers);
 
-        const comedyDramaData = resultComedy.map((item) => ({
+        const comedyDramaData = resultComedy.content.map((item) => ({
           contentId: item.contentId,
-          contentTitle: item.contentTitle,
-          contentOverview: item.contentOverview,
+          contentTitle: item.title.replace(/"/g, ""),
+          contentOverview: item.overview.replace(/"/g, ""),
           genreIds: item.genreIds,
-          src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
-          alt: item.contentTitle,
+          src: `https://image.tmdb.org/t/p/original/${item.poster.replace(
+            /"/g,
+            ""
+          )}`,
+          alt: item.title.replace(/"/g, ""),
         }));
         localStorage.setItem("comedyDrama", JSON.stringify(comedyDramaData));
         setComedyDrama(comedyDramaData);
 
-        //로맨스 영화
+        // //로맨스 영화
 
         const romanceQuery = "로맨스";
         const encodedQueryRomance = encodeURIComponent(romanceQuery);
-        const romanceUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/${encodedQueryRomance}`;
+        const romanceUrl = `${baseURL}/contents?type=movie&page=0&genreName=${encodedQueryRomance}`;
 
         const resultRomance = await getData(romanceUrl, headers);
 
-        const romanceFilmData = resultRomance.map((item) => ({
+        const romanceFilmData = resultRomance.content.map((item) => ({
           contentId: item.contentId,
-          contentTitle: item.contentTitle,
-          contentOverview: item.contentOverview,
+          contentTitle: item.title.replace(/"/g, ""),
+          contentOverview: item.overview.replace(/"/g, ""),
           genreIds: item.genreIds,
-          src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
-          alt: item.contentTitle,
+          src: `https://image.tmdb.org/t/p/original/${item.poster.replace(
+            /"/g,
+            ""
+          )}`,
+          alt: item.title.replace(/"/g, ""),
         }));
 
         localStorage.setItem("romanceFilm", JSON.stringify(romanceFilmData));
         setRomanceFilm(romanceFilmData);
 
-        //인기 컨텐츠
+        // //인기 컨텐츠
 
-        const popularUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/popular`;
+        // const popularUrl = `https://hoyeonjigi.site/content/${encodedQueryMovie}/popular`;
 
-        const resultPopular = await getData(popularUrl, headers);
+        // const resultPopular = await getData(popularUrl, headers);
 
-        const popularData = resultPopular.map((item) => ({
-          contentId: item.contentId,
-          contentTitle: item.contentTitle,
-          contentOverview: item.contentOverview,
-          genreIds: item.genreIds,
-          src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
-          alt: item.contentTitle,
-        }));
+        // const popularData = resultPopular.map((item) => ({
+        //   contentId: item.contentId,
+        //   contentTitle: item.contentTitle,
+        //   contentOverview: item.contentOverview,
+        //   genreIds: item.genreIds,
+        //   src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
+        //   alt: item.contentTitle,
+        // }));
 
-        localStorage.setItem("popularContent", JSON.stringify(popularData));
-        setPopularContent(popularData);
+        // localStorage.setItem("popularContent", JSON.stringify(popularData));
+        // setPopularContent(popularData);
 
         localStorage.setItem("isDataLoaded", "true");
       } catch (error) {
@@ -264,7 +213,6 @@ function Main() {
         console.log("에러출력");
         localStorage.removeItem("isDataLoaded");
         setIsRefresh(true);
-        refresh();
       }
     };
 
@@ -295,11 +243,11 @@ function Main() {
       setRomanceFilm(JSON.parse(storedRomanceFilm));
     }
 
-    const storedPopularContent = localStorage.getItem("popularContent");
-    // console.log(storedReviews);
-    if (storedPopularContent) {
-      setPopularContent(JSON.parse(storedPopularContent));
-    }
+    // const storedPopularContent = localStorage.getItem("popularContent");
+    // // console.log(storedReviews);
+    // if (storedPopularContent) {
+    //   setPopularContent(JSON.parse(storedPopularContent));
+    // }
   }, []);
 
   useEffect(() => {
@@ -492,7 +440,7 @@ function Main() {
                     }}
                     onClick={() => {
                       setContent(film);
-                      handleViewCount(film.contentId);
+                      // handleViewCount(film.contentId);
                     }}
                   >
                     <motion.img
@@ -541,7 +489,7 @@ function Main() {
                       }}
                       onClick={() => {
                         setContent(drama);
-                        handleViewCount(drama.contentId);
+                        // handleViewCount(drama.contentId);
                       }}
                     >
                       <motion.img
@@ -590,7 +538,7 @@ function Main() {
                       }}
                       onClick={() => {
                         setContent(drama);
-                        handleViewCount(drama.contentId);
+                        // handleViewCount(drama.contentId);
                       }}
                     >
                       <motion.img
@@ -639,7 +587,7 @@ function Main() {
                       }}
                       onClick={() => {
                         setContent(film);
-                        handleViewCount(film.contentId);
+                        // handleViewCount(film.contentId);
                       }}
                     >
                       <motion.img
@@ -688,7 +636,7 @@ function Main() {
                       }}
                       onClick={() => {
                         setContent(film);
-                        handleViewCount(film.contentId);
+                        // handleViewCount(film.contentId);
                       }}
                     >
                       <motion.img

@@ -523,69 +523,7 @@ function DetailCopy() {
     setIsChangeModalOpen(false);
   };
 
-  const refresh = async () => {
-    try {
-      const reUrl = `https://hoyeonjigi.site/user/refresh`;
-
-      const userId = Cookies.get("userId");
-      const isAutoLogin = Cookies.get("autoLogin");
-
-      const headers = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Token": `${Cookies.get("accessToken")}`,
-        "Refresh-Token": `${Cookies.get("refreshToken")}`,
-      };
-
-      const body = {};
-
-      const response = await postData(reUrl, body, headers);
-
-      Cookies.set("accessToken", response.accessToken, {
-        secure: true,
-        sameSite: "strict",
-      });
-      Cookies.set("refreshToken", response.refreshToken, {
-        secure: true,
-        sameSite: "strict",
-      });
-      Cookies.set("grantType", response.grantType, {
-        secure: true,
-        sameSite: "strict",
-      });
-      //자동 로그인 시 만료 시간 재설정
-      if (isAutoLogin) {
-        Cookies.set("autoLogin", true, {
-          secure: true,
-          sameSite: "strict",
-          expires: 7,
-        });
-        Cookies.set("accessToken", response.accessToken, {
-          secure: true,
-          sameSite: "strict",
-          expires: 7,
-        });
-        Cookies.set("refreshToken", response.refreshToken, {
-          secure: true,
-          sameSite: "strict",
-          expires: 7,
-        });
-        Cookies.set("grantType", response.grantType, {
-          secure: true,
-          sameSite: "strict",
-          expires: 7,
-        });
-        Cookies.set("userId", userId, {
-          secure: true,
-          sameSite: "strict",
-          expires: 7,
-        });
-      }
-    } catch (error) {
-      //refreshToken 만료 시 onBoarding으로 이동
-      navigate("/");
-    }
-  };
+  
 
   useEffect(() => {
     const contentData = async () => {
@@ -613,7 +551,7 @@ function DetailCopy() {
       } catch (error) {
         console.log(error);
         console.log("장르에러");
-        refresh();
+
       }
     };
 

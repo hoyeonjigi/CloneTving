@@ -27,6 +27,8 @@ function OnBoading() {
 		if (accessToken) {
 			try {
 				// refresh();
+
+				
 			} catch (error) {
 				//accessToken, refreshToken 만료 시 쿠키에서 제거
 				localStorage.removeItem("accessToken");
