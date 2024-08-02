@@ -82,7 +82,7 @@ function ProfileForEditDetail() {
 
       const headers = {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        // "Access-Control-Allow-Origin": "*",
         Authorization: `${type} ${token}`,
       };
 

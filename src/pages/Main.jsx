@@ -49,31 +49,33 @@ function Main() {
 
   // 조회수 로직
 
-  // const handleViewCount = async (contentId) => {
-  //   const already = Cookies.get(`alreadyViewCookie${contentId}`);
-  //   if (already) {
-  //     console.log("이미있음");
-  //     return;
-  //   } else {
-  //     const url = `https://hoyeonjigi.site/content/${contentId}/view/count`;
-  //     const type = Cookies.get("grantType");
-  //     const token = Cookies.get("accessToken");
+  const handleViewCount = async (contentId) => {
+    const already = Cookies.get(`alreadyViewCookie${contentId}`);
+    if (already) {
+      console.log("이미있음");
+      return;
+    } else {
+      const url = `${baseURL}/contents/${contentId}/view`;
+      const type = Cookies.get("grantType");
+      const token = Cookies.get("accessToken");
 
-  //     const headers = {
-  //       "Content-Type": "application/json",
-  //       Authorization: `${type} ${token}`,
-  //     };
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `${type} ${token}`,
+      };
 
-  //     const body = {};
-  //     const response = await patchData(url, body, headers);
+      const body = {};
+      const response = await postData(url, body, headers);
 
-  //     Cookies.set(`alreadyViewCookie${contentId}`, `${contentId}`, {
-  //       expires: 1,
-  //       secure: true,
-  //       sameSite: "strict",
-  //     }); // 1일 후에 만료되는 쿠키
-  //   }
-  // };
+      console.log(response);
+
+      Cookies.set(`alreadyViewCookie${contentId}`, `${contentId}`, {
+        expires: 1,
+        secure: true,
+        sameSite: "strict",
+      }); // 1일 후에 만료되는 쿠키
+    }
+  };
 
   useEffect(() => {
     setIsRefresh(false);
@@ -440,7 +442,7 @@ function Main() {
                     }}
                     onClick={() => {
                       setContent(film);
-                      // handleViewCount(film.contentId);
+                      handleViewCount(film.contentId);
                     }}
                   >
                     <motion.img
@@ -489,7 +491,7 @@ function Main() {
                       }}
                       onClick={() => {
                         setContent(drama);
-                        // handleViewCount(drama.contentId);
+                        handleViewCount(drama.contentId);
                       }}
                     >
                       <motion.img
@@ -538,7 +540,7 @@ function Main() {
                       }}
                       onClick={() => {
                         setContent(drama);
-                        // handleViewCount(drama.contentId);
+                        handleViewCount(drama.contentId);
                       }}
                     >
                       <motion.img
@@ -587,7 +589,7 @@ function Main() {
                       }}
                       onClick={() => {
                         setContent(film);
-                        // handleViewCount(film.contentId);
+                        handleViewCount(film.contentId);
                       }}
                     >
                       <motion.img
@@ -636,7 +638,7 @@ function Main() {
                       }}
                       onClick={() => {
                         setContent(film);
-                        // handleViewCount(film.contentId);
+                        handleViewCount(film.contentId);
                       }}
                     >
                       <motion.img

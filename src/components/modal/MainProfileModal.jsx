@@ -31,7 +31,9 @@ function MainProfileModal() {
       </div>
       <hr className="border border-gray_03 mb-4" />
       <ul className="text-[#a3a3a3] font-medium text-lg mb-4">
-        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">MY</li>
+        <Link to="/main/my">
+          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">MY</li>
+        </Link>
 
         <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
           <a href="/main">이용권</a>

@@ -30,9 +30,11 @@ function Profile() {
     profileName,
     userProfileUrl,
     child,
+    profileId,
     setProfileName,
     setUserProfileUrl,
     setChild,
+    setProfileId,
   } = useProfile();
   const isAutoLogin = Cookies.get("autoLogin");
   const userId = Cookies.get("userId");
@@ -52,7 +54,6 @@ function Profile() {
 
       const result = await getData(testUrl, headers);
 
-   
       setUserProfiles(
         result.map((item) => ({
           userProfileName: item.profileName,
@@ -99,7 +100,6 @@ function Profile() {
         updateProfileImages.filter((item) => item.profileImageId <= 9)
       );
 
-
       // console.log(result);
     } catch (error) {
       console.error(`Error in sending POST request: ${error}`);
@@ -114,10 +114,11 @@ function Profile() {
     navigate("/user/profile"); // 프로필 추가 버튼을 눌렀을 때 '/profilesForEdit'로 이동
   };
 
-  const handleSelectProfile = (name, url, isChild) => {
+  const handleSelectProfile = (name, url, isChild, profileId) => {
     setProfileName(name);
     setUserProfileUrl(url);
     setChild(isChild);
+    setProfileId(profileId);
   };
 
   useEffect(() => {
@@ -160,7 +161,8 @@ function Profile() {
                       handleSelectProfile(
                         user.userProfileName,
                         user.userProfileImageUrl,
-                        user.child
+                        user.child,
+                        user.userProfileId
                       )
                     }
                   >
@@ -177,7 +179,6 @@ function Profile() {
               </li>
             ))}
 
-           
             {userProfiles.length < 4 && (
               <li className="flex flex-col text-center gap-6 flex-grow relative">
                 <motion.button

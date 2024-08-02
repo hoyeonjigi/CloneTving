@@ -24,7 +24,7 @@ function ReviewModal({ isOpen, closeModal }) {
 
   const { setReviewState } = useReviews();
 
-  const { profileName } = useProfile();
+  const { profileId } = useProfile();
 
   // 별점을 설정하는 함수
   const handleSetRating = (newRating) => {
@@ -65,14 +65,14 @@ function ReviewModal({ isOpen, closeModal }) {
         .replace(/\./g, "");
 
       const data = {
-        profileName: profileName,
+        profileId: profileId,
         contentId: content.contentId,
-        starRating: rating,
+        rating: rating,
         review: review,
         // ratingDate: currentDate,
       };
 
-      const url = `https://hoyeonjigi.site/evaluation`;
+      const url = `${import.meta.env.VITE_API_URL}/evaluation/register`;
 
       const response = await postData(url, data, headers);
 
