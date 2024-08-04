@@ -51,13 +51,21 @@ function SignUp() {
 
   const url = `${import.meta.env.VITE_API_URL}/member/register`;
   const data = {
-    userId,
-    userPassword,
-    userEmail,
-    adultStatus,
-    privacyAgreement,
-    smsAgreement,
-    emailAgreement,
+    loginId: userId,
+    password: userPassword,
+    email: userEmail,
+    adultStatus: adultStatus,
+    privacyAgreement: privacyAgreement,
+    smsAgreement: smsAgreement,
+    emailAgreement: emailAgreement,
+
+    // userId,
+    // userPassword,
+    // userEmail,
+    // adultStatus,
+    // privacyAgreement,
+    // smsAgreement,
+    // emailAgreement,
   };
   const headers = {
     "Content-Type": "application/json",
@@ -75,7 +83,7 @@ function SignUp() {
       // console.log("회원가입 성공");
       navigate("/");
     } catch (error) {
-      console.log(error.response)
+      console.log(error.response);
     }
   };
 
@@ -201,8 +209,10 @@ function SignUp() {
       try {
         setUserId(query);
         // const url = `https://hoyeonjigi.site/user/exist/${query}`;
-        
-        const url = `${import.meta.env.VITE_API_URL}/member/duplication-check?loginId=${query}`;
+
+        const url = `${
+          import.meta.env.VITE_API_URL
+        }/member/duplication-check?loginId=${query}`;
         const headers = {
           "Content-Type": "application/json",
           // "Access-Control-Allow-Origin": "*",

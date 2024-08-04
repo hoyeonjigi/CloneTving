@@ -9,9 +9,11 @@ const reviewsStore = (set) => ({
     numberOfReviews: 0,
     page: 0, // 현재 페이지 번호
     isReview: false,
+    isModify: false,
     endPage: false,
     deleteReview: false,
     isFirst: true,
+    totalPages: 0,
     len: 0,
   },
   setReviewState: (newState) =>
@@ -30,9 +32,11 @@ const reviewsStore = (set) => ({
         numberOfReviews: 0,
         page: 0,
         isReview: false,
+        isModify: false,
         endPage: false,
         deleteReview: false,
         isFirst: true,
+        totalPages: 0,
         len: 0,
       },
     }),
