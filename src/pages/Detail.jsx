@@ -215,6 +215,7 @@ function Detail() {
     }
   }, [
     data,
+    isSearch,
     reviewState.isReview,
     reviewState.isModify,
     reviewState.deleteReview,
@@ -260,7 +261,7 @@ function Detail() {
       // console.log(hasNextPage);
       fetchNextPage();
     }
-  }, [data, inView, refetch]);
+  }, [data, inView, isSearch, refetch]);
 
   const avgRating = async () => {
     try {
@@ -311,7 +312,7 @@ function Detail() {
         });
       });
     }
-  }, [data, reviewState.isFirst]);
+  }, [data, reviewState.isFirst, isSearch]);
 
   useEffect(() => {
     window.history.scrollRestoration = "manual";

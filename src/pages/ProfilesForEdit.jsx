@@ -45,7 +45,6 @@ function ProfilesForEdit() {
 
       const result = await getData(testUrl, headers);
 
-      console.log(result);
 
       setUserProfiles(
         result.map((item) => ({
@@ -82,6 +81,7 @@ function ProfilesForEdit() {
 
     navigate("/user/profileForEdit");
   };
+
 
   useEffect(() => {
     // localStorage.removeItem("editProfile");

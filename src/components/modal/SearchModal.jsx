@@ -18,6 +18,8 @@ function SearchModal({ visible, onClose }) {
   const { setContent } = useContents();
   const { isSearch, setIsSearch } = useDetail();
 
+  const baseURL = `${import.meta.env.VITE_API_URL}`;
+
   // const handleItemClick = (item) => {
   //   setContent(item);
   // };
@@ -28,7 +30,7 @@ function SearchModal({ visible, onClose }) {
       console.log("이미있음");
       return;
     } else {
-      const url = `https://hoyeonjigi.site/content/${contentId}/view/count`;
+      const url = `${baseURL}/contents/${contentId}/view`;
       const type = Cookies.get("grantType");
       const token = Cookies.get("accessToken");
 
@@ -38,7 +40,7 @@ function SearchModal({ visible, onClose }) {
       };
 
       const body = {};
-      const response = await patchData(url, body, headers);
+      const response = await postData(url, body, headers);
 
       Cookies.set(`alreadyViewCookie${contentId}`, `${contentId}`, {
         expires: 1,
@@ -48,44 +50,19 @@ function SearchModal({ visible, onClose }) {
     }
   };
 
-  const refresh = async () => {
-    const reUrl = `https://hoyeonjigi.site/user/refresh`;
-
-    const headers = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Token": `${Cookies.get("accessToken")}`,
-      "Refresh-Token": `${Cookies.get("refreshToken")}`,
-    };
-
-    const body = {};
-
-    const response = await postData(reUrl, body, headers);
-
-    console.log(response);
-    Cookies.set("accessToken", response.accessToken, {
-      secure: true,
-      sameSite: "strict",
-    });
-    Cookies.set("refreshToken", response.refreshToken, {
-      secure: true,
-      sameSite: "strict",
-    });
-    Cookies.set("grantType", response.grantType, {
-      secure: true,
-      sameSite: "strict",
-    });
-  };
-
   const debouncedSearch = useRef(null);
 
   const handleSearch = useCallback(
     debounce(async (query) => {
       // handleSearch 함수 구현
       try {
-        const baseUrl = "https://hoyeonjigi.site/content/";
+        // const baseUrl = "https://hoyeonjigi.site/content/";
+
+        setIsSearch(false);
         const encodedQuery = encodeURIComponent(query);
-        const url = `${baseUrl}${encodedQuery}`;
+        // const url = `${baseUrl}${encodedQuery}`;
+
+        const url = `${baseURL}/contents?title=${encodedQuery}`;
 
         // console.log(url);
 
@@ -94,31 +71,28 @@ function SearchModal({ visible, onClose }) {
 
         const headers = {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          // "Access-Control-Allow-Origin": "*",
           Authorization: `${type} ${token}`,
         };
         const result = await getData(url, headers);
 
-        // setData(result);
-        // console.log(result);
-
         // result에 값이 있으면 그대로 저장하고, 없으면 빈 배열을 저장합니다.
         const searchData =
-          result.length > 0
-            ? result.map((item) => ({
+          result.content.length > 0
+            ? result.content.map((item) => ({
                 contentId: item.contentId,
-                contentTitle: item.contentTitle,
-                contentOverview: item.contentOverview,
+                contentTitle: item.title.replace(/"/g, ""),
+                contentOverview: item.overview.replace(/"/g, ""),
                 genreIds: item.genreIds,
-                src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
-                alt: item.contentTitle,
+                src: `https://image.tmdb.org/t/p/original/${item.poster.replace(
+                  /"/g,
+                  ""
+                )}`,
+                alt: item.title.replace(/"/g, ""),
               }))
             : [];
 
         setSearchContent(searchData);
-        // console.log(data);
-        // console.log(searchContent);
-        // console.log(searchContent);
       } catch (error) {
         console.error(`Error in sending get request: ${error}`);
         // refresh();

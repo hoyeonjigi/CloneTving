@@ -5,10 +5,8 @@ import LogoutButton from "./LogoutModal";
 import useProfile from "@/store/useProfile";
 
 function MainProfileModal() {
+  const { myProfileName, myProfileUrl } = useProfile();
 
-
-  const {profileName,userProfileUrl} = useProfile()
-  
   return (
     <motion.div
       className="absolute w-72 bg-[#212121] border border-[#4d4d4d] rounded-sm right-0 top-10 z-[100]"
@@ -18,10 +16,10 @@ function MainProfileModal() {
     >
       <div className="flex flex-row p-5">
         <div>
-          <img src={userProfileUrl} alt="유저 프로필 이미지" className="w-12" />
+          <img src={myProfileUrl} alt="유저 프로필 이미지" className="w-12" />
         </div>
         <div className="text-[#a3a3a3] ml-4 font-medium">
-          <p className="text-white text-lg">{profileName}</p>
+          <p className="text-white text-lg">{myProfileName}</p>
           <button>
             <Link to="/user/profiles">
               <span className="hover:text-[#d9d9d9] text-sm">프로필 전환</span>

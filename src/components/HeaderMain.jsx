@@ -23,7 +23,7 @@ function HeaderMain() {
 
   const [isVisible, setIsVisible] = useState(false);
 
-  const { userProfileUrl } = useProfile();
+  const { myProfileUrl } = useProfile();
 
   const handleSearchClick = () => {
     // 추가된 코드
@@ -81,7 +81,7 @@ function HeaderMain() {
             onMouseLeave={() => setIsVisible(false)}
           >
             <button className="w-8">
-              <img src={userProfileUrl} alt="" className="w-8" />
+              <img src={myProfileUrl} alt="" className="w-8" />
             </button>
             {isVisible && <MainProfileModal />}
           </div>

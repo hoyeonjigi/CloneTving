@@ -24,18 +24,13 @@ function Profile() {
     setBaseProfileImages,
     setYumiProfileImages,
     setIsImageSelected,
+    setSelectedImageId,
+    setSelectedImageName,
+    setSelectedImageUrl,
   } = useCreate();
   // const { userId } = useLogin();
-  const {
-    profileName,
-    userProfileUrl,
-    child,
-    profileId,
-    setProfileName,
-    setUserProfileUrl,
-    setChild,
-    setProfileId,
-  } = useProfile();
+  const { setMyProfileName, setMyProfileUrl, setMyChild, setMyProfileId } =
+    useProfile();
   const isAutoLogin = Cookies.get("autoLogin");
   const userId = Cookies.get("userId");
 
@@ -93,6 +88,11 @@ function Profile() {
         alt: `프로필 이미지`,
       }));
 
+      // console.log("테스트")
+      // console.log(updateProfileImages)
+
+      setProfileData(updateProfileImages);
+
       setBaseProfileImages(
         updateProfileImages.filter((item) => item.profileImageId > 9)
       );
@@ -115,10 +115,10 @@ function Profile() {
   };
 
   const handleSelectProfile = (name, url, isChild, profileId) => {
-    setProfileName(name);
-    setUserProfileUrl(url);
-    setChild(isChild);
-    setProfileId(profileId);
+    setMyProfileName(name);
+    setMyProfileUrl(url);
+    setMyChild(isChild);
+    setMyProfileId(profileId);
   };
 
   useEffect(() => {

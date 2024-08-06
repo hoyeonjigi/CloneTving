@@ -67,7 +67,6 @@ function Main() {
       const body = {};
       const response = await postData(url, body, headers);
 
-      console.log(response);
 
       Cookies.set(`alreadyViewCookie${contentId}`, `${contentId}`, {
         expires: 1,
@@ -454,7 +453,7 @@ function Main() {
                         // stiffness: 300,
                         duration: 0.3,
                       }}
-                      className="mt-4 rounded-md"
+                      className="mt-4 rounded-md h-[280px]"
                     />
                   </Link>
                 </SwiperSlide>
@@ -503,7 +502,7 @@ function Main() {
                           stiffness: 300,
                           duration: 0.3,
                         }}
-                        className="mt-4 rounded-md"
+                        className="mt-4 rounded-md h-[280px]"
                       />
                     </Link>
                   </SwiperSlide>
@@ -552,7 +551,7 @@ function Main() {
                           stiffness: 300,
                           duration: 0.3,
                         }}
-                        className="mt-4 rounded-md"
+                        className="mt-4 rounded-md h-[280px]"
                       />
                     </Link>
                   </SwiperSlide>
@@ -601,7 +600,7 @@ function Main() {
                           stiffness: 300,
                           duration: 0.3,
                         }}
-                        className="mt-4 rounded-md"
+                        className="mt-4 rounded-md h-[280px]"
                       />
                     </Link>
                   </SwiperSlide>

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import checkIcon from "@/assets/profiles/icon-circle.svg";
 
 import { motion } from "framer-motion";
+import useProfile from "@/store/useProfile";
 
 function ProfileForEditDetail() {
   const {
@@ -21,17 +22,30 @@ function ProfileForEditDetail() {
     imageName,
     userProfileUrl,
     child,
+    imageId,
+
     setProfileName,
     setImageName,
     setUserProfileUrl,
     setChild,
+    setImageId,
   } = useEdit();
+
+  const {
+    myImageId,
+    myProfileName,
+    myProfileUrl,
+    myChild,
+    myProfileId,
+    myEvaluationId,
+  } = useProfile();
 
   const {
     selectedImageName,
     selectedImageUrl,
     isImageSelected,
     selectedImageId,
+    profileData,
   } = useCreate();
 
   const [updateProfileName, setUpdateProfileName] = useState(profileName);
@@ -39,8 +53,8 @@ function ProfileForEditDetail() {
     src: userProfileUrl,
     alt: "사용자 프로필 이미지",
   });
-  const userId = Cookies.get("userId");
-  const isAutoLogin = Cookies.get("autoLogin");
+  // const userId = Cookies.get("userId");
+  // const isAutoLogin = Cookies.get("autoLogin");
 
   //모달 창 관리 state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -88,12 +102,21 @@ function ProfileForEditDetail() {
 
       //기존 이름과 변경한 이름이 동일한 경우
       let data = {};
-      if (updateProfileName == profileName) {
-        data = {
-          profileName: profileName,
-          profileImgId: selectedImageId,
-          child: child,
-        };
+
+      if (updateProfileName === profileName) {
+        if (isImageSelected) {
+          data = {
+            profileName: profileName,
+            profileImgId: selectedImageId,
+            child: child,
+          };
+        } else {
+          data = {
+            profileName: profileName,
+            profileImgId: imageId,
+            child: child,
+          };
+        }
       } else {
         data = {
           profileName: updateProfileName,
@@ -104,7 +127,6 @@ function ProfileForEditDetail() {
 
       const result = await patchData(url, data, headers);
 
-      console.log(result);
       // console.log(`프로필 수정 완료`);
       navigate("/user/profiles");
     } catch (error) {
@@ -113,6 +135,7 @@ function ProfileForEditDetail() {
     }
   };
 
+  // console.log(selectedImageId)
   //프로필 삭제 로직
   const handleDelete = async (e) => {
     e.preventDefault();
@@ -140,15 +163,43 @@ function ProfileForEditDetail() {
     // const randomIndex = Math.floor(Math.random() * profiles.length);
     // setCurrentProfile(profiles[randomIndex]);
     // setCurrentProfile()
+
+    // profileData.map((item) => {
+
+    //   console.log(item)
+    // });
+
+    // profileImageId
+
+    
+
+    profileData.map((item) => {
+      if (item.image_url === userProfileUrl) {
+        setImageId(item.profileImageId);
+      }
+      return null; // map 함수에서 반드시 반환값을 제공해야 합니다.
+    });
+
     if (isImageSelected) {
       setCurrentProfile({
         src: selectedImageUrl,
         alt: "대체 이미지",
         selectedImageName: selectedImageName,
       });
-      setImageName(selectedImageName);
+      // setImageName(selectedImageName);
     }
   }, [selectedImageName, selectedImageUrl]);
+
+
+  useEffect(()=>{
+    if(myProfileId){
+      setCurrentProfile({
+        src: myProfileUrl,
+        alt: "유저 프로필 이미지",
+        // selectedImageName: selectedImageName,
+      });
+    }
+  },[])
 
   return (
     <div className="bg-black font-noto">

@@ -3,17 +3,19 @@ import { persist } from "zustand/middleware";
 
 const createProfileStore = (set) => ({
   //선택한 이미지 정보
-  profileName: "",
-  userProfileUrl: "",
-  profileId: "",
-  child: "",
-  evaluationId: "",
+  myProfileName: "",
+  myProfileUrl: "",
+  myProfileId: "",
+  myChild: "",
+  myEvaluationId: "",
+  myImageId: "",
 
-  setProfileName: (profileName) => set({ profileName }),
-  setUserProfileUrl: (userProfileUrl) => set({ userProfileUrl }),
-  setChild: (child) => set({ child }),
-  setProfileId: (profileId) => set({ profileId }),
-  setEvaluationId: (evaluationId) => set({ evaluationId }),
+  setMyProfileName: (myProfileName) => set({ myProfileName }),
+  setMyProfileUrl: (myProfileUrl) => set({ myProfileUrl }),
+  setMyChild: (myChild) => set({ myChild }),
+  setMyProfileId: (myProfileId) => set({ myProfileId }),
+  setMyEvaluationId: (myEvaluationId) => set({ myEvaluationId }),
+  setMyImageId: (myImageId) => set({ myImageId }),
 });
 
 const useProfile = create(

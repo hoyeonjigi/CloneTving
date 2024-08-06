@@ -8,12 +8,14 @@ const createEditProfileStore = (set) => ({
   userProfileUrl: "",
   imageName: "",
   child: "",
+  imageId: "",
 
   setProfileId: (profileId) => set({ profileId }),
   setProfileName: (profileName) => set({ profileName }),
   setUserProfileUrl: (userProfileUrl) => set({ userProfileUrl }),
   setImageName: (imageName) => set({ imageName }),
   setChild: (child) => set({ child }),
+  setImageId: (imageId) => set({ imageId }),
 });
 
 const useEdit = create(

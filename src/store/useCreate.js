@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 const createProfileStore = (set) => ({
   //프로필 데이터
-  // profileData: [],
+  profileData: [],
   // profileImages: [],
   baseProfileImages: [],
   yumiProfileImages: [],
@@ -16,7 +16,7 @@ const createProfileStore = (set) => ({
   //이미지 선택 여부
   isImageSelected: false,
 
-  // setProfileData : (profileData) => set({profileData}),
+  setProfileData : (profileData) => set({profileData}),
   // setProfileImages : (profileImages) => set({profileImages}),
   setBaseProfileImages: (baseProfileImages) => set({ baseProfileImages }),
   setYumiProfileImages: (yumiProfileImages) => set({ yumiProfileImages }),
