@@ -3,32 +3,42 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 const reviewsStore = (set) => ({
-  review: [],
-  averageRating: "0.0",
-  numberOfReviews: 0,
-  page: 0, // 현재 페이지 번호
-
-  isReview: false,
-  endPage: false,
-
-  deleteReview: false,
-
-  setEndPage: (endPage) => set({ endPage }),
-
-  setPage: (page) => set({ page }),
-  setDeleteReview: (deleteReview) => set({ deleteReview }),
-  setReview: (review) => set({ review }),
-  setAverageRating: (averageRating) => set({ averageRating }),
-  setNumberOfReviews: (numberOfReviews) => set({ numberOfReviews }),
-  setIsReview: (isReview) => set({ isReview }),
+  reviewState: {
+    review: [],
+    averageRating: "0.0",
+    numberOfReviews: 0,
+    page: 0, // 현재 페이지 번호
+    isReview: false,
+    isModify: false,
+    endPage: false,
+    deleteReview: false,
+    isFirst: true,
+    totalPages: 0,
+    len: 0,
+  },
+  setReviewState: (newState) =>
+    set((state) => ({
+      reviewState: {
+        ...state.reviewState,
+        ...newState,
+      },
+    })),
 
   reset: () =>
     set({
-      review: [],
-      averageRating: "0.0",
-      numberOfReviews: 0,
-      page: 0,
-      // isReview: false,
+      reviewState: {
+        review: [],
+        averageRating: "0.0",
+        numberOfReviews: 0,
+        page: 0,
+        isReview: false,
+        isModify: false,
+        endPage: false,
+        deleteReview: false,
+        isFirst: true,
+        totalPages: 0,
+        len: 0,
+      },
     }),
 
   // addReview: (newReview) =>

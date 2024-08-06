@@ -12,62 +12,72 @@ import ProfileForEditDetail from "./pages/ProfileForEditDetail.jsx";
 import FindPassword from "./pages/FindPassword.jsx";
 import Detail from "./pages/Detail.jsx";
 import ProfileForCreate from "./pages/ProfileForCreate.jsx";
+import MyDetail from "./pages/MyDetail.jsx";
+// import DetailCopy from "./pages/DetailCopy.jsx";
 
 const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <RootLayout />,
-		children: [
-			{
-				path: "/",
-				element: <OnBoarding />,
-			},
-			{
-				path: "/signin",
-				element: <SignIn />,
-			},
-			{
-				path: "/signup",
-				element: <SignUp />,
-			},
-			{
-				path: "/FindID",
-				element: <FindID />,
-			},
-			{
-				path: "/FindPassword",
-				element: <FindPassword />,
-			},
-			{
-				path: "/main",
-				element: <Main />,
-			},
-			{
-				path: "/user/profiles",
-				element: <Profile />,
-			},
-			{
-				path: "/profilesForEdit",
-				element: <ProfilesForEdit />,
-			},
-			{
-				path: "/userTving",
-				element: <UserTving />,
-			},
-			{
-				path: "/user/profile",
-				element: <ProfileForCreate />,
-			},
-			{
-				path: "/user/profileForEdit",
-				element: <ProfileForEditDetail />,
-			},
-			{
-				path: `/main/detail/:id`,
-				element: <Detail />,
-			},
-		],
-	},
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      {
+        path: "/",
+        element: <OnBoarding />,
+      },
+      {
+        path: "/signin",
+        element: <SignIn />,
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,
+      },
+      {
+        path: "/FindID",
+        element: <FindID />,
+      },
+      {
+        path: "/FindPassword",
+        element: <FindPassword />,
+      },
+      {
+        path: "/main",
+        element: <Main />,
+      },
+      {
+        path: "/user/profiles",
+        element: <Profile />,
+      },
+      {
+        path: "/profilesForEdit",
+        element: <ProfilesForEdit />,
+      },
+      {
+        path: "/userTving",
+        element: <UserTving />,
+      },
+      {
+        path: "/user/profile",
+        element: <ProfileForCreate />,
+      },
+      {
+        path: "/user/profileForEdit",
+        element: <ProfileForEditDetail />,
+      },
+      {
+        path: `/main/detail/:id`,
+        element: <Detail />,
+      },
+      {
+        path: `/main/my`,
+        element: <MyDetail />,
+      },
+      // {
+      //   path: `/main/detail/:id`,
+      //   element: <DetailCopy />,
+      // },
+    ],
+  },
 ]);
 
 export default router;

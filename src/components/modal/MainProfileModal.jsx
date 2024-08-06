@@ -5,23 +5,21 @@ import LogoutButton from "./LogoutModal";
 import useProfile from "@/store/useProfile";
 
 function MainProfileModal() {
+  const { myProfileName, myProfileUrl } = useProfile();
 
-
-  const {profileName,userProfileUrl} = useProfile()
-  
   return (
     <motion.div
-      className="absolute w-72 bg-[#212121] border border-[#4d4d4d] rounded-sm right-0 top-10 z-50"
+      className="absolute w-72 bg-[#212121] border border-[#4d4d4d] rounded-sm right-0 top-10 z-[100]"
       initial={{ y: -10, opacity: 0 }} // 처음에는 아래에 있고 투명하게
       animate={{ y: 0, opacity: 1 }} // 애니메이션 후에는 원래 위치에 불투명하게
       transition={{ duration: 0.2 }} // 0.2초 동안 애니메이션
     >
       <div className="flex flex-row p-5">
         <div>
-          <img src={userProfileUrl} alt="유저 프로필 이미지" className="w-12" />
+          <img src={myProfileUrl} alt="유저 프로필 이미지" className="w-12" />
         </div>
         <div className="text-[#a3a3a3] ml-4 font-medium">
-          <p className="text-white text-lg">{profileName}</p>
+          <p className="text-white text-lg">{myProfileName}</p>
           <button>
             <Link to="/user/profiles">
               <span className="hover:text-[#d9d9d9] text-sm">프로필 전환</span>
@@ -31,7 +29,9 @@ function MainProfileModal() {
       </div>
       <hr className="border border-gray_03 mb-4" />
       <ul className="text-[#a3a3a3] font-medium text-lg mb-4">
-        <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">MY</li>
+        <Link to="/main/my">
+          <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">MY</li>
+        </Link>
 
         <li className="hover:text-white hover:bg-gray_03 px-6 py-1.5">
           <a href="/main">이용권</a>

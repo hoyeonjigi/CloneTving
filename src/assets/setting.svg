@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20.5" height="20" viewBox="0 0 20.5 20">
+	<defs>
+		<style>
+			.icon_user_info_edit_svg__cls-1{fill:none}.icon_user_info_edit_svg__cls-4{fill:gray}.icon_user_info_edit_svg__cls-5{stroke:none}
+		</style>
+	</defs>
+	<g id="icon_user_info_edit_svg__icon_\uD68C\uC6D0\uC815\uBCF4\uC218\uC815" transform="translate(-1047.5 -136)">
+		<path id="icon_user_info_edit_svg__\uC0AC\uAC01\uD615_2708" d="M0 0h20v20H0z" class="icon_user_info_edit_svg__cls-1" transform="translate(1048 136)">
+		</path>
+		<g id="icon_user_info_edit_svg__\uADF8\uB8F9_4409" transform="translate(127 -9.5)">
+			<g id="icon_user_info_edit_svg__\uD0C0\uC6D0_342" fill="none" stroke="gray" stroke-width="2" transform="translate(922 150.026)">
+				<circle cx="6.5" cy="6.5" r="6.5" class="icon_user_info_edit_svg__cls-5">
+				</circle>
+				<circle cx="6.5" cy="6.5" r="5.5" class="icon_user_info_edit_svg__cls-1">
+				</circle>
+			</g>
+			<g id="icon_user_info_edit_svg__\uD0C0\uC6D0_342-2" fill="gray" stroke="gray" stroke-width="2" transform="translate(926.8 154.8)">
+				<circle cx="1.7" cy="1.7" r="1.7" class="icon_user_info_edit_svg__cls-5">
+				</circle>
+				<circle cx="1.7" cy="1.7" r="0.7" class="icon_user_info_edit_svg__cls-1">
+				</circle>
+			</g>
+			<rect id="icon_user_info_edit_svg__\uC0AC\uAC01\uD615_2718" width="2.828" height="2.828" class="icon_user_info_edit_svg__cls-4" rx="1.2" transform="translate(927.099 148.5)">
+			</rect>
+			<rect id="icon_user_info_edit_svg__\uC0AC\uAC01\uD615_2720" width="2.828" height="2.828" class="icon_user_info_edit_svg__cls-4" rx="1.2" transform="translate(920.5 155.099)">
+			</rect>
+			<rect id="icon_user_info_edit_svg__\uC0AC\uAC01\uD615_2721" width="2.828" height="2.828" class="icon_user_info_edit_svg__cls-4" rx="1.2" transform="translate(933.698 155.099)">
+			</rect>
+			<rect id="icon_user_info_edit_svg__\uC0AC\uAC01\uD615_2722" width="2.828" height="2.828" class="icon_user_info_edit_svg__cls-4" rx="1.2" transform="rotate(45 285.925 1201.734)">
+			</rect>
+			<rect id="icon_user_info_edit_svg__\uC0AC\uAC01\uD615_2723" width="2.828" height="2.828" class="icon_user_info_edit_svg__cls-4" rx="1.2" transform="rotate(45 269.639 1194.6)">
+			</rect>
+			<rect id="icon_user_info_edit_svg__\uC0AC\uAC01\uD615_2724" width="2.828" height="2.828" class="icon_user_info_edit_svg__cls-4" rx="1.2" transform="rotate(45 274.579 1206.434)">
+			</rect>
+			<rect id="icon_user_info_edit_svg__\uC0AC\uAC01\uD615_2725" width="2.828" height="2.828" class="icon_user_info_edit_svg__cls-4" rx="1.2" transform="rotate(45 281.018 1189.886)">
+			</rect>
+			<rect id="icon_user_info_edit_svg__\uC0AC\uAC01\uD615_2719" width="2.828" height="2.828" class="icon_user_info_edit_svg__cls-4" rx="1.2" transform="translate(927.099 161.698)">
+			</rect>
+		</g>
+	</g>
+</svg>

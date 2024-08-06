@@ -1,6 +1,6 @@
 import Footer from "@/components/Footer";
 import HeaderMain from "@/components/HeaderMain";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import ReviewModal from "@/components/modal/ReviewModal";
 // import useContent from "@/store/useContent";
 import { useEffect, useLayoutEffect, useRef, React } from "react";
@@ -24,7 +24,7 @@ import dibs from "@/assets/dibs.svg";
 import share from "@/assets/share.svg";
 import play from "@/assets/play.svg";
 
-function Detail() {
+function DTC() {
   const queryClient = useQueryClient();
   const { content, genre, setGenre } = useContents();
   const { isLoading, isSearch, setIsLoading, setIsSearch } = useDetail();
@@ -60,6 +60,70 @@ function Detail() {
     setIsChangeModalOpen(false);
   };
 
+  const refresh = async () => {
+    try {
+      const reUrl = `https://hoyeonjigi.site/user/refresh`;
+
+      const userId = Cookies.get("userId");
+      const isAutoLogin = Cookies.get("autoLogin");
+
+      const headers = {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Token": `${Cookies.get("accessToken")}`,
+        "Refresh-Token": `${Cookies.get("refreshToken")}`,
+      };
+
+      const body = {};
+
+      const response = await postData(reUrl, body, headers);
+
+      Cookies.set("accessToken", response.accessToken, {
+        secure: true,
+        sameSite: "strict",
+      });
+      Cookies.set("refreshToken", response.refreshToken, {
+        secure: true,
+        sameSite: "strict",
+      });
+      Cookies.set("grantType", response.grantType, {
+        secure: true,
+        sameSite: "strict",
+      });
+      //자동 로그인 시 만료 시간 재설정
+      if (isAutoLogin) {
+        Cookies.set("autoLogin", true, {
+          secure: true,
+          sameSite: "strict",
+          expires: 7,
+        });
+        Cookies.set("accessToken", response.accessToken, {
+          secure: true,
+          sameSite: "strict",
+          expires: 7,
+        });
+        Cookies.set("refreshToken", response.refreshToken, {
+          secure: true,
+          sameSite: "strict",
+          expires: 7,
+        });
+        Cookies.set("grantType", response.grantType, {
+          secure: true,
+          sameSite: "strict",
+          expires: 7,
+        });
+        Cookies.set("userId", userId, {
+          secure: true,
+          sameSite: "strict",
+          expires: 7,
+        });
+      }
+    } catch (error) {
+      //refreshToken 만료 시 onBoarding으로 이동
+      navigate("/");
+    }
+  };
+
   useLayoutEffect(() => {
     const contentData = async () => {
       try {
@@ -72,22 +136,21 @@ function Detail() {
         };
 
         const str = content.genreIds;
+        const genreIds = str.split(",");
 
         // 각 genreId에 대한 URL을 생성하고, 각 URL에 대해 getData 함수를 호출하는 프로미스 배열을 생성합니다.
-        const promises = str.map((genreId) => {
-          const url = `${import.meta.env.VITE_API_URL}/genre/${genreId}`;
-
+        const promises = genreIds.map((genreId) => {
+          const url = `https://hoyeonjigi.site/genre/${genreId}`;
           return getData(url, headers); // getData 함수가 각 URL에 대해 요청을 수행하고, 프로미스를 반환한다고 가정합니다.
         });
 
-        // // Promise.all을 사용하여 모든 프로미스가 완료되길 기다립니다.
+        // Promise.all을 사용하여 모든 프로미스가 완료되길 기다립니다.
         const results = await Promise.all(promises);
-
         setGenre(results);
       } catch (error) {
         console.log(error);
         console.log("장르에러");
-        // refresh();
+        refresh();
       }
     };
 
@@ -97,6 +160,9 @@ function Detail() {
   //--------------------------------------------------------------------
 
   const fetchReviews = async ({ pageParam }) => {
+    if (reviewState.endPage === true) {
+      return;
+    }
     try {
       // API로부터 리뷰 데이터를 페이지별로 가져오는 함수
       const type = Cookies.get("grantType");
@@ -107,21 +173,10 @@ function Detail() {
         Authorization: `${type} ${token}`,
       };
 
-      const data = {
-        contentId: content.contentId,
-        sortType: "LATEST",
-      };
       // API URL 구성, pageParam을 사용하여 현재 페이지 지정
+      const url = `https://hoyeonjigi.site/evaluation/${content.contentId}?page=${pageParam}`;
 
-      const url = `${
-        import.meta.env.VITE_API_URL
-      }/evaluation/retrieve?page=${pageParam}&size=5&sort=string&contentId=${
-        content.contentId
-      }&sortType=LATEST`;
-
-      const response = await postData(url, data, headers);
-
-      // console.log(response);
+      const response = await getData(url, headers);
 
       setIsLoading(false);
 
@@ -129,9 +184,7 @@ function Detail() {
     } catch (error) {
       // 에러 발생 시 콘솔에 에러 메시지 출력
       console.error("fetchReviews 에러:", error);
-
-      // console.log(data);
-      // setReviewState({ endPage: true });
+      setReviewState({ endPage: true });
     }
   };
 
@@ -144,195 +197,177 @@ function Detail() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    refetch,
   } = useInfiniteQuery({
     queryKey: ["infinity"],
     queryFn: fetchReviews,
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
-      // return allPages.length;
-      // if (!lastPage) {
-      //   return undefined; // 빈 페이지를 명시적으로 처리
+      // const nextPage = lastPage.length ? 1 : undefined;
+      // return nextPage;
+      // if (endPage === true) {
+      //   // 예시로, 응답 데이터에 lastPage라는 필드가 마지막 페이지임을 나타낸다고 가정
+      //   return undefined; // 마지막 페이지이므로 다음 페이지는 없음
       // }
 
       return allPages.length;
     },
   });
 
-  // // 등록,수정 ,삭제 됐을 시 로직
-  useEffect(() => {
-    if (
-      reviewState.isReview ||
-      reviewState.isModify ||
-      reviewState.deleteReview
-    ) {
-      // window.location.reload();
-      // window.scrollTo(0, 0);
-
-      queryClient.invalidateQueries(["infinity"]);
-      queryClient.refetchQueries(["infinity"]);
-      // refetch();
-
-      // queryClient.clear();
-
-      // reset();
-      // queryClient.invalidateQueries(["infinity"]);
-      // queryClient.refetchQueries(["infinity"]);
-      // refetch();
-
-      console.log(data);
-
-      if (data) {
-        const updateReviewState = () => {
-          // reset();
-
-          if (
-            data.pages[0].page["totalElements"] !== reviewState.numberOfReviews
-          ) {
-            avgRating();
-            let changeReviews = [];
-
-            data.pages.map((reviews) => {
-              reviews.content.forEach((review) => {
-                changeReviews.push(review); // 리뷰 객체를 배열에 추가
-              });
-
-              setReviewState({
-                review: changeReviews,
-                numberOfReviews: reviews.page["totalElements"],
-                totalPages: reviews.page["totalPages"],
-                isReview: false,
-                isModify: false,
-                deleteReview: false,
-              });
-            });
-          }
-        };
-
-        updateReviewState(); // 리뷰 상태 업데이트 함수 호출
-        // window.scrollTo(0, 0);
-      }
-    }
-  }, [
-    data,
-    isSearch,
-    reviewState.isReview,
-    reviewState.isModify,
-    reviewState.deleteReview,
-    queryClient,
-  ]);
+  // useLayoutEffect(() => {
+  //   // console.log(error);
+  //   if (reviewState.endPage === true) {
+  //     return;
+  //   } else if (reviewState.endPage === false && inView) {
+  //     console.log(data);
+  //     // setReviewState({
+  //     //   averageRating: data["avg"],
+  //     //   numberOfReviews: data["evaluationCount"],
+  //     //   review: [...reviewState.review, ...data.evaluationList],
+  //     // });
+  //     // // console.log("Fire");
+  //     // setIsLoading(false);
+  //     fetchNextPage();
+  //   }
+  // }, [inView, fetchNextPage, reviewState.endPage]);
 
   //스크롤을 내리면 기존 있었던 리뷰에 추가된 리뷰를 업데이트
-  useEffect(() => {
-    queryClient.invalidateQueries(["infinity"]);
-    queryClient.refetchQueries(["infinity"]);
-    refetch();
+  // useLayoutEffect(() => {
+  //   // console.log(error);
+  //   if (reviewState.endPage === true || !inView) {
+  //     return; // 다음 페이지 데이터가 없거나, inView가 false일 경우 실행하지 않습니다.
+  //   }
 
-    if (reviewState.len >= reviewState.totalPages || !inView) {
-      return;
-    }
+  //   if (data) {
+  //     console.log("밑으로 내리는 데이터");
+  //     console.log(data);
+  //     // 예를 들어, data.pages를 순회하면서 원하는 작업을 수행할 수 있습니다.
+  //     data.pages.forEach((reviews) => {
+  //       // console.log(reviews);
+  //       setReviewState((prevState) => ({
+  //         ...prevState,
+  //         averageRating: reviews.avg,
+  //         numberOfReviews: reviews.evaluationCount,
+  //         review: [...prevState.review, ...reviews.evaluationList],
+  //       }));
+  //     });
+  //     setReviewState((prevState) => ({
+  //       ...prevState,
+  //       isFirst: false,
+  //     }));
+  //     fetchNextPage();
+  //   }
+  // }, [data, inView, reviewState.endPage, reviewState.isReview]);
 
-    if (data) {
-      console.log(data.pages.length);
-      console.log(data);
+  useLayoutEffect(() => {
+    if (reviewState.endPage || !inView || !data) return;
 
-      // console.log(reviewState.len);
-      // console.log(data.pages[data.pages.length - 1].content);
-      // console.log(reviewState.len);
-      // console.log(data.pages[data.pages.length]);
+    const lastPage = data.pages[data.pages.length - 1];
+    const newReviews = lastPage.evaluationList;
 
-      if (reviewState.len !== 0 && data.pages.length !== reviewState.len) {
-        // console.log(data);
-        setReviewState({
-          // averageRating: data.pages[data.pages.length - 1].avg,
-          // numberOfReviews: data.pages[data.pages.length - 1].evaluationCount,
-          // len:data.pages.length,
-          review: [
-            ...reviewState.review,
-            ...data.pages[data.pages.length - 1].content,
-          ],
-        });
-      }
+    setReviewState((prevState) => ({
+      ...prevState,
+      averageRating: lastPage.avg,
+      numberOfReviews: lastPage.evaluationCount,
+      review: [...prevState.review, ...newReviews],
+    }));
 
-      setReviewState({
-        len: data.pages.length,
-      });
-
-      // console.log(hasNextPage);
-      fetchNextPage();
-    }
-  }, [data, inView, isSearch, refetch]);
-
-  const avgRating = async () => {
-    try {
-      const type = Cookies.get("grantType");
-      const token = Cookies.get("accessToken");
-
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `${type} ${token}`,
-      };
-
-      const url = `${
-        import.meta.env.VITE_API_URL
-      }/evaluation/average-rating?contentId=${content.contentId}`;
-
-      const response = await getData(url, headers);
-
-      setReviewState({
-        averageRating: response,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    fetchNextPage();
+  }, [data, inView, reviewState.endPage]);
 
   // 맨 처음 랜더링 됐을때 초기 데이터 입력
+  // useEffect(() => {
+  //   // window.scrollTo(0, 0);
+
+  //   console.log(reviewState);
+  //   if (reviewState.isFirst === false) {
+  //     return;
+  //   }
+
+  //   if (data) {
+  //     // 예를 들어, data.pages를 순회하면서 원하는 작업을 수행할 수 있습니다.
+  //     data.pages.map((reviews) => {
+  //       setReviewState({
+  //         averageRating: reviews.avg,
+  //         numberOfReviews: reviews.evaluationCount,
+  //         review: [...reviewState.review, ...reviews.evaluationList],
+  //       });
+
+  //       console.log("초기데이터");
+  //     });
+  //     setReviewState({ isFirst: false });
+
+  //   }
+  // }, [data, reviewState.isFirst]);
+
   useEffect(() => {
-    let accumulatedReviews = []; // 누적할 리뷰 배열
-
-    if (reviewState.isFirst === false) {
-      return;
+    if (reviewState.isFirst && data) {
+      const initialReviews = data.pages[0].evaluationList;
+      setReviewState((prevState) => ({
+        ...prevState,
+        averageRating: data.pages[0].avg,
+        numberOfReviews: data.pages[0].evaluationCount,
+        review: initialReviews,
+        isFirst: false,
+      }));
     }
+  }, [data, reviewState.isFirst]);
 
-    avgRating();
-    // console.log(data);
+  //등록, 삭제 됐을 시 로직
+  // useLayoutEffect(() => {
+  //   queryClient.invalidateQueries(["infinity"]);
 
-    if (data) {
-      data.pages.map((reviews) => {
-        reviews.content.forEach((review) => {
-          accumulatedReviews.push(review); // 리뷰 객체를 배열에 추가
-        });
+  //   if (data) {
+  //     // data가 존재하고, isReview 또는 deleteReview 상태가 변경될 때 실행됩니다.
 
+  //     // 리뷰 상태를 업데이트하는 함수
+
+  //     console.log("변경 데이터");
+  //     const updateReviewState = () => {
+  //       // 이전 상태를 기반으로 새로운 상태를 업데이트하는 함수형 업데이트 사용
+  //       setReviewState({
+  //         averageRating: "0.0",
+  //         numberOfReviews: 0,
+  //         review: [],
+  //       });
+
+  //       // data의 각 페이지를 순회하면서 리뷰 상태를 업데이트
+  //       data.pages.forEach((reviews) => {
+  //         // console.log("리뷰 확인");
+  //         // console.log(reviews);
+  //         setReviewState({
+  //           averageRating: reviews.avg,
+  //           numberOfReviews: reviews.evaluationCount,
+  //           review: reviews.evaluationList,
+  //           isReview: false,
+  //           deleteReview: false,
+  //           isFirst: true,
+  //         });
+  //       });
+  //     };
+
+  //     updateReviewState(); // 리뷰 상태 업데이트 함수 호출
+  //     window.scrollTo(0, 0);
+  //   }
+  // }, [data, reviewState.isReview, reviewState.deleteReview]);
+
+  useLayoutEffect(() => {
+    if (reviewState.isReview || reviewState.deleteReview) {
+      queryClient.invalidateQueries(["infinity"]);
+
+      if (data) {
+        const firstPage = data.pages[0];
         setReviewState({
-          review: accumulatedReviews,
-          numberOfReviews: reviews.page["totalElements"],
-          totalPages: reviews.page["totalPages"],
-          isFirst: false, // isFirst를 false로 설정하여 다음 렌더링에서는 조건문에서 리턴하도록
+          averageRating: firstPage.avg,
+          numberOfReviews: firstPage.evaluationCount,
+          review: firstPage.evaluationList,
+          isReview: false,
+          deleteReview: false,
+          isFirst: false,
         });
-      });
+      }
+      window.scrollTo(0, 0);
     }
-  }, [data, reviewState.isFirst, isSearch]);
-
-  useEffect(() => {
-    window.history.scrollRestoration = "manual";
-    // 스크롤을 맨 위로 올립니다
-    window.scrollTo(0, 0);
-
-    // React Query 캐시를 초기화합니다
-    queryClient.removeQueries(["infinity"]);
-    queryClient.refetchQueries(["infinity"]);
-
-    // 컴포넌트의 상태를 초기화합니다
-    reset();
-
-    // isLoading 상태를 true로 설정하여 로딩 스피너를 표시합니다
-    setIsLoading(true);
-
-    // 필요한 경우 다른 상태들도 초기화합니다
-    setIsModalOpen(false);
-    setIsChangeModalOpen(false);
-  }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때만 실행되도록 합니다
+  }, [data, reviewState.isReview, reviewState.deleteReview]);
 
   return (
     <div className="bg-black">
@@ -352,7 +387,7 @@ function Detail() {
                   key={index}
                   className="text-gray_06 inline-block border border-gray_05 rounded font-semibold px-2"
                 >
-                  {item.genreName}
+                  {item}
                 </li>
               ))}
             </ul>
@@ -439,13 +474,15 @@ function Detail() {
           <ul>
             <h3 className="text-white font-semibold mt-11">최신순</h3>
 
-            {reviewState.review.length > 0 ? (
+            {isLoading ? (
+              <Spinner />
+            ) : reviewState.review.length > 0 ? (
               reviewState.review.map((item, index) => (
                 <li className="mt-11" key={index}>
-                  <Star starRating={item.rating}></Star>
+                  <Star starRating={item.starRating}></Star>
                   <p className="text-white mt-2 font-medium">{item.review}</p>
                   <span className="mt-2 text-gray_07 text-sm">
-                    {item.profileName} • {item.ratingTime}{" "}
+                    {item.profileName} • {item.ratingDate}{" "}
                   </span>
                 </li>
               ))
@@ -465,4 +502,4 @@ function Detail() {
   );
 }
 
-export default Detail;
+export default DTC;

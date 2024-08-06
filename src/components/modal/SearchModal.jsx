@@ -3,6 +3,10 @@ import search from "@/assets/search/icon_search_white.svg";
 import Cookies from "js-cookie";
 import { getData, postData } from "@/utils/crud";
 import debounce from "lodash/debounce";
+import useContents from "@/store/useContent";
+import { Link } from "react-router-dom";
+import { patchData } from "@/utils/crud";
+import useDetail from "@/store/useDetail";
 // import debounce from "@/utils/debounce";
 
 function SearchModal({ visible, onClose }) {
@@ -11,39 +15,39 @@ function SearchModal({ visible, onClose }) {
   const [searchContent, setSearchContent] = useState([]);
   // const [shouldSearch, setShouldSearch] = useState(false); // 검색이 필요한지 여부를 상태로 관리
 
-  const refresh = async () => {
-    const reUrl = `https://hoyeonjigi.site/user/refresh`;
+  const { setContent } = useContents();
+  const { isSearch, setIsSearch } = useDetail();
 
-    const headers = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Token": `${Cookies.get("accessToken")}`,
-      "Refresh-Token": `${Cookies.get("refreshToken")}`,
-    };
+  const baseURL = `${import.meta.env.VITE_API_URL}`;
 
-    const body = {};
+  // const handleItemClick = (item) => {
+  //   setContent(item);
+  // };
 
-    const response = await postData(reUrl, body, headers);
+  const handleViewCount = async (contentId) => {
+    const already = Cookies.get(`alreadyViewCookie${contentId}`);
+    if (already) {
+      console.log("이미있음");
+      return;
+    } else {
+      const url = `${baseURL}/contents/${contentId}/view`;
+      const type = Cookies.get("grantType");
+      const token = Cookies.get("accessToken");
 
-    console.log(response);
-    Cookies.set("accessToken", response.accessToken, {
-      secure: true,
-      sameSite: "strict",
-    });
-    Cookies.set("refreshToken", response.refreshToken, {
-      secure: true,
-      sameSite: "strict",
-    });
-    Cookies.set("grantType", response.grantType, {
-      secure: true,
-      sameSite: "strict",
-    });
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `${type} ${token}`,
+      };
 
-    // if (response.success) {
-    //
-    // } else {
-    //   console.log(response.message);
-    // }
+      const body = {};
+      const response = await postData(url, body, headers);
+
+      Cookies.set(`alreadyViewCookie${contentId}`, `${contentId}`, {
+        expires: 1,
+        secure: true,
+        sameSite: "strict",
+      }); // 1일 후에 만료되는 쿠키
+    }
   };
 
   const debouncedSearch = useRef(null);
@@ -52,9 +56,13 @@ function SearchModal({ visible, onClose }) {
     debounce(async (query) => {
       // handleSearch 함수 구현
       try {
-        const baseUrl = "https://hoyeonjigi.site/content/";
+        // const baseUrl = "https://hoyeonjigi.site/content/";
+
+        setIsSearch(false);
         const encodedQuery = encodeURIComponent(query);
-        const url = `${baseUrl}${encodedQuery}`;
+        // const url = `${baseUrl}${encodedQuery}`;
+
+        const url = `${baseURL}/contents?title=${encodedQuery}`;
 
         // console.log(url);
 
@@ -63,23 +71,28 @@ function SearchModal({ visible, onClose }) {
 
         const headers = {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+          // "Access-Control-Allow-Origin": "*",
           Authorization: `${type} ${token}`,
         };
         const result = await getData(url, headers);
 
-        console.log(result.length);
         // result에 값이 있으면 그대로 저장하고, 없으면 빈 배열을 저장합니다.
         const searchData =
-          result.length > 0
-            ? result.map((item) => ({
-                src: `https://image.tmdb.org/t/p/original/${item.contentImage}`,
-                alt: item.contentTitle,
+          result.content.length > 0
+            ? result.content.map((item) => ({
+                contentId: item.contentId,
+                contentTitle: item.title.replace(/"/g, ""),
+                contentOverview: item.overview.replace(/"/g, ""),
+                genreIds: item.genreIds,
+                src: `https://image.tmdb.org/t/p/original/${item.poster.replace(
+                  /"/g,
+                  ""
+                )}`,
+                alt: item.title.replace(/"/g, ""),
               }))
             : [];
 
         setSearchContent(searchData);
-        // console.log(searchContent);
       } catch (error) {
         console.error(`Error in sending get request: ${error}`);
         // refresh();
@@ -90,11 +103,6 @@ function SearchModal({ visible, onClose }) {
 
   debouncedSearch.current = handleSearch;
 
-  // const handleChange = (e) => {
-  //   const value = e.target.value;
-  //   setQuery(value);
-  //   debouncedSearch.current(value);
-  // };
   const handleChange = (e) => {
     const value = e.target.value;
     setQuery(value);
@@ -130,10 +138,6 @@ function SearchModal({ visible, onClose }) {
   };
 
   return (
-    // <div
-    //   className="fixed inset-0 flex flex-col items-center bg-[#191919] h-[90%] translate-y-20 z-50"
-    //   onClick={stopPropagation}
-    // >
     <div
       className="fixed inset-0 flex flex-col items-center bg-[#191919] h-[90%] translate-y-20 z-50"
       onClick={stopPropagation}
@@ -159,12 +163,27 @@ function SearchModal({ visible, onClose }) {
           <ul className="flex  gap-3 justify-start">
             {searchContent.slice(0, 6).map((item, index) => (
               <li key={index} className="w-48">
-                <a href="/" className="">
-                  <img src={item.src} alt="" className="rounded h-72" />
+                <Link
+                  to={{
+                    pathname: `/main/detail/${item.contentId}`, // 절대 경로를 사용합니다.
+                  }}
+                  onClick={() => {
+                    setContent(item);
+                    onClose();
+                    setQuery("");
+                    setIsSearch(true);
+                    handleViewCount(item.contentId);
+                  }}
+                >
+                  <img
+                    src={item.src}
+                    alt={`${item.alt} 포스터 이미지`}
+                    className="rounded h-72"
+                  />
                   <p className="mt-2 font-semibold text-lg text-gray_06 truncate">
                     {item.alt}
                   </p>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -190,6 +209,46 @@ function SearchModal({ visible, onClose }) {
                 </span>
                 <h3 className="inline-block text-[#dededeb2] text-xl hover:text-[#dedede]">
                   이재, 곧 죽습니다
+                </h3>
+              </button>
+            </li>
+            <li>
+              <button>
+                <span className="inline-block text-[#ff153c] text-xl w-10 text-left">
+                  2
+                </span>
+                <h3 className="inline-block text-[#dededeb2] text-xl hover:text-[#dedede]">
+                  인사이드 아웃 2
+                </h3>
+              </button>
+            </li>
+            <li>
+              <button>
+                <span className="inline-block text-[#ff153c] text-xl w-10 text-left">
+                  3
+                </span>
+                <h3 className="inline-block text-[#dededeb2] text-xl hover:text-[#dedede]">
+                  쿵푸팬더 4
+                </h3>
+              </button>
+            </li>
+            <li>
+              <button>
+                <span className="inline-block text-[#ff153c] text-xl w-10 text-left">
+                  4
+                </span>
+                <h3 className="inline-block text-[#dededeb2] text-xl hover:text-[#dedede]">
+                  아이언맨 2
+                </h3>
+              </button>
+            </li>
+            <li>
+              <button>
+                <span className="inline-block text-[#ff153c] text-xl w-10 text-left">
+                  5
+                </span>
+                <h3 className="inline-block text-[#dededeb2] text-xl hover:text-[#dedede]">
+                  위대한 수업
                 </h3>
               </button>
             </li>
