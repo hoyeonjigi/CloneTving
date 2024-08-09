@@ -82,7 +82,7 @@
 .content-custom-swiper .swiper-button-prev,
 .content-custom-swiper .swiper-button-next {
   position: absolute;
-  top: 63%;
+  top: 60%;
   /* right: 0;
   left: 0; */
   transform: translateY(-50%);
@@ -104,11 +104,12 @@
 
 .content-custom-swiper .swiper-button-prev {
   /* width: 20px; */
-  left: 0;
+  left: -15px;
+ 
 }
 
 .content-custom-swiper .swiper-button-next {
-  right: 0;
+  right: -15px;
 }
 
 .content-custom-swiper:hover .swiper-button-prev,

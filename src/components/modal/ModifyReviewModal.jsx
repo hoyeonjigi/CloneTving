@@ -26,7 +26,7 @@ function ModifyReviewModal({ isOpen, onClose }) {
 
   const { setReviewState } = useReviews();
 
-  const { profileId } = useProfile();
+  const { myProfileId } = useProfile();
 
   // 별점을 설정하는 함수
   const handleSetRating = (newRating) => {
@@ -88,8 +88,6 @@ function ModifyReviewModal({ isOpen, onClose }) {
       toast.success(`리뷰가 수정되었습니다`, {
         duration: 2000,
       });
-
-     
     } catch (error) {
       console.log(error);
       console.log("에러출력");
@@ -114,7 +112,7 @@ function ModifyReviewModal({ isOpen, onClose }) {
           import.meta.env.VITE_API_URL
         }/evaluation/retrieve/by-profile?contentId=${
           content.contentId
-        }&profileId=${profileId}`;
+        }&profileId=${myProfileId}`;
 
         const response = await getData(checkUrl, headers);
 

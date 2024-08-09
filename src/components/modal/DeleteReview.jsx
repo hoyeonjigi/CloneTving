@@ -10,7 +10,7 @@ import { useEffect } from "react";
 
 function DeleteReview({ isOpen, onClose }) {
   const { content } = useContents();
-  const { profileId, evaluationId, setEvaluationId } = useProfile();
+  const { myProfileId, myEvaluationId, setMyEvaluationId } = useProfile();
   const { reviewState, setReviewState } = useReviews();
 
   const isReview = async () => {
@@ -27,11 +27,11 @@ function DeleteReview({ isOpen, onClose }) {
         import.meta.env.VITE_API_URL
       }/evaluation/retrieve/by-profile?contentId=${
         content.contentId
-      }&profileId=${profileId}`;
+      }&profileId=${myProfileId}`;
 
       const getRes = await getData(isReviewUrl, headers);
 
-      setEvaluationId(getRes.evaluationId);
+      setMyEvaluationId(getRes.evaluationId);
     } catch (error) {
       console.log(error);
       console.log("에러출력");
@@ -53,7 +53,7 @@ function DeleteReview({ isOpen, onClose }) {
 
       const url = `${
         import.meta.env.VITE_API_URL
-      }/evaluation/delete?evaluationId=${evaluationId}`;
+      }/evaluation/delete?evaluationId=${myEvaluationId}`;
 
       const response = await deleteData(url, headers);
 

@@ -122,7 +122,7 @@ function Profile() {
   };
 
   useEffect(() => {
-    // localStorage.removeItem("myProfile");
+    localStorage.removeItem("myProfile");
     // localStorage.removeItem("editProfile");
     getProfileInfo();
     setIsImageSelected(false);

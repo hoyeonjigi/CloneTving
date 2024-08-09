@@ -36,6 +36,8 @@ function OnBoading() {
 				localStorage.removeItem("grantType");
 				localStorage.removeItem("userId");
 				localStorage.removeItem("autoLogin");
+				localStorage.removeItem("detail");
+				
 			}
 		} else;
 
@@ -128,6 +130,7 @@ function OnBoading() {
 		localStorage.removeItem("profileList");
 		localStorage.removeItem("editProfile");
 		localStorage.removeItem("myProfile");
+		localStorage.removeItem("detail");
 		autoLogin();
 	}, []);
 	return (

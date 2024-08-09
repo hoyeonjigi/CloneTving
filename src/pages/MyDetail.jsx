@@ -8,7 +8,11 @@ import setting from "@/assets/setting.svg";
 import { Link } from "react-router-dom";
 
 function MyDetail() {
-  const { myProfileName, myProfileUrl } = useProfile();
+  const { myProfileName, myProfileUrl, setMyChange } = useProfile();
+
+  const handleMyChange = () => {
+    setMyChange(true);
+  };
   return (
     <div>
       <HeaderMain />
@@ -27,6 +31,7 @@ function MyDetail() {
               src={pen}
               alt="프로필 이름 수정"
               className="brightness-75 hover:brightness-100 cursor-pointer"
+              onClick={handleMyChange}
             />
           </Link>
           <Link to="/user/profiles">

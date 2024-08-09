@@ -15,7 +15,7 @@ function App() {
     <>
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ReactQueryDevtools initialIsOpen={true} />
           <AnimatePresence>
             <Toaster />
             <RouterProvider router={router} />

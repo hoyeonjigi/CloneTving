@@ -166,11 +166,9 @@ function Detail() {
       reviewState.isModify ||
       reviewState.deleteReview
     ) {
-      // window.location.reload();
-      // window.scrollTo(0, 0);
-
-      queryClient.invalidateQueries(["infinity"]);
-      queryClient.refetchQueries(["infinity"]);
+      queryClient.removeQueries(["infinity"]);
+      queryClient.invalidateQueries(["infinity"], { exact: true });
+      // queryClient.refetchQueries(["infinity"]);
       // refetch();
 
       // queryClient.clear();
@@ -186,9 +184,13 @@ function Detail() {
         const updateReviewState = () => {
           // reset();
 
+          queryClient.removeQueries(["infinity"]);
+          queryClient.invalidateQueries(["infinity"], { exact: true });
+
           if (
             data.pages[0].page["totalElements"] !== reviewState.numberOfReviews
           ) {
+            
             avgRating();
             let changeReviews = [];
 
