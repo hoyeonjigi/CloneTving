@@ -26,7 +26,9 @@ function OnBoading() {
 		//accessToken이 존재하면 이동, refreshToken 존재 시 refresh 후 이동
 		if (accessToken) {
 			try {
-				refresh();
+				// refresh();
+
+				
 			} catch (error) {
 				//accessToken, refreshToken 만료 시 쿠키에서 제거
 				localStorage.removeItem("accessToken");
@@ -34,6 +36,8 @@ function OnBoading() {
 				localStorage.removeItem("grantType");
 				localStorage.removeItem("userId");
 				localStorage.removeItem("autoLogin");
+				localStorage.removeItem("detail");
+				
 			}
 		} else;
 
@@ -47,64 +51,71 @@ function OnBoading() {
 		// }
 	};
 
-	const refresh = async () => {
-		const url = `https://hoyeonjigi.site/user/refresh`;
-		const headers = {
-			"Content-Type": "application/json",
-			"Access-Control-Allow-Origin": "*",
-			"Access-Token": `${Cookies.get("accessToken")}`,
-			"Refresh-Token": `${Cookies.get("refreshToken")}`,
-		};
-		const body = {};
+	// const refresh = async () => {
+	// 	const url = `https://hoyeonjigi.site/user/refresh`;
+	// 	const headers = {
+	// 		"Content-Type": "application/json",
+	// 		"Access-Control-Allow-Origin": "*",
+	// 		"Access-Token": `${Cookies.get("accessToken")}`,
+	// 		"Refresh-Token": `${Cookies.get("refreshToken")}`,
+	// 	};
+	// 	const body = {};
 
-		const response = await postData(url, body, headers);
-		//토큰 재설정
-		Cookies.set("accessToken", response.accessToken, {
-			secure: true,
-			sameSite: "strict",
-		});
-		Cookies.set("refreshToken", response.refreshToken, {
-			secure: true,
-			sameSite: "strict",
-		});
-		Cookies.set("grantType", response.grantType, {
-			secure: true,
-			sameSite: "strict",
-		});
+	// 	const response = await postData(url, body, headers);
+	// 	//토큰 재설정
+	// 	Cookies.set("accessToken", response.accessToken, {
+	// 		secure: true,
+	// 		sameSite: "strict",
+	// 	});
+	// 	Cookies.set("refreshToken", response.refreshToken, {
+	// 		secure: true,
+	// 		sameSite: "strict",
+	// 	});
+	// 	Cookies.set("grantType", response.grantType, {
+	// 		secure: true,
+	// 		sameSite: "strict",
+	// 	});
 
-		//자동 로그인 시 만료 시간 재설정
-		if (isAutoLogin) {
-			Cookies.set("autoLogin", true, {
-				secure: true,
-				sameSite: "strict",
-				expires: 7,
-			});
-			Cookies.set("accessToken", response.accessToken, {
-				secure: true,
-				sameSite: "strict",
-				expires: 7,
-			});
-			Cookies.set("refreshToken", response.refreshToken, {
-				secure: true,
-				sameSite: "strict",
-				expires: 7,
-			});
-			Cookies.set("grantType", response.grantType, {
-				secure: true,
-				sameSite: "strict",
-				expires: 7,
-			});
-			Cookies.set("userId", userId, {
-				secure: true,
-				sameSite: "strict",
-				expires: 7,
-			});
-		}
-		//Refresh 후 profiles로 이동
-		if (response) {
-			navigate("/user/profiles");
-		}
-	};
+	// 	//자동 로그인 시 만료 시간 재설정
+	// 	if (isAutoLogin) {
+	// 		Cookies.set("autoLogin", true, {
+	// 			secure: true,
+	// 			sameSite: "strict",
+	// 			expires: 7,
+	// 		});
+	// 		Cookies.set("accessToken", response.accessToken, {
+	// 			secure: true,
+	// 			sameSite: "strict",
+	// 			expires: 7,
+	// 		});
+	// 		Cookies.set("refreshToken", response.refreshToken, {
+	// 			secure: true,
+	// 			sameSite: "strict",
+	// 			expires: 7,
+	// 		});
+	// 		Cookies.set("grantType", response.grantType, {
+	// 			secure: true,
+	// 			sameSite: "strict",
+	// 			expires: 7,
+	// 		});
+	// 		Cookies.set("userId", userId, {
+	// 			secure: true,
+	// 			sameSite: "strict",
+	// 			expires: 7,
+	// 		});
+	// 	}
+	// 	//Refresh 후 profiles로 이동
+	// 	if (response) {
+	// 		navigate("/user/profiles");
+	// 	} else {
+	// 		//accessToken, refreshToken 만료 시 쿠키에서 제거
+	// 		localStorage.removeItem("accessToken");
+	// 		localStorage.removeItem("refreshToken");
+	// 		localStorage.removeItem("grantType");
+	// 		localStorage.removeItem("userId");
+	// 		localStorage.removeItem("autoLogin");
+	// 	}
+	// };
 
 	useEffect(() => {
 		localStorage.removeItem("isDataLoaded");
@@ -119,6 +130,7 @@ function OnBoading() {
 		localStorage.removeItem("profileList");
 		localStorage.removeItem("editProfile");
 		localStorage.removeItem("myProfile");
+		localStorage.removeItem("detail");
 		autoLogin();
 	}, []);
 	return (

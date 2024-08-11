@@ -1,16 +1,45 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { deleteData } from "@/utils/crud";
+import { deleteData, getData } from "@/utils/crud";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
 import useContents from "@/store/useContent";
 import useProfile from "@/store/useProfile";
 import useReviews from "@/store/useReviews";
+import { useEffect } from "react";
 
 function DeleteReview({ isOpen, onClose }) {
   const { content } = useContents();
-  const { profileName } = useProfile();
-  const { deleteReview, setDeleteReview } = useReviews();
+  const { myProfileId, myEvaluationId, setMyEvaluationId } = useProfile();
+  const { reviewState, setReviewState } = useReviews();
+
+  const isReview = async () => {
+    try {
+      const type = Cookies.get("grantType");
+      const token = Cookies.get("accessToken");
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `${type} ${token}`,
+      };
+
+      const isReviewUrl = `${
+        import.meta.env.VITE_API_URL
+      }/evaluation/retrieve/by-profile?contentId=${
+        content.contentId
+      }&profileId=${myProfileId}`;
+
+      const getRes = await getData(isReviewUrl, headers);
+
+      setMyEvaluationId(getRes.evaluationId);
+    } catch (error) {
+      console.log(error);
+      console.log("에러출력");
+      toast.error(`작성한 리뷰가 없습니다.`, {
+        duration: 2000,
+      });
+    }
+  };
 
   const handleDelete = async () => {
     try {
@@ -22,20 +51,19 @@ function DeleteReview({ isOpen, onClose }) {
         Authorization: `${type} ${token}`,
       };
 
-      const url = `https://hoyeonjigi.site/evaluation/${profileName}/${content.contentId}`;
+      const url = `${
+        import.meta.env.VITE_API_URL
+      }/evaluation/delete?evaluationId=${myEvaluationId}`;
 
       const response = await deleteData(url, headers);
 
-      if ("scrollRestoration" in history) {
-        history.scrollRestoration = "manual";
-      }
       window.scrollTo(0, 0);
 
       toast.success(`리뷰가 삭제되었습니다`, {
         duration: 2000,
       });
 
-      setDeleteReview(true);
+      setReviewState({ deleteReview: true, isReview: false });
     } catch (error) {
       console.log(error);
       console.log("에러출력");
@@ -44,6 +72,10 @@ function DeleteReview({ isOpen, onClose }) {
       });
     }
   };
+
+  useEffect(() => {
+    isReview();
+  }, []);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-90 ">
