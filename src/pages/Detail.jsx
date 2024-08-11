@@ -23,6 +23,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import dibs from "@/assets/dibs.svg";
 import share from "@/assets/share.svg";
 import play from "@/assets/play.svg";
+import checkToken from "@/utils/checkToken";
 
 function Detail() {
   const queryClient = useQueryClient();
@@ -85,8 +86,11 @@ function Detail() {
 
         setGenre(results);
       } catch (error) {
-        console.log(error);
-        console.log("장르에러");
+        // if (error.response["status"] === 403) {
+        //   checkToken();
+        // }
+        //   console.log(error.response["status"]);
+        // console.log("장르에러");
         // refresh();
       }
     };
@@ -104,6 +108,7 @@ function Detail() {
 
       const headers = {
         "Content-Type": "application/json",
+        // "Access-Control-Allow-Origin": "https://clone-tving.vercel.app",
         Authorization: `${type} ${token}`,
       };
 
@@ -128,6 +133,9 @@ function Detail() {
       return response; // JSON 형태로 파싱된 응답 데이터
     } catch (error) {
       // 에러 발생 시 콘솔에 에러 메시지 출력
+      // if (error.response["status"] === 403) {
+      //   checkToken();
+      // }
       console.error("fetchReviews 에러:", error);
 
       // console.log(data);
@@ -159,38 +167,34 @@ function Detail() {
     },
   });
 
-  // // 등록,수정 ,삭제 됐을 시 로직
+  // // 등록 ,삭제 됐을 시 로직
   useEffect(() => {
     if (
       reviewState.isReview ||
-      reviewState.isModify ||
+      // reviewState.isModify ||
       reviewState.deleteReview
     ) {
-      queryClient.removeQueries(["infinity"]);
-      queryClient.invalidateQueries(["infinity"], { exact: true });
+      // queryClient.removeQueries(["infinity"]);
+      // queryClient.invalidateQueries(["infinity"], { exact: true });
       // queryClient.refetchQueries(["infinity"]);
       // refetch();
 
       // queryClient.clear();
 
       // reset();
-      // queryClient.invalidateQueries(["infinity"]);
-      // queryClient.refetchQueries(["infinity"]);
-      // refetch();
 
-      console.log(data);
-
+      // console.log(reviewState.isModify);
       if (data) {
         const updateReviewState = () => {
           // reset();
 
-          queryClient.removeQueries(["infinity"]);
+          // queryClient.removeQueries(["infinity"]);
           queryClient.invalidateQueries(["infinity"], { exact: true });
+          refetch();
 
           if (
             data.pages[0].page["totalElements"] !== reviewState.numberOfReviews
           ) {
-            
             avgRating();
             let changeReviews = [];
 
@@ -206,12 +210,14 @@ function Detail() {
                 isReview: false,
                 isModify: false,
                 deleteReview: false,
+                len: 0,
               });
             });
           }
         };
 
         updateReviewState(); // 리뷰 상태 업데이트 함수 호출
+
         // window.scrollTo(0, 0);
       }
     }
@@ -224,19 +230,58 @@ function Detail() {
     queryClient,
   ]);
 
+  // 댓글 수정 됐을 때 로직
+  const prevDataRef = useRef(null);
+
+  useEffect(() => {
+    if (reviewState.isModify) {
+      if (data) {
+        queryClient.invalidateQueries(["infinity"], { exact: true });
+
+        let changeReviews = [];
+
+        console.log(data);
+
+        if (
+          prevDataRef.current !== null &&
+          prevDataRef.current !== data.pages[0].content
+        ) {
+          data.pages[0].content.map((reviews) => {
+            changeReviews.push(reviews); // 리뷰 객체를 배열에 추가
+          });
+
+          avgRating();
+          setReviewState({
+            review: changeReviews,
+            numberOfReviews: data.pages[0].page["totalElements"],
+            totalPages: data.pages[0].page["totalPages"],
+            isReview: false,
+            isModify: false,
+            deleteReview: false,
+            len: 0,
+          });
+        }
+
+        prevDataRef.current = data.pages[0].content;
+      }
+    }
+  }, [data, isSearch, reviewState.isModify, queryClient]);
+
   //스크롤을 내리면 기존 있었던 리뷰에 추가된 리뷰를 업데이트
   useEffect(() => {
-    queryClient.invalidateQueries(["infinity"]);
-    queryClient.refetchQueries(["infinity"]);
-    refetch();
-
     if (reviewState.len >= reviewState.totalPages || !inView) {
       return;
     }
 
+    console.log(reviewState.len);
+
+    queryClient.invalidateQueries(["infinity"]);
+    queryClient.refetchQueries(["infinity"]);
+    refetch();
+
     if (data) {
-      console.log(data.pages.length);
-      console.log(data);
+      // console.log(data.pages.length);
+      // console.log(data);
 
       // console.log(reviewState.len);
       // console.log(data.pages[data.pages.length - 1].content);
@@ -285,7 +330,10 @@ function Detail() {
         averageRating: response,
       });
     } catch (error) {
-      console.log(error);
+      // if (error.response["status"] === 403) {
+      //   checkToken();
+      // }
+      // console.log(error);
     }
   };
 
