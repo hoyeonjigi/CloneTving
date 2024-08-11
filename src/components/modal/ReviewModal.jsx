@@ -24,7 +24,7 @@ function ReviewModal({ isOpen, closeModal }) {
 
   const { setReviewState } = useReviews();
 
-  const { profileId } = useProfile();
+  const { myProfileId } = useProfile();
 
   // 별점을 설정하는 함수
   const handleSetRating = (newRating) => {
@@ -65,7 +65,7 @@ function ReviewModal({ isOpen, closeModal }) {
         .replace(/\./g, "");
 
       const data = {
-        profileId: profileId,
+        profileId: myProfileId,
         contentId: content.contentId,
         rating: rating,
         review: review,

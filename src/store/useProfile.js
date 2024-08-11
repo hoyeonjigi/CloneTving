@@ -10,12 +10,25 @@ const createProfileStore = (set) => ({
   myEvaluationId: "",
   myImageId: "",
 
+  myChange: false,
+
   setMyProfileName: (myProfileName) => set({ myProfileName }),
   setMyProfileUrl: (myProfileUrl) => set({ myProfileUrl }),
   setMyChild: (myChild) => set({ myChild }),
   setMyProfileId: (myProfileId) => set({ myProfileId }),
   setMyEvaluationId: (myEvaluationId) => set({ myEvaluationId }),
   setMyImageId: (myImageId) => set({ myImageId }),
+  setMyChange: (myChange) => set({ myChange }),
+  reset: () =>
+    set({
+      myProfileName: "",
+      myProfileUrl: "",
+      myProfileId: "",
+      myChild: "",
+      myEvaluationId: "",
+      myImageId: "",
+      myChange: false,
+    }),
 });
 
 const useProfile = create(
