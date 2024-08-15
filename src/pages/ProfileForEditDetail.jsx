@@ -376,6 +376,7 @@ import UserProfileModal from "@/components/modal/UserProfileModal";
 import profileEdit from "@/assets/profiles/icon-edit.svg";
 import checkIcon from "@/assets/profiles/icon-circle.svg";
 import { motion } from "framer-motion";
+import checkError from "@/utils/checkError";
 
 function ProfileForEditDetail() {
   const {
@@ -630,6 +631,10 @@ function ProfileForEditDetail() {
   //     setUpdateProfileName(profileName);
   //   }
   // }, [myProfileId, myProfileName, updateProfileName]);
+
+  useEffect(() => {
+    checkError();
+  }, []);
 
   return (
     <div className="bg-black font-noto">

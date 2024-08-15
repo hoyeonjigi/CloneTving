@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import useCreate from "@/store/useCreate";
 import useProfile from "@/store/useProfile";
 import useProfileList from "@/store/useProfileList";
+import checkError from "@/utils/checkError";
+// import { checkError } from "@/utils/checkToken";
 
 function Profile() {
   const { userProfiles, setUserProfiles } = useProfileList();
@@ -128,6 +130,10 @@ function Profile() {
     setIsImageSelected(false);
     getUserData();
   }, []);
+
+  useEffect(() => {
+    checkError();
+  }, []); // 빈 배열을 의존성 배열로 설정하여 컴포넌트 마운트 시에만 실행되도록 함
 
   return (
     <div className="bg-black">

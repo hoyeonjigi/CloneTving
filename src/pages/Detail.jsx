@@ -23,7 +23,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import dibs from "@/assets/dibs.svg";
 import share from "@/assets/share.svg";
 import play from "@/assets/play.svg";
-import checkToken from "@/utils/checkToken";
+import checkError from "@/utils/checkError";
 
 function Detail() {
   const queryClient = useQueryClient();
@@ -86,9 +86,9 @@ function Detail() {
 
         setGenre(results);
       } catch (error) {
-        // if (error.response["status"] === 403) {
-        //   checkToken();
-        // }
+        if (error.response["status"] === 403) {
+          checkError();
+        }
         //   console.log(error.response["status"]);
         // console.log("장르에러");
         // refresh();
@@ -133,9 +133,9 @@ function Detail() {
       return response; // JSON 형태로 파싱된 응답 데이터
     } catch (error) {
       // 에러 발생 시 콘솔에 에러 메시지 출력
-      // if (error.response["status"] === 403) {
-      //   checkToken();
-      // }
+      if (error.response["status"] === 403) {
+        checkError();
+      }
       console.error("fetchReviews 에러:", error);
 
       // console.log(data);
@@ -158,6 +158,9 @@ function Detail() {
     queryFn: fetchReviews,
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
+      // console.log("찐")
+      // console.log(lastPage)
+      // console.log(allPages)
       // return allPages.length;
       // if (!lastPage) {
       //   return undefined; // 빈 페이지를 명시적으로 처리
@@ -198,21 +201,34 @@ function Detail() {
             avgRating();
             let changeReviews = [];
 
-            data.pages.map((reviews) => {
-              reviews.content.forEach((review) => {
-                changeReviews.push(review); // 리뷰 객체를 배열에 추가
-              });
+            // data.pages.map((reviews) => {
+            //   reviews.content.forEach((review) => {
+            //     changeReviews.push(review); // 리뷰 객체를 배열에 추가
+            //   });
 
-              setReviewState({
-                review: changeReviews,
-                numberOfReviews: reviews.page["totalElements"],
-                totalPages: reviews.page["totalPages"],
-                isReview: false,
-                isModify: false,
-                deleteReview: false,
-                len: 0,
-              });
+            //   setReviewState({
+            //     review: changeReviews,
+            //     numberOfReviews: reviews.page["totalElements"],
+            //     totalPages: reviews.page["totalPages"],
+            //     isReview: false,
+            //     isModify: false,
+            //     deleteReview: false,
+            //     len: 0,
+            //   });
+            // });
+
+            setReviewState({
+              // review: changeReviews,
+              // numberOfReviews: reviews.page["totalElements"],
+              // totalPages: reviews.page["totalPages"],
+              isReview: false,
+              // isModify: false,
+              deleteReview: false,
+              len: 0,
+              isFirst: true,
             });
+
+            queryClient.clear();
           }
         };
 
@@ -240,26 +256,26 @@ function Detail() {
 
         let changeReviews = [];
 
-        console.log(data);
+        // console.log(data);
 
         if (
           prevDataRef.current !== null &&
           prevDataRef.current !== data.pages[0].content
         ) {
-          data.pages[0].content.map((reviews) => {
-            changeReviews.push(reviews); // 리뷰 객체를 배열에 추가
-          });
+          // data.pages[0].content.map((reviews) => {
+          //   changeReviews.push(reviews); // 리뷰 객체를 배열에 추가
+          // });
 
           avgRating();
           setReviewState({
-            review: changeReviews,
-            numberOfReviews: data.pages[0].page["totalElements"],
-            totalPages: data.pages[0].page["totalPages"],
             isReview: false,
             isModify: false,
             deleteReview: false,
             len: 0,
+            isFirst: true,
           });
+
+          queryClient.clear();
         }
 
         prevDataRef.current = data.pages[0].content;
@@ -273,21 +289,13 @@ function Detail() {
       return;
     }
 
-    console.log(reviewState.len);
+    // console.log(reviewState.len);
 
     queryClient.invalidateQueries(["infinity"]);
-    queryClient.refetchQueries(["infinity"]);
-    refetch();
+    // queryClient.refetchQueries(["infinity"]);
+    // refetch();
 
     if (data) {
-      // console.log(data.pages.length);
-      // console.log(data);
-
-      // console.log(reviewState.len);
-      // console.log(data.pages[data.pages.length - 1].content);
-      // console.log(reviewState.len);
-      // console.log(data.pages[data.pages.length]);
-
       if (reviewState.len !== 0 && data.pages.length !== reviewState.len) {
         // console.log(data);
         setReviewState({
@@ -330,9 +338,9 @@ function Detail() {
         averageRating: response,
       });
     } catch (error) {
-      // if (error.response["status"] === 403) {
-      //   checkToken();
-      // }
+      if (error.response["status"] === 403) {
+        checkError();
+      }
       // console.log(error);
     }
   };
@@ -373,6 +381,8 @@ function Detail() {
     queryClient.removeQueries(["infinity"]);
     queryClient.refetchQueries(["infinity"]);
 
+    queryClient.resetQueries({ queryKey: ["infinity"] });
+
     // 컴포넌트의 상태를 초기화합니다
     reset();
 
@@ -383,6 +393,10 @@ function Detail() {
     setIsModalOpen(false);
     setIsChangeModalOpen(false);
   }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때만 실행되도록 합니다
+
+  useEffect(() => {
+    checkError();
+  }, []);
 
   return (
     <div className="bg-black">
@@ -495,7 +509,12 @@ function Detail() {
                   <Star starRating={item.rating}></Star>
                   <p className="text-white mt-2 font-medium">{item.review}</p>
                   <span className="mt-2 text-gray_07 text-sm">
-                    {item.profileName} • {item.ratingTime}{" "}
+                    {item.profileName} •{" "}
+                    {new Date(item.ratingTime).toLocaleDateString("ko-KR", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </span>
                 </li>
               ))

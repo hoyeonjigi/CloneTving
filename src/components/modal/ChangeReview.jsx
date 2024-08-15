@@ -63,6 +63,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import DeleteReview from "./DeleteReview";
 import ModifyReviewModal from "./ModifyReviewModal"; // 리뷰 수정 모달 컴포넌트
+import checkError from "@/utils/checkError";
 
 function ChangeReview({ isOpen, onClose }) {
   const modalRef = useRef();
@@ -109,6 +110,11 @@ function ChangeReview({ isOpen, onClose }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
+
+  useEffect(() => {
+    checkError();
+  }, []);
+
 
   if (!isOpen) return null;
 

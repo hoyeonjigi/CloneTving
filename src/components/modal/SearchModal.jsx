@@ -7,6 +7,7 @@ import useContents from "@/store/useContent";
 import { Link } from "react-router-dom";
 import { patchData } from "@/utils/crud";
 import useDetail from "@/store/useDetail";
+import checkError from "@/utils/checkError";
 // import debounce from "@/utils/debounce";
 
 function SearchModal({ visible, onClose }) {
@@ -131,11 +132,18 @@ function SearchModal({ visible, onClose }) {
     };
   }, [visible]); // visible 상태가 변경될 때마다 실행
 
+
+  useEffect(() => {
+    checkError();
+  }, []);
+
   if (!visible) return null;
 
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
+
+  
 
   return (
     <div

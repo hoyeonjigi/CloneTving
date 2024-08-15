@@ -13,6 +13,7 @@ import { Navigation } from "swiper/modules";
 import close from "@/assets/profiles/icon_x.svg";
 import right from "@/assets/profiles/icon-right.svg";
 import left from "@/assets/profiles/icon-left.svg";
+import checkError from "@/utils/checkError";
 
 function UserProfileModal({ isOpen, closeModal }) {
   // const [profileImages, setProfileImages] = useState([]);
@@ -68,6 +69,11 @@ function UserProfileModal({ isOpen, closeModal }) {
   // useEffect(() => {
   // 	getProfileImage();
   // }, []);
+
+
+  useEffect(() => {
+    checkError();
+  }, []);
 
   if (!isOpen) {
     return null;
