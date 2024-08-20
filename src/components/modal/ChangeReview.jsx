@@ -64,90 +64,142 @@ import React, { useState, useRef, useEffect } from "react";
 import DeleteReview from "./DeleteReview";
 import ModifyReviewModal from "./ModifyReviewModal"; // 리뷰 수정 모달 컴포넌트
 import checkError from "@/utils/checkError";
+import useContents from "@/store/useContent";
+import useProfile from "@/store/useProfile";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
+import { getData } from "@/utils/crud";
 
 function ChangeReview({ isOpen, onClose }) {
-  const modalRef = useRef();
+	const modalRef = useRef();
+	const { content } = useContents();
+	const { myProfileId, myEvaluationId, setMyEvaluationId } = useProfile();
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false); // 수정 모달 상태
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [isModifyModalOpen, setIsModifyModalOpen] = useState(false); // 수정 모달 상태
 
-  // 삭제 모달 열기 핸들러
-  const handleDeleteClick = () => {
-    setIsDeleteModalOpen(true);
-  };
+	const [isExistReview, setIsExistReview] = useState(false);
 
-  // 수정 모달 열기 핸들러
-  const handleModifyClick = () => {
-    setIsModifyModalOpen(true);
-  };
+	// 삭제 모달 열기 핸들러
+	const handleDeleteClick = () => {
+		if (!isExistReview) {
+			toast.error("작성한 리뷰가 없습니다.", { duration: 2000 });
+			setIsDeleteModalOpen(false);
+			onClose();
+			return;
+		}
+		setIsDeleteModalOpen(true);
+	};
 
-  // 삭제 모달 및 ChangeReview 모달 닫기 핸들러
-  const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-    onClose();
-  };
+	// 수정 모달 열기 핸들러
+	const handleModifyClick = () => {
+		if (!isExistReview) {
+			toast.error("작성한 리뷰가 없습니다.", { duration: 2000 });
+			setIsModifyModalOpen(false);
+			onClose();
+			return;
+		}
+		setIsModifyModalOpen(true);
+	};
 
-  // 수정 모달 및 ChangeReview 모달 닫기 핸들러
-  const closeModifyModal = () => {
-    setIsModifyModalOpen(false);
-    onClose();
-  };
+	// 삭제 모달 및 ChangeReview 모달 닫기 핸들러
+	const closeDeleteModal = () => {
+		setIsDeleteModalOpen(false);
+		onClose();
+	};
 
-  useEffect(() => {
-    // 모달 외부 클릭 시 모달을 닫는 함수
-    const handleClickOutside = (event) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target) &&
-        !event.target.closest(".modal-trigger")
-      ) {
-        onClose(); // 모달 닫기
-      }
-    };
+	// 수정 모달 및 ChangeReview 모달 닫기 핸들러
+	const closeModifyModal = () => {
+		setIsModifyModalOpen(false);
+		onClose();
+	};
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [onClose]);
+	const isReview = async () => {
+		try {
+			const type = Cookies.get("grantType");
+			const token = Cookies.get("accessToken");
 
-  useEffect(() => {
-    checkError();
-  }, []);
+			const headers = {
+				"Content-Type": "application/json",
+				Authorization: `${type} ${token}`,
+			};
 
+			const isReviewUrl = `${
+				import.meta.env.VITE_API_URL
+			}/evaluation/retrieve/by-profile?contentId=${
+				content.contentId
+			}&profileId=${myProfileId}`;
 
-  if (!isOpen) return null;
+			const getRes = await getData(isReviewUrl, headers);
+			console.log(getRes);
 
-  return (
-    <div
-      ref={modalRef}
-      className="flex flex-col mt-3 bg-gray_03 text-white w-[60%] items-center rounded absolute right-10"
-    >
-      <button
-        onClick={handleModifyClick}
-        className="py-3 w-full text-gray_08 hover:text-white"
-      >
-        리뷰 수정
-      </button>
-      <button
-        onClick={handleDeleteClick}
-        className="py-3 w-full text-gray_08 hover:text-white"
-      >
-        리뷰 삭제
-      </button>
+			setMyEvaluationId(getRes.evaluationId);
+			setIsExistReview(true);
+		} catch (error) {
+			console.log(error);
+			console.log("에러출력");
+			setIsExistReview(false);
+		}
+	};
 
-      {isModifyModalOpen && (
-        <ModifyReviewModal
-          isOpen={isModifyModalOpen}
-          onClose={closeModifyModal}
-        />
-      )}
+	useEffect(() => {
+		isReview();
+	}, []);
 
-      {isDeleteModalOpen && (
-        <DeleteReview isOpen={isDeleteModalOpen} onClose={closeDeleteModal} />
-      )}
-    </div>
-  );
+	useEffect(() => {
+		// 모달 외부 클릭 시 모달을 닫는 함수
+		const handleClickOutside = (event) => {
+			if (
+				modalRef.current &&
+				!modalRef.current.contains(event.target) &&
+				!event.target.closest(".modal-trigger")
+			) {
+				onClose(); // 모달 닫기
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [onClose]);
+
+	useEffect(() => {
+		checkError();
+	}, []);
+
+	if (!isOpen) return null;
+
+	return (
+		<div
+			ref={modalRef}
+			className="flex flex-col mt-3 bg-gray_03 text-white w-[60%] items-center rounded absolute right-10"
+		>
+			<button
+				onClick={handleModifyClick}
+				className="py-3 w-full text-gray_08 hover:text-white"
+			>
+				리뷰 수정
+			</button>
+			<button
+				onClick={handleDeleteClick}
+				className="py-3 w-full text-gray_08 hover:text-white"
+			>
+				리뷰 삭제
+			</button>
+
+			{isModifyModalOpen && (
+				<ModifyReviewModal
+					isOpen={isModifyModalOpen}
+					onClose={closeModifyModal}
+				/>
+			)}
+
+			{isDeleteModalOpen && (
+				<DeleteReview isOpen={isDeleteModalOpen} onClose={closeDeleteModal} />
+			)}
+		</div>
+	);
 }
 
 export default ChangeReview;
