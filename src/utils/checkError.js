@@ -1,8 +1,28 @@
 //
 
 // utils/tokenUtils.js
-import { postData } from "@/utils/crud";
+import { getData, postData } from "@/utils/crud";
 import Cookies from "js-cookie";
+
+const checkError = async () => {
+  try {
+    const profileUrl = `${import.meta.env.VITE_API_URL}/profileImages`;
+    const type = Cookies.get("grantType");
+    const token = Cookies.get("accessToken");
+    const headers = {
+      "Content-Type": "application/json",
+      // "Access-Control-Allow-Origin": "*",
+      Authorization: `${type} ${token}`,
+    };
+
+    const result = await getData(profileUrl, headers);
+
+    // console.log(result);
+  } catch (error) {
+    checkToken();
+    console.error(`Error in sending POST request: ${error}`);
+  }
+};
 
 const checkToken = async () => {
   const url = `${import.meta.env.VITE_API_URL}/member/reissue`;
@@ -18,11 +38,8 @@ const checkToken = async () => {
 
   const data = {};
 
-  console.log(refreshToken);
   try {
     const response = await postData(url, data, headers);
-
-    console.log(response);
 
     Cookies.set("accessToken", response.accessToken, {
       secure: true,
@@ -37,17 +54,13 @@ const checkToken = async () => {
       sameSite: "strict",
     });
 
-    return response;
+    // return response;
+    window.location.reload();
   } catch (error) {
     console.log("Token refresh failed:", error.response);
-
-    // // 에러 발생 시 토큰 삭제
-    // Cookies.remove("accessToken");
-    // Cookies.remove("refreshToken");
-    // Cookies.remove("grantType");
 
     throw error; // 에러를 다시 던져서 호출자에게 알림
   }
 };
 
-export default checkToken;
+export default checkError;

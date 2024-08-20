@@ -7,6 +7,7 @@ import useContents from "@/store/useContent";
 import useProfile from "@/store/useProfile";
 import useReviews from "@/store/useReviews";
 import { useEffect } from "react";
+import checkError from "@/utils/checkError";
 
 function DeleteReview({ isOpen, onClose }) {
   const { content } = useContents();
@@ -75,6 +76,10 @@ function DeleteReview({ isOpen, onClose }) {
 
   useEffect(() => {
     isReview();
+  }, []);
+
+  useEffect(() => {
+    checkError();
   }, []);
 
   return (
