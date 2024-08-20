@@ -82,7 +82,7 @@ function ChangeReview({ isOpen, onClose }) {
 	// 삭제 모달 열기 핸들러
 	const handleDeleteClick = () => {
 		if (!isExistReview) {
-			toast.error("작성한 리뷰가 없음.", { duration: 2000 });
+			toast.error("작성한 리뷰가 없습니다.", { duration: 2000 });
 			setIsDeleteModalOpen(false);
 			onClose();
 			return;
@@ -93,7 +93,7 @@ function ChangeReview({ isOpen, onClose }) {
 	// 수정 모달 열기 핸들러
 	const handleModifyClick = () => {
 		if (!isExistReview) {
-			toast.error("작성한 리뷰가 없음.", { duration: 2000 });
+			toast.error("작성한 리뷰가 없습니다.", { duration: 2000 });
 			setIsModifyModalOpen(false);
 			onClose();
 			return;
