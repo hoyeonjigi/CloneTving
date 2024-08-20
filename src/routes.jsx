@@ -85,6 +85,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import RootLayout from "./pages/RootLayout.jsx";
+import Spinner from "./components/Spinner.jsx";
 
 // 동적 import를 통한 코드 스플리팅
 const SignIn = lazy(() => import("./pages/SignIn.jsx"));
@@ -111,7 +112,13 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <OnBoarding />
           </Suspense>
         ),
@@ -119,7 +126,13 @@ const router = createBrowserRouter([
       {
         path: "/signin",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <SignIn />
           </Suspense>
         ),
@@ -127,7 +140,13 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <SignUp />
           </Suspense>
         ),
@@ -135,7 +154,13 @@ const router = createBrowserRouter([
       {
         path: "/FindID",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <FindID />
           </Suspense>
         ),
@@ -143,7 +168,13 @@ const router = createBrowserRouter([
       {
         path: "/FindPassword",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <FindPassword />
           </Suspense>
         ),
@@ -151,7 +182,13 @@ const router = createBrowserRouter([
       {
         path: "/main",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <Main />
           </Suspense>
         ),
@@ -159,7 +196,13 @@ const router = createBrowserRouter([
       {
         path: "/user/profiles",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <Profile />
           </Suspense>
         ),
@@ -167,7 +210,13 @@ const router = createBrowserRouter([
       {
         path: "/profilesForEdit",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <ProfilesForEdit />
           </Suspense>
         ),
@@ -175,7 +224,13 @@ const router = createBrowserRouter([
       {
         path: "/userTving",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <UserTving />
           </Suspense>
         ),
@@ -183,7 +238,13 @@ const router = createBrowserRouter([
       {
         path: "/user/profile",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <ProfileForCreate />
           </Suspense>
         ),
@@ -191,7 +252,13 @@ const router = createBrowserRouter([
       {
         path: "/user/profileForEdit",
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <ProfileForEditDetail />
           </Suspense>
         ),
@@ -199,7 +266,13 @@ const router = createBrowserRouter([
       {
         path: `/main/detail/:id`,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <Detail />
           </Suspense>
         ),
@@ -207,7 +280,13 @@ const router = createBrowserRouter([
       {
         path: `/main/my`,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center mt-20">
+                <Spinner />
+              </div>
+            }
+          >
             <MyDetail />
           </Suspense>
         ),
