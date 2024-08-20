@@ -63,11 +63,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import DeleteReview from "./DeleteReview";
 import ModifyReviewModal from "./ModifyReviewModal"; // 리뷰 수정 모달 컴포넌트
-import Cookies from "js-cookie";
+import checkError from "@/utils/checkError";
 import useContents from "@/store/useContent";
 import useProfile from "@/store/useProfile";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 import { getData } from "@/utils/crud";
-import { toast } from "react-hot-toast";
 
 function ChangeReview({ isOpen, onClose }) {
 	const modalRef = useRef();
@@ -130,6 +131,7 @@ function ChangeReview({ isOpen, onClose }) {
 			}&profileId=${myProfileId}`;
 
 			const getRes = await getData(isReviewUrl, headers);
+			console.log(getRes);
 
 			setMyEvaluationId(getRes.evaluationId);
 			setIsExistReview(true);
@@ -161,6 +163,10 @@ function ChangeReview({ isOpen, onClose }) {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [onClose]);
+
+	useEffect(() => {
+		checkError();
+	}, []);
 
 	if (!isOpen) return null;
 

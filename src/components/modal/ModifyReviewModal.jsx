@@ -12,6 +12,7 @@ import { toast } from "react-hot-toast";
 
 import useReviews from "@/store/useReviews";
 import useProfile from "@/store/useProfile";
+import checkError from "@/utils/checkError";
 
 function ModifyReviewModal({ isOpen, onClose }) {
 	const [rating, setRating] = useState(0); // 초기 별점 상태 설정
@@ -98,6 +99,10 @@ function ModifyReviewModal({ isOpen, onClose }) {
 	};
 
 	useEffect(() => {
+		checkError();
+	}, []);
+
+	useEffect(() => {
 		const reviewStatus = async () => {
 			try {
 				const type = Cookies.get("grantType");
@@ -118,7 +123,7 @@ function ModifyReviewModal({ isOpen, onClose }) {
 
 				setEid(response["evaluationId"]);
 
-				console.log(response);
+				// console.log(response);
 			} catch (error) {
 				console.log(error);
 				console.log("에러출력");

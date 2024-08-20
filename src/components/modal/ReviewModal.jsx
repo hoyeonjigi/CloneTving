@@ -12,6 +12,7 @@ import { toast } from "react-hot-toast";
 
 import useReviews from "@/store/useReviews";
 import useProfile from "@/store/useProfile";
+import checkError from "@/utils/checkError";
 
 function ReviewModal({ isOpen, closeModal }) {
 	const [rating, setRating] = useState(0); // 초기 별점 상태 설정
@@ -102,6 +103,10 @@ function ReviewModal({ isOpen, closeModal }) {
 			});
 		}
 	};
+
+	useEffect(() => {
+		checkError();
+	}, []);
 
 	if (!isOpen) {
 		return null;

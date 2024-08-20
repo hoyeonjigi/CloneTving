@@ -21,6 +21,7 @@ import { useLocation } from "react-router-dom";
 import useContents from "@/store/useContent";
 import useReviews from "@/store/useReviews";
 import { useQueryClient } from "@tanstack/react-query";
+import checkError from "@/utils/checkError";
 
 function Main() {
   const location = useLocation();
@@ -264,6 +265,11 @@ function Main() {
       localStorage.removeItem("isDataLoaded");
     }
   }, [location]); // location 객체가 변경될 때마다 useEffect 훅이 실행됩니다.
+
+
+  useEffect(() => {
+    checkError();
+  }, []);
 
   return (
     <>

@@ -11,6 +11,7 @@ import { getData, postData } from "@/utils/crud";
 import useLogin from "@/store/login";
 import useEdit from "@/store/useEdit";
 import useCreate from "@/store/useCreate";
+import checkError from "@/utils/checkError";
 
 function ProfilesForEdit() {
   const [userProfiles, setUserProfiles] = useState([]);
@@ -85,9 +86,15 @@ function ProfilesForEdit() {
 
   useEffect(() => {
     // localStorage.removeItem("editProfile");
+    checkError();
     getUserData();
     setIsImageSelected(false);
   }, []);
+
+
+  // useEffect(() => {
+  //   checkError();
+  // }, []);
 
   return (
     <div className="bg-black font-noto">

@@ -2,15 +2,41 @@ import { useEffect, useState } from "react";
 
 import { motion } from "framer-motion";
 import close from "@/assets/profiles/icon_x.svg";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { deleteData } from "@/utils/crud";
+import useLogin from "@/store/login";
+import Cookies from "js-cookie";
 
 function ReconfirmModal({ isOpen, closeModal }) {
+	const { userId } = useLogin();
+
+	const navigate = useNavigate();
+
+	const handleDelete = async () => {
+		const type = Cookies.get("grantType");
+		const token = Cookies.get("accessToken");
+
+		const headers = {
+			"Content-Type": "application/json",
+			Authorization: `${type} ${token}`,
+		};
+		const url = `${
+			import.meta.env.VITE_API_URL
+		}/member/delete?loginId=${userId}`;
+
+		const response = await deleteData(url, headers);
+
+		navigate("/");
+		toast.success(`회원 탈퇴가 완료되었습니다.`, {
+			duration: 2000,
+			icon: `😥`,
+		});
+	};
+
 	if (!isOpen) {
 		return null;
 	}
-
-	const handleDelete = async () => {
-		//테스트
-	};
 
 	return (
 		<div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-90 ">

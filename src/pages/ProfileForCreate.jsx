@@ -26,6 +26,7 @@ import useCreate from "@/store/useCreate";
 import useProfileList from "@/store/useProfileList";
 
 import debounce from "lodash/debounce";
+import checkError from "@/utils/checkError";
 
 function ProfileForCreate() {
 	const profiles = [
@@ -249,6 +250,10 @@ function ProfileForCreate() {
 		// console.log(`selectedImageUrl : ${selectedImageUrl}`);
 		// console.log(`selectedImageName : ${selectedImageName}`);
 	}, [selectedImageName, selectedImageUrl]);
+
+	useEffect(() => {
+		checkError();
+	}, []);
 
 	return (
 		<div className="bg-black font-noto">
