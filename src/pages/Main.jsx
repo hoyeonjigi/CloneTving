@@ -67,7 +67,6 @@ function Main() {
       const body = {};
       const response = await postData(url, body, headers);
 
-
       Cookies.set(`alreadyViewCookie${contentId}`, `${contentId}`, {
         expires: 1,
         secure: true,
@@ -418,7 +417,7 @@ function Main() {
 
         <section className="pt-5 mt-10">
           <h3 className="text-white text-2.5xl font-bold ml-16">최신 영화</h3>
-          <div className="relative">
+          <div className="relative px-16">
             <Swiper
               modules={[Navigation]}
               spaceBetween={10}
@@ -428,7 +427,7 @@ function Main() {
               pagination={{
                 clickable: true,
               }}
-              className="px-16 content-custom-swiper z-10"
+              className="content-custom-swiper z-10"
             >
               {latestFilm.map((film, index) => (
                 <SwiperSlide
@@ -467,48 +466,50 @@ function Main() {
             <h3 className="text-white text-2.5xl font-bold ml-16">
               최신 드라마
             </h3>
-            <Swiper
-              modules={[Navigation]}
-              spaceBetween={10}
-              slidesPerView={7.1}
-              slidesPerGroup={7}
-              navigation
-              pagination={{
-                clickable: true,
-              }}
-              className="px-16 content-custom-swiper z-10"
-            >
-              <section>
-                {latestDrama.map((drama, index) => (
-                  <SwiperSlide
-                    key={index}
-                    className="inline-flex z-50 flex-col items-start cursor-pointer"
-                  >
-                    <Link
-                      to={{
-                        pathname: `/main/detail/${drama.contentId}`, // 절대 경로를 사용합니다.
-                      }}
-                      onClick={() => {
-                        setContent(drama);
-                        handleViewCount(drama.contentId);
-                      }}
+            <div className="px-16">
+              <Swiper
+                modules={[Navigation]}
+                spaceBetween={10}
+                slidesPerView={7.1}
+                slidesPerGroup={7}
+                navigation
+                pagination={{
+                  clickable: true,
+                }}
+                className="px-16 content-custom-swiper z-10"
+              >
+                <section>
+                  {latestDrama.map((drama, index) => (
+                    <SwiperSlide
+                      key={index}
+                      className="inline-flex z-50 flex-col items-start cursor-pointer"
                     >
-                      <motion.img
-                        src={drama.src}
-                        alt={drama.alt}
-                        whileHover={{ y: -10 }} // 마우스 호버 시 y축으로 -10 이동
-                        transition={{
-                          type: "tween",
-                          stiffness: 300,
-                          duration: 0.3,
+                      <Link
+                        to={{
+                          pathname: `/main/detail/${drama.contentId}`, // 절대 경로를 사용합니다.
                         }}
-                        className="mt-4 rounded-md h-[280px]"
-                      />
-                    </Link>
-                  </SwiperSlide>
-                ))}
-              </section>
-            </Swiper>
+                        onClick={() => {
+                          setContent(drama);
+                          handleViewCount(drama.contentId);
+                        }}
+                      >
+                        <motion.img
+                          src={drama.src}
+                          alt={drama.alt}
+                          whileHover={{ y: -10 }} // 마우스 호버 시 y축으로 -10 이동
+                          transition={{
+                            type: "tween",
+                            stiffness: 300,
+                            duration: 0.3,
+                          }}
+                          className="mt-4 rounded-md h-[280px]"
+                        />
+                      </Link>
+                    </SwiperSlide>
+                  ))}
+                </section>
+              </Swiper>
+            </div>
           </div>
         </section>
         <section className="pt-5 relative mt-10">
@@ -516,48 +517,50 @@ function Main() {
             <h3 className="text-white text-2.5xl font-bold ml-16">
               코미디 드라마
             </h3>
-            <Swiper
-              modules={[Navigation]}
-              spaceBetween={10}
-              slidesPerView={7.1}
-              slidesPerGroup={7}
-              navigation
-              pagination={{
-                clickable: true,
-              }}
-              className="px-16 content-custom-swiper z-10"
-            >
-              <section>
-                {comedyDrama.map((drama, index) => (
-                  <SwiperSlide
-                    key={index}
-                    className="inline-flex z-50 flex-col items-start cursor-pointer"
-                  >
-                    <Link
-                      to={{
-                        pathname: `/main/detail/${drama.contentId}`, // 절대 경로를 사용합니다.
-                      }}
-                      onClick={() => {
-                        setContent(drama);
-                        handleViewCount(drama.contentId);
-                      }}
+            <div className="px-16">
+              <Swiper
+                modules={[Navigation]}
+                spaceBetween={10}
+                slidesPerView={7.1}
+                slidesPerGroup={7}
+                navigation
+                pagination={{
+                  clickable: true,
+                }}
+                className="px-16 content-custom-swiper z-10"
+              >
+                <section>
+                  {comedyDrama.map((drama, index) => (
+                    <SwiperSlide
+                      key={index}
+                      className="inline-flex z-50 flex-col items-start cursor-pointer"
                     >
-                      <motion.img
-                        src={drama.src}
-                        alt={drama.alt}
-                        whileHover={{ y: -10 }} // 마우스 호버 시 y축으로 -10 이동
-                        transition={{
-                          type: "tween",
-                          stiffness: 300,
-                          duration: 0.3,
+                      <Link
+                        to={{
+                          pathname: `/main/detail/${drama.contentId}`, // 절대 경로를 사용합니다.
                         }}
-                        className="mt-4 rounded-md h-[280px]"
-                      />
-                    </Link>
-                  </SwiperSlide>
-                ))}
-              </section>
-            </Swiper>
+                        onClick={() => {
+                          setContent(drama);
+                          handleViewCount(drama.contentId);
+                        }}
+                      >
+                        <motion.img
+                          src={drama.src}
+                          alt={drama.alt}
+                          whileHover={{ y: -10 }} // 마우스 호버 시 y축으로 -10 이동
+                          transition={{
+                            type: "tween",
+                            stiffness: 300,
+                            duration: 0.3,
+                          }}
+                          className="mt-4 rounded-md h-[280px]"
+                        />
+                      </Link>
+                    </SwiperSlide>
+                  ))}
+                </section>
+              </Swiper>
+            </div>
           </div>
         </section>
         <section className="pt-5 relative mt-10">
@@ -565,48 +568,50 @@ function Main() {
             <h3 className="text-white text-2.5xl font-bold ml-16">
               로맨스 영화
             </h3>
-            <Swiper
-              modules={[Navigation]}
-              spaceBetween={10}
-              slidesPerView={7.1}
-              slidesPerGroup={7}
-              navigation
-              pagination={{
-                clickable: true,
-              }}
-              className="px-16 content-custom-swiper z-10"
-            >
-              <section>
-                {romanceFilm.map((film, index) => (
-                  <SwiperSlide
-                    key={index}
-                    className="inline-flex z-50 flex-col items-start cursor-pointer"
-                  >
-                    <Link
-                      to={{
-                        pathname: `/main/detail/${film.contentId}`, // 절대 경로를 사용합니다.
-                      }}
-                      onClick={() => {
-                        setContent(film);
-                        handleViewCount(film.contentId);
-                      }}
+            <div className="px-16">
+              <Swiper
+                modules={[Navigation]}
+                spaceBetween={10}
+                slidesPerView={7.1}
+                slidesPerGroup={7}
+                navigation
+                pagination={{
+                  clickable: true,
+                }}
+                className="px-16 content-custom-swiper z-10"
+              >
+                <section>
+                  {romanceFilm.map((film, index) => (
+                    <SwiperSlide
+                      key={index}
+                      className="inline-flex z-50 flex-col items-start cursor-pointer"
                     >
-                      <motion.img
-                        src={film.src}
-                        alt={film.alt}
-                        whileHover={{ y: -10 }} // 마우스 호버 시 y축으로 -10 이동
-                        transition={{
-                          type: "tween",
-                          stiffness: 300,
-                          duration: 0.3,
+                      <Link
+                        to={{
+                          pathname: `/main/detail/${film.contentId}`, // 절대 경로를 사용합니다.
                         }}
-                        className="mt-4 rounded-md h-[280px]"
-                      />
-                    </Link>
-                  </SwiperSlide>
-                ))}
-              </section>
-            </Swiper>
+                        onClick={() => {
+                          setContent(film);
+                          handleViewCount(film.contentId);
+                        }}
+                      >
+                        <motion.img
+                          src={film.src}
+                          alt={film.alt}
+                          whileHover={{ y: -10 }} // 마우스 호버 시 y축으로 -10 이동
+                          transition={{
+                            type: "tween",
+                            stiffness: 300,
+                            duration: 0.3,
+                          }}
+                          className="mt-4 rounded-md h-[280px]"
+                        />
+                      </Link>
+                    </SwiperSlide>
+                  ))}
+                </section>
+              </Swiper>
+            </div>
           </div>
         </section>
         <section className="pt-5 relative mt-10">

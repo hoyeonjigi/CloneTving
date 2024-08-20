@@ -23,6 +23,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import dibs from "@/assets/dibs.svg";
 import share from "@/assets/share.svg";
 import play from "@/assets/play.svg";
+import checkToken from "@/utils/checkToken";
 
 function Detail() {
 	const queryClient = useQueryClient();
